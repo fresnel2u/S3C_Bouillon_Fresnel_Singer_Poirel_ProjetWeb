@@ -35,7 +35,9 @@ class CreationController
      */
     public function formList(Request $rq, Response $rs, array $args) : Response
     {
-        $v = new CreationView([], $this->container);
+        $url = $this->container;
+        $list = isset($args['id']) ? Liste::find($args['id']) : null;
+        $v = new CreationView($list, $this->container);
         $rs->getBody()->write($v->render(0));
         return $rs;     
     }
@@ -64,7 +66,7 @@ class CreationController
 
     /**
      * Créer un nouvel item
-     *
+     * 
      * @param Request $rq requete
      * @param Response $rs reponse
      * @param array $args arguments donnes par le createur de la liste
@@ -82,5 +84,30 @@ class CreationController
             $rs->getBody()->write("<h1 style=\"text-align : center;\"> L'item ". $args['id'] . " n'a pas été trouvé.</h1>");
             return $rs;  
         }
+
+    }
+
+
+    /**
+     * Modifie une liste existante
+     * 
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments donnes par le createur de la liste
+     * @return Response le contenu de la page
+     */
+    public function saveList(Request $rq, Response $rs, $args): Response {
+        $id = $args['id'];
+        $list = Liste::find($id);
+        if($list === null) {
+            $rs->getBody()->write("Unable to find list with id '$id'");
+            return $rs->withStatus(400, "Unable to find list with id '$id'");
+        }
+        $newVals = $rq->getParsedBody();
+        $list->description = htmlentities($newVals['list_description'], ENT_QUOTES);
+        $list->titre = htmlentities($newVals['list_title'], ENT_QUOTES);
+        $list->save();
+        $rs->getBody()->write((new CreationView($list, $this->container))->render(0));
+        return $rs;     
     }
 }

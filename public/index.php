@@ -21,6 +21,9 @@ $app->get('/list/{id}', ParticipationController::class . ':displayList')->setNam
 $app->get('/newList', CreationController::class . ':formList')->setName('formList');
 $app->post('/newList', CreationController::class . ':newList')->setName('newList');
 
+$app->get('/editList/{id}', CreationController::class . ':formList')->setName('editList');
+$app->post('/editList/{id}', CreationController::class . ':saveList')->setName('saveList');
+
 // Items
 $app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');
 $app->get('/items/{id}', ParticipationController::class . ':displayItem')->setName('displayItem');
@@ -28,6 +31,7 @@ $app->get('/items/{id}/edit', CreationController::class . ':editItemPage')->setN
 $app->post('/items/{id}/edit', CreationController::class . ':editItem')->setName('editItem');
 
 // Auth
+
 $app->get('/login', ConnectionController::class . ':getLogin')->setName('loginPage');
 $app->get('/register', ConnectionController::class.':getRegister')->setName('registerPage');
 

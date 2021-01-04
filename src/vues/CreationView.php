@@ -6,15 +6,17 @@ class CreationView
 {
     private $container;
 
+    private $model;
+
     /**
      * Constructeur de la vue
      *
-     * @param array $m - modeles pour recuperer les donnees de la bdd
+     * @param mixed $m - modeles pour recuperer les donnees de la bdd
      * @param \Slim\Container $c - container
      */
-    public function __construct(array $m, \Slim\Container $c)
+    public function __construct($m, \Slim\Container $c)
     {
-        $this->modeles = $m;
+        $this->model = $m;
         $this->container = $c;
     }
 
@@ -25,13 +27,15 @@ class CreationView
      */
     private function getFormList(): string
     {
-        $urlNewList = $this->container->router->pathFor('formList');
+        $titre = $this->model !== null ? $this->model->titre : '';
+        $description = $this->model !== null ? $this->model->description : '';
+        $action = $this->model === null ? 'Créer la liste' : 'Sauvegarder';
 
         return <<<HTML
-            <form method="POST" action="{$urlNewList}">
-                <label>Titre : <br><input type="text" name="list_title"/></label><br>
-                <label>Description : <br><input type="text" name="list_description" /></label><br>
-                <button type="submit">Créer la liste</button>
+            <form method="POST" action="">
+                <label>Titre : <br><input type="text" name="list_title" value="{$titre}"/></label><br>
+                <label>Description : <br><input type="text" name="list_description" value="{$description}"/></label><br>
+                <button type="submit">$action</button>
             </form>
         HTML;
     }
