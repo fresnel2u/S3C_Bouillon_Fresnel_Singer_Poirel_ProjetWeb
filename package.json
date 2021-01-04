@@ -1,0 +1,22 @@
+{
+  "name": "s3c_bouillon_fresnel_singer_poirel_projetweb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "sass --watch ./ressources/sass/app.scss:./public/css/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fresnel2u/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fresnel2u/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb/issues"
+  },
+  "homepage": "https://github.com/fresnel2u/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb#readme",
+  "dependencies": {
+    "sass": "^1.32.0"
+  }
+}

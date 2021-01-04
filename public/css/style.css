@@ -1,0 +1,249 @@
+html, body {
+  width: 100%;
+  min-width: 100vw;
+  background-color: var(--clr-light);
+}
+
+:root {
+  font-family: var(--ff-paragraph);
+  font-weight: var(--fw-regular);
+  color: var(--clr-dark);
+}
+
+* {
+  box-sizing: border-box;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a:visited {
+  color: var(--clr-primary);
+}
+
+input {
+  color: inherit;
+}
+
+h1, .title {
+  font-family: var(--ff-title);
+  font-weight: var(--fw-bold);
+  font-size: 2.5rem;
+}
+
+h2, .sub-title {
+  font-family: var(--ff-paragraph);
+  font-weight: var(--fw-bold);
+  font-weight: 2rem;
+}
+
+h3, .sub-title-2 {
+  font-family: var(--ff-paragraph);
+  font-weight: var(--fw-regular);
+  font-weight: 2rem;
+}
+
+.btn {
+  border-radius: 5px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  background: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--clr-primary);
+  border: none;
+  color: var(--clr-white);
+}
+
+.btn-secondary {
+  color: var(--clr-primary);
+  border: thin solid var(--clr-primary);
+}
+
+.btn-light {
+  padding: 0;
+  border: none;
+  text-decoration: underline;
+  color: var(--clr-dark);
+}
+
+input, .input {
+  border: none;
+  background-color: var(--clr-light);
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+}
+
+:root {
+  --clr-primary: #7A9ACC;
+  --clr-secondary: #EE9023;
+  --clr-dark: #2D3142;
+  --clr-dark-2: #535769;
+  --clr-light: #F4F4F4;
+  --clr-white: #FFFFFF;
+  --ff-title: "Abhaya Libre", serif;
+  --ff-paragraph: "Nunito", sans-serif;
+  --fw-light: 200;
+  --fw-regular: 400;
+  --fw-bold: 600;
+  --eft-neumorphism-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.07),
+                            -5px -5px 10px 0 rgba(255, 255, 255, 0.2) ;
+}
+
+li {
+  list-style: none;
+  font-size: 1.4rem;
+  padding: 20px;
+}
+
+.table {
+  margin: auto;
+  background-color: #7785AC;
+  color: #CEFDFF;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+td, th {
+  padding: 10px;
+}
+
+th {
+  color: black;
+  border-bottom: 1px solid white;
+  font-weight: 300;
+}
+
+thead,
+tfoot {
+  background-color: #6777A2;
+  color: #fff;
+}
+
+.login {
+  display: block;
+  margin: auto;
+  margin-top: 6rem;
+  width: 30rem;
+  max-width: 100%;
+  background-color: var(--clr-white);
+  border-radius: 5px;
+  padding: 2rem;
+  box-shadow: var(--eft-neumorphism-shadow);
+}
+.login * {
+  display: block;
+  width: 100%;
+}
+.login form {
+  max-width: 20rem;
+  margin: 0 auto;
+}
+.login .form-row {
+  margin-bottom: 2rem;
+}
+.login .input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+}
+.login .input * {
+  display: inline-block;
+  width: auto;
+}
+.login .input img {
+  height: 1rem;
+  margin-left: 0.5rem;
+}
+.login label {
+  margin-bottom: 0.25rem;
+}
+.login h1 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.login p {
+  margin-top: 2rem;
+  text-align: center;
+}
+.login p a {
+  display: inline-block;
+  width: auto;
+}
+.login a {
+  margin-top: 0.25rem;
+  text-align: end;
+}
+
+.register {
+  display: block;
+  margin: auto;
+  margin-top: 6rem;
+  width: 30rem;
+  max-width: 100%;
+  background-color: var(--clr-white);
+  border-radius: 5px;
+  padding: 2rem;
+  box-shadow: var(--eft-neumorphism-shadow);
+}
+.register * {
+  width: 100%;
+}
+.register form {
+  max-width: 20rem;
+  margin: 0 auto;
+}
+.register .form-row {
+  margin-bottom: 2rem;
+}
+.register p {
+  margin-top: 2rem;
+  text-align: center;
+}
+.register .terms {
+  display: flex;
+}
+.register .terms * {
+  font-size: 14px;
+}
+.register .terms .checkbox-wrapper {
+  width: 2rem;
+  margin-top: 0.2rem;
+}
+.register .terms p {
+  margin-top: 0;
+  text-align: left;
+  width: auto;
+  margin-left: 0.1rem;
+}
+.register .input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+}
+.register .input * {
+  display: inline-block;
+  width: auto;
+}
+.register .input img {
+  height: 1rem;
+  margin-left: 0.5rem;
+}
+.register label {
+  margin-bottom: 0.25rem;
+}
+.register h1 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/*# sourceMappingURL=style.css.map */

@@ -4,6 +4,7 @@ namespace Whishlist\controleur;
 
 use Whishlist\modele\Item;
 use Whishlist\modele\Liste;
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -12,7 +13,7 @@ use Whishlist\vues\ParticipationView;
 use Whishlist\vues\HomeView;
 
 /**
- * Ce controleur permet de creer des vues en rapport aux actions de l'utilisateur concernant les fonctionnalites de consultation.
+ * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de consultation.
  */
 class ParticipationController 
 {

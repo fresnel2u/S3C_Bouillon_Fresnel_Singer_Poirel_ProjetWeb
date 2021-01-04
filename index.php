@@ -3,6 +3,7 @@
 use Whishlist\conf\Database;
 use Whishlist\controleur\ParticipationController;
 use Whishlist\controleur\CreationController;
+use Whishlist\controleur\ConnectionController;
 
 use Whishlist\modele\Item;
 use Whishlist\modele\Liste;
@@ -26,8 +27,13 @@ $app->get('/list/{id}', ParticipationController::class . ':displayList')->setNam
 $app->get('/item/{id}', ParticipationController::class . ':displayItem')->setName('displayItem');
 
 $app->get('/newList', CreationController::class . ':formList')->setName('formList');
-
 $app->post('/newList', CreationController::class . ':newList')->setName('newList');
+
+$app->get('/login', ConnectionController::class . ':getLogin')->setName('loginPage');
+$app->get('/register', ConnectionController::class.':getRegister')->setName('registerPage');
+
+$app->post('/login', ConnectionController::class.':login')->setName('login');
+$app->post('/register', ConnectionController::class.':register')->setName('register');
 
 $app->run();
 

@@ -9,6 +9,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 use \Whishlist\vues\CreationView;
 
+/**
+ * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de creation.
+ */
 class CreationController
 {
     private $container;

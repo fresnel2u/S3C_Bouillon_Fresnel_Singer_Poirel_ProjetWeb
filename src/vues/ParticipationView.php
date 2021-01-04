@@ -87,7 +87,7 @@ class ParticipationView
             $i = 0;
             foreach ($it as $row) {
                 if ($i == 4) {
-                    $url = '"/web/img/' . $row . '"';
+                    $url = '"/public/img/' . $row . '"';
                     $html .= '<td><img src=' . $url . ' width="150"/></td>';
                 } else {
                     $html .= "<td>$row</td>";
@@ -130,7 +130,7 @@ class ParticipationView
                     $i = 0;
                     foreach($this->modeles as $col){
                         if($i === 4){
-                            $url = '"/web/img/' . $col . '"';
+                            $url = '"/public/img/' . $col . '"';
                             $html .= '<td><img src=' . $url . ' width="150"/></td>';
                         } else {
                             $html .= "<td> $col </td>";
