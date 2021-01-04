@@ -15,15 +15,19 @@ $app = new \Slim\App($container);
 
 $app->get('/', ParticipationController::class . ':home')->setName('home');
 
+// Lists
 $app->get('/allList', ParticipationController::class . ':displayAllList')->setName('displayAllList');
-
 $app->get('/list/{id}', ParticipationController::class . ':displayList')->setName('displayList');
-
-$app->get('/item/{id}', ParticipationController::class . ':displayItem')->setName('displayItem');
-
 $app->get('/newList', CreationController::class . ':formList')->setName('formList');
 $app->post('/newList', CreationController::class . ':newList')->setName('newList');
 
+// Items
+$app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');
+$app->get('/items/{id}', ParticipationController::class . ':displayItem')->setName('displayItem');
+$app->get('/items/{id}/edit', CreationController::class . ':editItemPage')->setName('editItemPage');
+$app->post('/items/{id}/edit', CreationController::class . ':editItem')->setName('editItem');
+
+// Auth
 $app->get('/login', ConnectionController::class . ':getLogin')->setName('loginPage');
 $app->get('/register', ConnectionController::class.':getRegister')->setName('registerPage');
 

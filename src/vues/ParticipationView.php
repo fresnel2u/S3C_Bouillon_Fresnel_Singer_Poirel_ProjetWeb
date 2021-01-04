@@ -101,6 +101,58 @@ class ParticipationView
     }
 
     /**
+     * Construit le contenu de la liste d'items
+     *
+     * @return string
+     */
+    private function getAllItems(): string
+    {
+        $html = <<<HTML
+            <h1>Résultat de l'affichage de l'item :</h1>'
+            <div>
+                <table class="table table-bordered table-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">liste id</th>
+                            <th scope="col">nom</th>
+                            <th scope="col">description</th>
+                            <th scope="col">image</th>
+                            <th scope="col">url</th>
+                            <th scope="col">tarif</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        HTML;
+        
+        
+        foreach ($this->modeles as $modele) {
+            $html .= "<tr>";
+            $i = 0;
+            foreach ($modele as $col) {
+                if ($i === 4) {
+                    $url = "/img/{$col}";
+                    $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";
+                } else {
+                    $html .= "<td>{$col}</td>";
+                }
+                $i++;
+            }
+            $edit = $this->container->router->pathFor('editItem', [
+                'id' => $modele['id']
+            ]);
+            $html .= "<td><a href=\"{$edit}\">Éditer</a></td>";
+            $html .= "</tr>";
+        }
+        $html .= '</tbody>
+            </table>
+        </div>';
+
+        return $html;
+    }
+
+    /**
      * Construit le contenu d'un item
      *
      * @return string l'HTML d'un item
@@ -108,7 +160,7 @@ class ParticipationView
     private function getItem(): string
     {
         $html = <<<HTML
-            <h1>Résultat de l'affichage de l'item :</h1>'
+            <h1>Tous les items :</h1>'
             <div>
                 <table class="table table-bordered table-dark">
                     <thead>
@@ -142,7 +194,7 @@ class ParticipationView
 
         return $html;
     }
-    
+
     /**
      * Construit la page entiere selon le selecteur
      *
@@ -164,6 +216,11 @@ class ParticipationView
                     break;
                 }
             case 2: {
+                    $content = $this->getAllItems();
+                    $title .= "Liste des items";
+                    break;
+                }
+            case 3: {
                     $content = $this->getItem();
                     $title .= "Item";
                     break;

@@ -85,6 +85,28 @@ class ParticipationController
     }
 
     /**
+     * creer une vue pour afficher les items
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments
+     * @return Response le contenu de la page
+     */
+    public function displayAllItems(Request $rq, Response $rs, array $args) : Response
+    {
+        try {
+            $items = Item::all();
+
+            $v = new ParticipationView($items->toArray(), $this->container);
+            $rs->getBody()->write($v->render(2));
+            return $rs;  
+        } catch(ModelNotFoundException $e) {
+            $rs->getBody()->write("<h1 style=\"text-align : center;\"> L'item ". $args['id'] . " n'a pas été trouvé.</h1>");
+            return $rs;  
+        }
+    }
+
+    /**
      * creer une vue pour afficher un item
      *
      * @param Request $rq requete
@@ -98,7 +120,7 @@ class ParticipationController
             $item = Item::select('*')->where('id', '=', $args['id'])->firstOrFail();
 
             $v = new ParticipationView($item->toArray(), $this->container);
-            $rs->getBody()->write($v->render(2));
+            $rs->getBody()->write($v->render(3));
             return $rs;  
         } catch(ModelNotFoundException $e) {
             $rs->getBody()->write("<h1 style=\"text-align : center;\"> L'item ". $args['id'] . " n'a pas été trouvé.</h1>");

@@ -1,8 +1,10 @@
 <?php
 namespace Whishlist\controleur;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Whishlist\modele\Item;
 use Whishlist\modele\Liste;
 use \Whishlist\vues\CreationView;
 
@@ -58,5 +60,27 @@ class CreationController
 		$l->save();
 		$url_listes = $this->container->router->pathFor('displayAllList') ;		
 		return $rs->withRedirect($url_listes);  
+    }
+
+    /**
+     * Créer un nouvel item
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments donnes par le createur de la liste
+     * @return Response le contenu de la page
+     */
+    public function editItemPage(Request $rq, Response $rs, array $args) : Response
+    {
+        try {
+            $item = Item::select('*')->where('id', '=', $args['id'])->firstOrFail();
+
+            $v = new CreationView($item->toArray(), $this->container);
+            $rs->getBody()->write($v->render(2));
+            return $rs;  
+        } catch(ModelNotFoundException $e) {
+            $rs->getBody()->write("<h1 style=\"text-align : center;\"> L'item ". $args['id'] . " n'a pas été trouvé.</h1>");
+            return $rs;  
+        }
     }
 }

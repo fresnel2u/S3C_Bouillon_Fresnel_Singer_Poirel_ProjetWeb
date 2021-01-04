@@ -18,7 +18,7 @@ class Menu
                 <li><a href="/register">Inscription</a></li>
                 <li><a href="/allList">Listes de souhaits</a></li>
                 <li><a href="/list/1">Liste</a></li>
-                <li><a href="/item/1">Item</a></li>
+                <li><a href="/items">Items</a></li>
                 <li><a href="/newList">Nouvelle liste</a></li>
             </ul>
         HTML;

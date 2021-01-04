@@ -37,6 +37,49 @@ class CreationView
     }
 
     /**
+     * Construit la page d'édition d'un item
+     *
+     * @return string
+     */
+    private function editPage(): string
+    {
+        $item = $this->modeles;
+
+        return <<<HTML
+            <div class="container">
+                <h1>Éditer un item</h1>
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="liste_id">ID de la liste</label>
+                        <input type="text" name="liste_id" id="liste_id" value="{$item['id']}">
+                    </div>        
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" name="nom" id="nom" value="{$item['name']}">
+                    </div>        
+                    <div class="form-group">
+                        <label for="descr">Description</label>
+                        <textarea name="descr" id="descr" cols="30" rows="10">{$item['descr']}</textarea>
+                    </div>        
+                    <div class="form-group">
+                        <label for="img">Image</label>
+                        <input type="text" name="img" id="img" value="{$item['img']}">
+                    </div>        
+                    <div class="form-group">
+                        <label for="url">URL</label>
+                        <input type="text" name="url" id="url" value="{$item['url']}">
+                    </div>      
+                    <div class="form-group">
+                        <label for="tarif">Tarif</label>
+                        <input type="text" name="tarif" id="tarif" value="{$item['tarif']}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>  
+                </form>
+            </div>
+        HTML;
+    }
+
+    /**
      * Construit la page entiere selon le parametre
      *
      * @param integer $selector - selon sa valeur, la methode execute une methode differente et renvoit une page adaptee a la demande
@@ -49,6 +92,11 @@ class CreationView
             case 0: {
                     $content = $this->getFormList();
                     $title .= "Créer une liste";
+                    break;
+                }
+            case 2: {
+                    $content = $this->editPage();
+                    $title .= "Éditer un item";
                     break;
                 }
             default: {

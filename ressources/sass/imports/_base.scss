@@ -1,88 +1,51 @@
-html, body {
+html,
+body {
     width: 100%;
     min-width: 100vw;
     background-color: var(--clr-light);
-  }
-  
-  :root {
+}
+
+:root {
     font-family: var(--ff-paragraph);
     font-weight: var(--fw-regular);
     color: var(--clr-dark);
-  }
-  
-  * {
+}
+
+* {
     box-sizing: border-box;
     position: relative;
     margin: 0;
     padding: 0;
-  }
-  
-  img {
+}
+
+img {
     max-width: 100%;
     display: block;
-  }
-  
-  a:visited {
+}
+
+a:visited {
     color: var(--clr-primary);
-  }
-  
-  input {
-    color: inherit;
-  }
-  
-  // TITLE
-  
-  h1, .title{
+}
+
+// TITLE
+
+h1,
+.title {
     font-family: var(--ff-title);
     font-weight: var(--fw-bold);
     font-size: 2.5rem;
-  }
-  
-  h2, .sub-title {
+}
+
+h2,
+.sub-title {
     font-family: var(--ff-paragraph);
     font-weight: var(--fw-bold);
     font-weight: 2rem;
-  }
-  
-  h3, .sub-title-2 {
+}
+
+h3,
+.sub-title-2 {
     font-family: var(--ff-paragraph);
     font-weight: var(--fw-regular);
     font-weight: 2rem;
-  }
-  
-  // BUTTON
-  
-  .btn {
-    border-radius: 5px;
-    padding: .5rem 1.5rem;
-    font-size: 1rem;
-    background: none;
-    cursor: pointer;
-  }
-  
-  .btn-primary {
-    background-color: var(--clr-primary);
-    border: none;
-    color: var(--clr-white);
-  }
-  
-  .btn-secondary {
-    color: var(--clr-primary);
-    border: thin solid var(--clr-primary);
-  }
-  
-  .btn-light {
-    padding: 0;
-    border: none;
-    text-decoration: underline;
-    color: var(--clr-dark);
-  }
-  
-  // INPUT
-  
-  input, .input {
-    border: none;
-    background-color: var(--clr-light);
-    border-radius: 5px;
-    padding: .5rem 1rem;
-  }
+}
