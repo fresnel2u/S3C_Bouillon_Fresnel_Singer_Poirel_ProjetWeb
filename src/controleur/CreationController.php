@@ -169,6 +169,29 @@ class CreationController
         }
     }
 
+    /**
+     * Supprimer un item
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments donnes par le createur de la liste
+     * @return Response
+     */
+    public function deleteItem(Request $rq, Response $rs, array $args): Response
+    {
+        try {
+            $item = Item::select('*')->where('id', '=', $args['id'])->firstOrFail();
+            $item->delete();
+
+            return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $rs;
+        }
+    }
+
+
 
     /**
      * Modifie une liste existante

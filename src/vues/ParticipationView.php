@@ -140,11 +140,21 @@ class ParticipationView
                 }
                 $i++;
             }
-            $edit = $this->container->router->pathFor('editItem', [
+            $editUrl = $this->container->router->pathFor('editItem', [
                 'id' => $modele['id']
             ]);
-            $html .= "<td><a href=\"{$edit}\">Éditer</a></td>";
-            $html .= "</tr>";
+            $deleteUrl = $this->container->router->pathFor('deleteItem', [
+                'id' => $modele['id']
+            ]);
+            $html .= <<<HTML
+                    <td>
+                        <a href="{$editUrl}" class="btn btn-light">Éditer</a>
+                        <form method="POST" action="{$deleteUrl}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            HTML;
         }
         $html .= '</tbody>
             </table>

@@ -25,6 +25,8 @@ textarea {
 
 // BUTTON
 .btn {
+    display: inline-block;
+    border: none;
     border-radius: 5px;
     padding: .5rem 1.5rem;
     font-size: 1rem;
@@ -35,7 +37,6 @@ textarea {
 
 .btn-primary {
     background-color: var(--clr-primary);
-    border: none;
     color: var(--clr-white);
 }
 
@@ -45,8 +46,11 @@ textarea {
 }
 
 .btn-light {
-    padding: 0;
-    border: none;
-    text-decoration: underline;
+    background-color: var(--clr-light);
     color: var(--clr-dark);
+}
+
+.btn-danger {
+    background-color: var(--clr-danger);
+    color: var(--clr-white);
 }
