@@ -26,6 +26,8 @@ $app->post('/editList/{id}', CreationController::class . ':saveList')->setName('
 
 // Items
 $app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');
+$app->get('/items/new', CreationController::class . ':newItemPage')->setName('newItemPage');
+$app->post('/items/new', CreationController::class . ':newItem')->setName('newItem');
 $app->get('/items/{id}', ParticipationController::class . ':displayItem')->setName('displayItem');
 $app->get('/items/{id}/edit', CreationController::class . ':editItemPage')->setName('editItemPage');
 $app->post('/items/{id}/edit', CreationController::class . ':editItem')->setName('editItem');

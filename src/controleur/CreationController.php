@@ -66,6 +66,54 @@ class CreationController
     }
 
     /**
+     * Ajouter un item (page)
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments donnes par le createur de la liste
+     * @return Response le contenu de la page
+     */
+    public function newItemPage(Request $rq, Response $rs, array $args): Response
+    {
+        $v = new CreationView(null, $this->container);
+        $rs->getBody()->write($v->render(1));
+        return $rs;
+    }
+
+    /**
+     * Ajouter un item
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments donnes par le createur de la liste
+     * @return Response
+     */
+    public function newItem(Request $rq, Response $rs, array $args): Response
+    {
+        try {
+            $post = $rq->getParsedBody();
+            $post = array_map(function ($field) {
+                return filter_var($field, FILTER_SANITIZE_STRING);
+            }, $post);
+
+            $item = new Item();
+            $item->liste_id = $post['liste_id'];
+            $item->nom = $post['nom'];
+            $item->descr = $post['descr'];
+            $item->img = $post['img'];
+            $item->url = $post['url'];
+            $item->tarif = $post['tarif'];
+            $item->save();
+
+            return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $rs;
+        }
+    }
+
+    /**
      * Editer un item (page)
      *
      * @param Request $rq requete
@@ -119,7 +167,6 @@ class CreationController
             $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
             return $rs;
         }
-
     }
 
 

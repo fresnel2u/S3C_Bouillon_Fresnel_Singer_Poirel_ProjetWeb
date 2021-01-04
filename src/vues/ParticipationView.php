@@ -108,7 +108,8 @@ class ParticipationView
     private function getAllItems(): string
     {
         $html = <<<HTML
-            <h1>Résultat de l'affichage de l'item :</h1>'
+            <h1>Résultat de l'affichage de l'item :</h1>
+            <a href="{$this->container->router->pathFor('newItemPage')}" class="btn btn-primary">Ajouter un item</a>
             <div>
                 <table class="table table-bordered table-dark">
                     <thead>

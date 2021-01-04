@@ -41,11 +41,52 @@ class CreationView
     }
 
     /**
+     * Construit la page d'ajout d'un item
+     *
+     * @return string
+     */
+    private function newItemPage(): string
+    {
+        return <<<HTML
+            <div class="container">
+                <h1>Ajouter un item</h1>
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="liste_id">ID de la liste</label>
+                        <input type="text" name="liste_id" id="liste_id">
+                    </div>        
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" name="nom" id="nom">
+                    </div>        
+                    <div class="form-group">
+                        <label for="descr">Description</label>
+                        <textarea name="descr" id="descr" cols="30" rows="10"></textarea>
+                    </div>        
+                    <div class="form-group">
+                        <label for="img">Image</label>
+                        <input type="text" name="img" id="img">
+                    </div>        
+                    <div class="form-group">
+                        <label for="url">URL</label>
+                        <input type="text" name="url" id="url">
+                    </div>      
+                    <div class="form-group">
+                        <label for="tarif">Tarif</label>
+                        <input type="text" name="tarif" id="tarif">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>  
+                </form>
+            </div>
+        HTML;
+    }
+
+    /**
      * Construit la page d'édition d'un item
      *
      * @return string
      */
-    private function editPage(): string
+    private function editItemPage(): string
     {
         $item = $this->model;
 
@@ -98,8 +139,13 @@ class CreationView
                     $title .= "Créer une liste";
                     break;
                 }
+            case 1: {
+                    $content = $this->newItemPage();
+                    $title .= "Ajouter un item";
+                    break;
+                }
             case 2: {
-                    $content = $this->editPage();
+                    $content = $this->editItemPage();
                     $title .= "Éditer un item";
                     break;
                 }
