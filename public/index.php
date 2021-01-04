@@ -18,10 +18,10 @@ $app->get('/', ParticipationController::class . ':home')->setName('home');
 // Lists
 $app->get('/allList', ParticipationController::class . ':displayAllList')->setName('displayAllList');
 $app->get('/list/{id}', ParticipationController::class . ':displayList')->setName('displayList');
-$app->get('/newList', CreationController::class . ':formList')->setName('formList');
+$app->get('/newList', CreationController::class . ':newListPage')->setName('newListPage');
 $app->post('/newList', CreationController::class . ':newList')->setName('newList');
 
-$app->get('/editList/{id}', CreationController::class . ':formList')->setName('editList');
+$app->get('/editList/{id}', CreationController::class . ':editListPage')->setName('editListPage');
 $app->post('/editList/{id}', CreationController::class . ':saveList')->setName('saveList');
 
 // Items

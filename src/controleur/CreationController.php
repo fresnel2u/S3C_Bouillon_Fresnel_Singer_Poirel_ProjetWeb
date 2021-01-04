@@ -34,11 +34,9 @@ class CreationController
      * @param array $args arguments
      * @return Response le contenu de la page
      */
-    public function formList(Request $rq, Response $rs, array $args): Response
+    public function newListPage(Request $rq, Response $rs, array $args): Response
     {
-        $url = $this->container;
-        $list = isset($args['id']) ? Liste::find($args['id']) : null;
-        $v = new CreationView($list, $this->container);
+        $v = new CreationView(null, $this->container);
         $rs->getBody()->write($v->render(0));
         return $rs;
     }
@@ -53,16 +51,26 @@ class CreationController
      */
     public function newList(Request $rq, Response $rs, array $args): Response
     {
-        $post = $rq->getParsedBody();
-        $titre = filter_var($post['list_title'], FILTER_SANITIZE_STRING);
-        $description = filter_var($post['list_description'], FILTER_SANITIZE_STRING);
-        $l = new Liste();
-        $l->user_id = 2;
-        $l->titre = $titre;
-        $l->description = $description;
-        $l->save();
-        $url_listes = $this->container->router->pathFor('displayAllList');
-        return $rs->withRedirect($url_listes);
+        try {
+            $post = $rq->getParsedBody();
+            $post = array_map(function ($field) {
+                return filter_var($field, FILTER_SANITIZE_STRING);
+            }, $post);
+
+            $list = new Liste();
+            $list->user_id = 1; // TODO: Change to current user id
+            $list->titre = $post['titre'];
+            $list->description = $post['description'];
+            $list->expiration = $post['expiration'];
+            $list->token = $post['token'];
+            $list->save();
+
+            return $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $rs;
+        }
     }
 
     /**

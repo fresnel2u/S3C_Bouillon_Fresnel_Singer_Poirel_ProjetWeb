@@ -25,18 +25,31 @@ class CreationView
      *
      * @return string l'HTML du formulaire de creation de liste
      */
-    private function getFormList(): string
+    private function newList(): string
     {
-        $titre = $this->model !== null ? $this->model->titre : '';
-        $description = $this->model !== null ? $this->model->description : '';
-        $action = $this->model === null ? 'Créer la liste' : 'Sauvegarder';
-
         return <<<HTML
-            <form method="POST" action="">
-                <label>Titre : <br><input type="text" name="list_title" value="{$titre}"/></label><br>
-                <label>Description : <br><input type="text" name="list_description" value="{$description}"/></label><br>
-                <button type="submit">$action</button>
-            </form>
+            <div class="container">
+                <h1>Créer une liste</h1>
+                <form method="POST" action="{$this->container->router->pathFor('newList')}">
+                    <div class="form-group">
+                        <label for="titre">Titre</label>
+                        <input type="text" name="titre" id="titre">
+                    </div>        
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                    </div>        
+                    <div class="form-group">
+                        <label for="expiration">Expiration</label>
+                        <input type="date" name="expiration" id="expiration">
+                    </div>        
+                    <div class="form-group">
+                        <label for="token">Token</label>
+                        <input type="text" name="token" id="token">
+                    </div>      
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>  
+                </form>
+            </div>
         HTML;
     }
 
@@ -135,7 +148,7 @@ class CreationView
         $title = "MyWhishList | ";
         switch ($selector) {
             case 0: {
-                    $content = $this->getFormList();
+                    $content = $this->newList();
                     $title .= "Créer une liste";
                     break;
                 }
