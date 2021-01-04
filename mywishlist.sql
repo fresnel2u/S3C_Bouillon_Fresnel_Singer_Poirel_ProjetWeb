@@ -51,3 +51,27 @@ INSERT INTO `liste` (`no`, `user_id`, `titre`, `description`, `expiration`, `tok
 (1,	1,	'Pour fêter le bac !',	'Pour un week-end à Nancy qui nous fera oublier les épreuves. ',	'2018-06-27',	'nosecure1'),
 (2,	2,	'Liste de mariage d\'Alice et Bob',	'Nous souhaitons passer un week-end royal à Nancy pour notre lune de miel :)',	'2018-06-30',	'nosecure2'),
 (3,	3,	'C\'est l\'anniversaire de Charlie',	'Pour lui préparer une fête dont il se souviendra :)',	'2017-12-12',	'nosecure3');
+
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
+  id int(11) NOT NULL,
+  nom varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  prenom varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  mail varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  password varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Insertion des données de la table user
+--
+
+INSERT INTO user (id, nom, prenom, mail, password) VALUES
+        (1, 'Dupont', 'Jean', 'a@a.com', '$2y$10$lSlsWvlGqNVZZ.P4ImJOAOcKO.0BZ7re4lNLMvhExNJAaJV.YG4xe'),
+        (2, 'Maria', 'Jeanne', 'b@b.com', '$2y$10$lSlsWvlGqNVZZ.P4ImJOAOcKO.0BZ7re4lNLMvhExNJAaJV.YG4xe'),
+        (3, 'Maria2', 'Jeanne2', 'c@c.com', '$2y$10$lSlsWvlGqNVZZ.P4ImJOAOcKO.0BZ7re4lNLMvhExNJAaJV.YG4xe');
+
+ALTER TABLE `item` ADD COLUMN user_id int(11);
+ALTER TABLE `item` ADD CONSTRAINT fk_item_liste FOREIGN KEY (liste_id) REFERENCES `liste`(`no`);
+ALTER TABLE `item` ADD CONSTRAINT fk_item_user FOREIGN KEY (user_id) REFERENCES `user`(`id`);
+ALTER TABLE `liste` ADD CONSTRAINT fk_liste_user FOREIGN KEY (user_id) REFERENCES `user`(`id`);
