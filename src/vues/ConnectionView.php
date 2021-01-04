@@ -18,14 +18,14 @@ class ConnectionView
                     <div class="form-row">
                         <label for="email">Email</label>
                         <div class="input">
-                            <img src="/public/img/user.svg" alt="User icon">
+                            <img src="/img/user.svg" alt="User icon">
                             <input type="text" id="email">
                         </div>
                     </div>
                     <div class="form-row">
                         <label for="password">Password</label>
                         <div class="input">
-                            <img src="/public/img/password.svg" alt="Password icon">
+                            <img src="/img/password.svg" alt="Password icon">
                             <input type="password" id="password">
                         </div>
                     </div>
@@ -52,21 +52,21 @@ class ConnectionView
                     <div class="form-row">
                         <label for="fullname">Fullname</label>
                         <div class="input">
-                            <img src="/public/img/user.svg" alt="User icon">
+                            <img src="/img/user.svg" alt="User icon">
                             <input type="text" id="fullname">
                         </div>
                     </div>
                     <div class="form-row">
                         <label for="email">Email</label>
                         <div class="input">
-                            <img src="/public/img/user.svg" alt="User icon">
+                            <img src="/img/user.svg" alt="User icon">
                             <input type="text" id="email">
                         </div>
                     </div>
                     <div class="form-row">
                         <label for="password">Password</label>
                         <div class="input">
-                            <img src="/public/img/password.svg" alt="Password icon">
+                            <img src="/img/password.svg" alt="Password icon">
                             <input type="password" id="password">
                         </div>
                     </div>

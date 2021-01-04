@@ -24,7 +24,7 @@ class HomeView
     private function getHome(): string
     {
         $html = <<<HTML
-            <h1 style="text-align : center;"> Page d'accueil | TODO </h1>
+            <h1 style="text-align : center;">Page d'accueil | TODO</h1>
         HTML;
 
         return $html;

@@ -1,12 +1,12 @@
 <?php
-require_once('vendor/autoload.php');
+require_once('../vendor/autoload.php');
 
 use Whishlist\conf\Database;
 use Whishlist\controleur\ParticipationController;
 use Whishlist\controleur\CreationController;
 use Whishlist\controleur\ConnectionController;
 
-$config = require_once('settings.php');
+$config = require_once('../settings.php');
 
 Database::connect();
 
