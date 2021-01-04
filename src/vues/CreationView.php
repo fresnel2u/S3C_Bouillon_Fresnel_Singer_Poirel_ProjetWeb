@@ -11,7 +11,7 @@ class CreationView
     /**
      * Constructeur de la vue
      *
-     * @param mixed $m - modeles pour recuperer les donnees de la bdd
+     * @param mixed $m - model pour recuperer les donnees de la bdd
      * @param \Slim\Container $c - container
      */
     public function __construct($m, \Slim\Container $c)
@@ -47,7 +47,7 @@ class CreationView
      */
     private function editPage(): string
     {
-        $item = $this->modeles;
+        $item = $this->model;
 
         return <<<HTML
             <div class="container">
@@ -55,11 +55,11 @@ class CreationView
                 <form method="POST">
                     <div class="form-group">
                         <label for="liste_id">ID de la liste</label>
-                        <input type="text" name="liste_id" id="liste_id" value="{$item['id']}">
+                        <input type="text" name="liste_id" id="liste_id" value="{$item['liste_id']}">
                     </div>        
                     <div class="form-group">
                         <label for="nom">Nom</label>
-                        <input type="text" name="nom" id="nom" value="{$item['name']}">
+                        <input type="text" name="nom" id="nom" value="{$item['nom']}">
                     </div>        
                     <div class="form-group">
                         <label for="descr">Description</label>

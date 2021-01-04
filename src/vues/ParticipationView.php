@@ -4,17 +4,17 @@ namespace Whishlist\vues;
 
 class ParticipationView
 {
-    private $modeles;
+    private $model;
 
     /**
      * Constructeur de la vue
      *
-     * @param array $m - modeles pour recuperer les donnees de la bdd
+     * @param array $m - model pour recuperer les donnees de la bdd
      * @param \Slim\Container $c - container
      */
     public function __construct(array $m, \Slim\Container $c)
     {
-        $this->modeles = $m;
+        $this->model = $m;
         $this->container = $c;
     }
 
@@ -41,7 +41,7 @@ class ParticipationView
                 </thead>
                         <tbody> 
         HTML;
-        foreach ($this->modeles as $liste) {
+        foreach ($this->model as $liste) {
             $html .= "<tr>";
             foreach ($liste as $row) {
                 $html .= "<td>$row</td>";
@@ -79,7 +79,7 @@ class ParticipationView
                     </thead>
                     <tbody>
         HTML;
-        foreach ($this->modeles as $it) {
+        foreach ($this->model as $it) {
             $html .= "<tr>";
             $i = 0;
             foreach ($it as $row) {
@@ -127,7 +127,7 @@ class ParticipationView
         HTML;
         
         
-        foreach ($this->modeles as $modele) {
+        foreach ($this->model as $modele) {
             $html .= "<tr>";
             $i = 0;
             foreach ($modele as $col) {
@@ -178,7 +178,7 @@ class ParticipationView
                         <tr>
         HTML;
         $i = 0;
-        foreach ($this->modeles as $col) {
+        foreach ($this->model as $col) {
             if ($i === 4) {
                 $url = "/img/{$col}";
                 $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";

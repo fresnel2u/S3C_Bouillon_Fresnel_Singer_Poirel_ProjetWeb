@@ -7,12 +7,12 @@ class HomeView
     /**
      * Constructeur de la vue
      *
-     * @param array $m - modeles pour recuperer les donnees de la bdd
+     * @param array $m - model pour recuperer les donnees de la bdd
      * @param \Slim\Container $c - container
      */
     public function __construct(array $m, \Slim\Container $c)
     {
-        $this->modeles = $m;
+        $this->model = $m;
         $this->container = $c;
     }
 
