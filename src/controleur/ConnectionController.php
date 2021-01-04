@@ -1,10 +1,9 @@
 <?php
 namespace Whishlist\controleur;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-
-use \Whishlist\vues\ConnectionView;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Whishlist\vues\ConnectionView;
 
 /**
  * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de connection/inscription.

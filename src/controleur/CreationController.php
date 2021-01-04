@@ -1,12 +1,9 @@
 <?php
 namespace Whishlist\controleur;
 
-use Whishlist\modele\Item;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Whishlist\modele\Liste;
-
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-
 use \Whishlist\vues\CreationView;
 
 /**
@@ -36,7 +33,6 @@ class CreationController
      */
     public function formList(Request $rq, Response $rs, array $args) : Response
     {
-        $url = $this->container;
         $v = new CreationView([], $this->container);
         $rs->getBody()->write($v->render(0));
         return $rs;     

@@ -2,15 +2,13 @@
 
 namespace Whishlist\controleur;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Whishlist\modele\Item;
 use Whishlist\modele\Liste;
-
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Whishlist\vues\ParticipationView;
 use Whishlist\vues\HomeView;
+use Whishlist\vues\ParticipationView;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de consultation.
