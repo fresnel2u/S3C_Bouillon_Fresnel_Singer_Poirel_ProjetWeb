@@ -1,0 +1,62 @@
+<?php
+
+namespace Whishlist\vues;
+
+class HomeView 
+{
+    private $modeles;
+
+    private $container;
+    
+    /**
+     * Constructeur de la vue
+     *
+     * @param array $m - modeles pour recuperer les donnees de la bdd
+     * @param \Slim\Container $c - container
+     */
+    public function __construct(array $m, \Slim\Container $c)
+    {
+        $this->modeles = $m;
+        $this->container = $c; 
+    }
+
+    /**
+     * construit le contenu de la page d'accueil
+     *
+     * @return string l'HTML de la page d'accueil
+     */
+    private function getHome() : string
+    {
+        $html = '<h1 style="text-align : center;"> Page d\'accueil | TODO </h1>';
+
+        return $html;
+    }
+
+    /**
+     * construit la page entiere selon le selecteur
+     *
+     * @param integer $selector - selon sa valeur, la methode execute une methode differente et renvoit une page adaptee a la demande
+     * @return string l'HTML de la page complete
+     */
+    public function render(int $selector) : string
+    {
+        $title = "MyWishList | ";
+        switch ($selector){
+            case 0 : {
+                $content = $this->getHome();
+                $title .= "Accueil";
+                break;
+            }
+            default : {
+                $content = '';
+                break;
+            }
+        }
+        
+        $html = composants\Header::getHeader($title);
+        $html .= composants\Menu::getMenu();
+        $html .= $content; 
+        $html .= "</body> </html>";
+        return $html;
+    }
+}

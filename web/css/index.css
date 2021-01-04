@@ -1,0 +1,28 @@
+li{
+    list-style: none;
+    font-size: 1.4rem;
+    padding: 20px;
+}
+
+.table {
+    margin: auto;
+    background-color: #7785AC;
+    color: #CEFDFF;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+td,th{
+    padding: 10px;
+}
+th {
+    color: black;
+    border-bottom: 1px solid white;
+    font-weight: 300;
+}
+
+thead,
+tfoot {
+    background-color: #6777A2;
+    color: #fff;
+}
