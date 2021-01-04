@@ -25,7 +25,7 @@ class CreationView
      *
      * @return string l'HTML du formulaire de creation de liste
      */
-    private function newList(): string
+    private function newListPage(): string
     {
         return <<<HTML
             <div class="container">
@@ -46,6 +46,44 @@ class CreationView
                     <div class="form-group">
                         <label for="token">Token</label>
                         <input type="text" name="token" id="token">
+                    </div>      
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>  
+                </form>
+            </div>
+        HTML;
+    }
+
+     /**
+     * Construit le contenu d'un formulaire d'edition de liste
+     *
+     * @return string
+     */
+    private function editListPage(): string
+    {
+        $list = $this->model;
+        $editUrl = $this->container->router->pathFor('editList', [
+            'id' => $list['no']
+        ]);
+
+        return <<<HTML
+            <div class="container">
+                <h1>Éditer une liste</h1>
+                <form method="POST" action="{$editUrl}">
+                    <div class="form-group">
+                        <label for="titre">Titre</label>
+                        <input type="text" name="titre" id="titre" value="{$list['titre']}">
+                    </div>        
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" cols="30" rows="10">{$list['description']}</textarea>
+                    </div>        
+                    <div class="form-group">
+                        <label for="expiration">Expiration</label>
+                        <input type="date" name="expiration" id="expiration" value="{$list['expiration']}">
+                    </div>        
+                    <div class="form-group">
+                        <label for="token">Token</label>
+                        <input type="text" name="token" id="token" value="{$list['token']}">
                     </div>      
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
                 </form>
@@ -102,11 +140,14 @@ class CreationView
     private function editItemPage(): string
     {
         $item = $this->model;
+        $editUrl = $this->container->router->pathFor('editItem', [
+            'id' => $item['id']
+        ]);
 
         return <<<HTML
             <div class="container">
                 <h1>Éditer un item</h1>
-                <form method="POST">
+                <form method="POST" action="{$editUrl}">
                     <div class="form-group">
                         <label for="liste_id">ID de la liste</label>
                         <input type="text" name="liste_id" id="liste_id" value="{$item['liste_id']}">
@@ -148,16 +189,21 @@ class CreationView
         $title = "MyWhishList | ";
         switch ($selector) {
             case 0: {
-                    $content = $this->newList();
+                    $content = $this->newListPage();
                     $title .= "Créer une liste";
                     break;
                 }
             case 1: {
+                    $content = $this->editListPage();
+                    $title .= "Éditer une liste";
+                    break;
+                }
+            case 2: {
                     $content = $this->newItemPage();
                     $title .= "Ajouter un item";
                     break;
                 }
-            case 2: {
+            case 3: {
                     $content = $this->editItemPage();
                     $title .= "Éditer un item";
                     break;

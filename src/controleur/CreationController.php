@@ -74,6 +74,60 @@ class CreationController
     }
 
     /**
+     * Crée une vue pour afficher le formulaire d'édition d'une liste
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments
+     * @return Response le contenu de la page
+     */
+    public function editListPage(Request $rq, Response $rs, array $args): Response
+    {
+        try {
+            $list = Liste::select('*')->where('no', '=', $args['id'])->firstOrFail();
+
+            $v = new CreationView($list, $this->container);
+            $rs->getBody()->write($v->render(1));
+            return $rs;
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $rs;
+        }
+    }
+
+    /**
+     * Modifie une liste existante
+     * 
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments donnes par le createur de la liste
+     * @return Response le contenu de la page
+     */
+    public function editList(Request $rq, Response $rs, $args): Response {
+        try {
+            $list = Liste::select('*')->where('no', '=', $args['id'])->firstOrFail();
+
+            $post = $rq->getParsedBody();
+            $post = array_map(function ($field) {
+                return filter_var($field, FILTER_SANITIZE_STRING);
+            }, $post);
+
+            $list->titre = $post['titre'];
+            $list->description = $post['description'];
+            $list->expiration = $post['expiration'];
+            $list->token = $post['token'];
+            $list->save();
+
+            return $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $rs;
+        }  
+    }
+
+    /**
      * Ajouter un item (page)
      *
      * @param Request $rq requete
@@ -84,7 +138,7 @@ class CreationController
     public function newItemPage(Request $rq, Response $rs, array $args): Response
     {
         $v = new CreationView(null, $this->container);
-        $rs->getBody()->write($v->render(1));
+        $rs->getBody()->write($v->render(2));
         return $rs;
     }
 
@@ -135,10 +189,11 @@ class CreationController
             $item = Item::select('*')->where('id', '=', $args['id'])->firstOrFail();
 
             $v = new CreationView($item->toArray(), $this->container);
-            $rs->getBody()->write($v->render(2));
+            $rs->getBody()->write($v->render(3));
             return $rs;
         } catch (ModelNotFoundException $e) {
-            $rs->getBody()->write("<h1 style=\"text-align : center;\"> L'item " . $args['id'] . " n'a pas été trouvé.</h1>");
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
             return $rs;
         }
     }
@@ -197,30 +252,5 @@ class CreationController
             $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
             return $rs;
         }
-    }
-
-
-
-    /**
-     * Modifie une liste existante
-     * 
-     * @param Request $rq requete
-     * @param Response $rs reponse
-     * @param array $args arguments donnes par le createur de la liste
-     * @return Response le contenu de la page
-     */
-    public function saveList(Request $rq, Response $rs, $args): Response {
-        $id = $args['id'];
-        $list = Liste::find($id);
-        if($list === null) {
-            $rs->getBody()->write("Unable to find list with id '$id'");
-            return $rs->withStatus(400, "Unable to find list with id '$id'");
-        }
-        $newVals = $rq->getParsedBody();
-        $list->description = htmlentities($newVals['list_description'], ENT_QUOTES);
-        $list->titre = htmlentities($newVals['list_title'], ENT_QUOTES);
-        $list->save();
-        $rs->getBody()->write((new CreationView($list, $this->container))->render(0));
-        return $rs;     
     }
 }

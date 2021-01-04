@@ -16,13 +16,12 @@ $app = new \Slim\App($container);
 $app->get('/', ParticipationController::class . ':home')->setName('home');
 
 // Lists
-$app->get('/allList', ParticipationController::class . ':displayAllList')->setName('displayAllList');
-$app->get('/list/{id}', ParticipationController::class . ':displayList')->setName('displayList');
-$app->get('/newList', CreationController::class . ':newListPage')->setName('newListPage');
-$app->post('/newList', CreationController::class . ':newList')->setName('newList');
-
-$app->get('/editList/{id}', CreationController::class . ':editListPage')->setName('editListPage');
-$app->post('/editList/{id}', CreationController::class . ':saveList')->setName('saveList');
+$app->get('/lists', ParticipationController::class . ':displayAllList')->setName('displayAllList');
+$app->get('/lists/new', CreationController::class . ':newListPage')->setName('newListPage');
+$app->post('/lists/new', CreationController::class . ':newList')->setName('newList');
+$app->get('/lists/{id}', ParticipationController::class . ':displayList')->setName('displayList');
+$app->get('/lists/{id}/edit', CreationController::class . ':editListPage')->setName('editListPage');
+$app->post('/lists/{id}/edit', CreationController::class . ':editList')->setName('editList');
 
 // Items
 $app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');

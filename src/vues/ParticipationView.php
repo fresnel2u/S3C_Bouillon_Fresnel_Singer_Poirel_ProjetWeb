@@ -26,7 +26,8 @@ class ParticipationView
     private function getAllList(): string
     {
         $html = <<<HTML
-            <h1 style="text-align : center;"> Liste des listes de souhaits : </h1>
+            <h1>Listes de souhaits</h1>
+            <a href="{$this->container->router->pathFor('newListPage')}" class="btn btn-primary">Ajouter une liste</a>
             <div>
                 <table class="table">
                 <thead>
@@ -37,6 +38,7 @@ class ParticipationView
                         <th scope="col">description</th>
                         <th scope="col">expiration</th>
                         <th scope="col">token</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                         <tbody> 
@@ -46,7 +48,15 @@ class ParticipationView
             foreach ($liste as $row) {
                 $html .= "<td>$row</td>";
             }
-            $html .= "</tr>";
+            $editUrl = $this->container->router->pathFor('editListPage', [
+                'id' => $liste['no']
+            ]);
+            $html .= <<<HTML
+                    <td>
+                        <a href="{$editUrl}" class="btn btn-light">Éditer</a>
+                    </td>
+                </tr>
+            HTML;
         }
         $html .= '</tbody>
             </table>
@@ -63,12 +73,12 @@ class ParticipationView
     {
 
         $html = <<<HTML
-            <h1> Résultat de l'affichage de la liste : </h1>"
+            <h1>Items de la liste :</h1>
             <div>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">id</th>
+                            <th scope="col">item id</th>
                             <th scope="col">liste id</th>
                             <th scope="col">nom</th>
                             <th scope="col">description</th>
@@ -79,10 +89,10 @@ class ParticipationView
                     </thead>
                     <tbody>
         HTML;
-        foreach ($this->model as $it) {
+        foreach ($this->model as $item) {
             $html .= "<tr>";
             $i = 0;
-            foreach ($it as $row) {
+            foreach ($item as $row) {
                 if ($i === 4) {
                     $url = "/img/{$row}";
                     $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";
