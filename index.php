@@ -1,17 +1,12 @@
 <?php
+require_once('vendor/autoload.php');
 
 use Whishlist\conf\Database;
 use Whishlist\controleur\ParticipationController;
 use Whishlist\controleur\CreationController;
 use Whishlist\controleur\ConnectionController;
 
-use Whishlist\modele\Item;
-use Whishlist\modele\Liste;
-
-use Slim\Http\Request;
-use Slim\Http\Response;
-require_once 'vendor/autoload.php';
-$config = require_once 'settings.php';
+$config = require_once('settings.php');
 
 Database::connect();
 

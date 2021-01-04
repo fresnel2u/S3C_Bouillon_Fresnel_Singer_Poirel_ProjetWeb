@@ -2,12 +2,8 @@
 
 namespace Whishlist\vues;
 
-class HomeView 
+class HomeView
 {
-    private $modeles;
-
-    private $container;
-    
     /**
      * Constructeur de la vue
      *
@@ -17,46 +13,48 @@ class HomeView
     public function __construct(array $m, \Slim\Container $c)
     {
         $this->modeles = $m;
-        $this->container = $c; 
+        $this->container = $c;
     }
 
     /**
-     * construit le contenu de la page d'accueil
+     * Construit le contenu de la page d'accueil
      *
      * @return string l'HTML de la page d'accueil
      */
-    private function getHome() : string
+    private function getHome(): string
     {
-        $html = '<h1 style="text-align : center;"> Page d\'accueil | TODO </h1>';
+        $html = <<<HTML
+            <h1 style="text-align : center;"> Page d'accueil | TODO </h1>
+        HTML;
 
         return $html;
     }
 
     /**
-     * construit la page entiere selon le selecteur
+     * Construit la page entiere selon le selecteur
      *
      * @param integer $selector - selon sa valeur, la methode execute une methode differente et renvoit une page adaptee a la demande
      * @return string l'HTML de la page complete
      */
-    public function render(int $selector) : string
+    public function render(int $selector): string
     {
         $title = "MyWishList | ";
-        switch ($selector){
-            case 0 : {
-                $content = $this->getHome();
-                $title .= "Accueil";
-                break;
-            }
-            default : {
-                $content = '';
-                break;
-            }
+        switch ($selector) {
+            case 0: {
+                    $content = $this->getHome();
+                    $title .= "Accueil";
+                    break;
+                }
+            default: {
+                    $content = '';
+                    break;
+                }
         }
-        
+
         $html = composants\Header::getHeader($title);
         $html .= composants\Menu::getMenu();
-        $html .= $content; 
-        $html .= "</body> </html>";
+        $html .= $content;
+        $html .= "</body></html>";
         return $html;
     }
 }
