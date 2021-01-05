@@ -10,7 +10,7 @@ use Whishlist\modele\Liste;
 use \Whishlist\vues\CreationView;
 
 /**
- * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de creation.
+ * Ce controleur permet de gerer les actions concernant les fonctionnalites de consultation.
  */
 class CreationController
 {

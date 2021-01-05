@@ -1,7 +1,7 @@
 <?php
-
 namespace Whishlist\vues;
 
+session_start();
 class HomeView
 {
     /**
@@ -26,7 +26,7 @@ class HomeView
         $html = <<<HTML
             <h1 style="text-align : center;">Page d'accueil | TODO</h1>
         HTML;
-
+        $html .= "<p> ". $_SESSION['user']. "</p>" ;
         return $html;
     }
 

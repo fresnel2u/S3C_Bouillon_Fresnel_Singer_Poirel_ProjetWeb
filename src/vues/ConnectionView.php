@@ -4,6 +4,21 @@ namespace Whishlist\vues;
 
 class ConnectionView
 {
+
+    private $container;
+
+    /**
+     * Constructeur de la vue
+     *
+     * @param array $m - modeles pour recuperer les donnees de la bdd
+     * @param \Slim\Container $c - container
+     */
+    public function __construct(array $m, \Slim\Container $c)
+    {
+        $this->modeles = $m;
+        $this->container = $c;
+    }
+
     /**
      * Construit le contenu de la page de login
      *
@@ -13,25 +28,25 @@ class ConnectionView
     {
         $html = <<<HTML
             <div class="login">
-                <h1>Login</h1>
-                <form>
+                <h1>Connexion</h1>
+                <form role="form" method="post" action="{$this->container->router->pathFor("login")}">
                     <div class="form-row">
                         <label for="email">Email</label>
                         <div class="input">
                             <img src="/img/user.svg" alt="User icon">
-                            <input type="text" id="email">
+                            <input type="text" name="email" id="email">
                         </div>
                     </div>
                     <div class="form-row">
-                        <label for="password">Password</label>
+                        <label for="password">Mot de passe</label>
                         <div class="input">
                             <img src="/img/password.svg" alt="Password icon">
-                            <input type="password" id="password">
+                            <input type="password" name="password" id="password">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Sign in</button>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
                 </form>
-                <p>Don't have an account ? <a class="btn btn-light" href="">Sign up</a></p>
+                <p>Pas de compte ? <a class="btn btn-light" href="{$this->container->router->pathFor("registerPage")}">Inscription</a></p>
             </div>
         HTML;
 
@@ -47,32 +62,46 @@ class ConnectionView
     {
         $html = <<<HTML
             <div class="register">
-                <h1>Sign up</h1>
-                <form>
+                <h1>Inscription</h1>
+                <form role="form" method="post" action="{$this->container->router->pathFor("register")}">
                     <div class="form-row">
-                        <label for="fullname">Fullname</label>
+                        <label for="firstname">Prénom</label>
                         <div class="input">
                             <img src="/img/user.svg" alt="User icon">
-                            <input type="text" id="fullname">
+                            <input type="text" name="firstname" id="firstname">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="lastname">Nom</label>
+                        <div class="input">
+                            <img src="/img/user.svg" alt="User icon">
+                            <input type="text" name="lastname" id="lastname">
                         </div>
                     </div>
                     <div class="form-row">
                         <label for="email">Email</label>
                         <div class="input">
                             <img src="/img/user.svg" alt="User icon">
-                            <input type="text" id="email">
+                            <input type="text" name="email" id="email">
                         </div>
                     </div>
                     <div class="form-row">
-                        <label for="password">Password</label>
+                        <label for="password">Mot de passe</label>
                         <div class="input">
                             <img src="/img/password.svg" alt="Password icon">
-                            <input type="password" id="password">
+                            <input type="password" name="password" id="password">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Continue</button>
+                    <div class="form-row">
+                        <label for="passwordConfirm">Confirmer le mot de passe</label>
+                        <div class="input">
+                            <img src="/img/password.svg" alt="Password icon">
+                            <input type="password" name="passwordConfirm" id="password">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Continuer</button>
                 </form>
-                <p>Already have an account ? <a class="btn btn-light" href="">Sign in</a></p>
+                <p>Déjà inscrit ? <a class="btn btn-light" href="{$this->container->router->pathFor("loginPage")}">Connexion</a></p>
             </div>
         HTML;
 
