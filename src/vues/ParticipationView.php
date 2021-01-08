@@ -2,6 +2,8 @@
 
 namespace Whishlist\vues;
 
+use Whishlist\helpers\Authentication;
+
 class ParticipationView
 {
     private $model;
@@ -234,18 +236,19 @@ class ParticipationView
     private function getAccount(): string
     {
         $deleteAccount = $this->container->router->pathFor('deleteAccount');
+        $user = Authentication::getUser();
 
         $html = <<<HTML
         <div class="account">
             <h1> Account informations </h1>
             <div class="account-container">
                 <div class="account-informations">
-                    <p> Firstname : {$_SESSION['user']->nom}  </p>
-                    <p> Lastname : {$_SESSION['user']->prenom} </p>
-                    <p> Email : {$_SESSION['user']->mail}</p>
+                    <p> Firstname : {$user->nom}  </p>
+                    <p> Lastname : {$user->prenom} </p>
+                    <p> Email : {$user->mail}</p>
                 </div>
                 <div class="account-actions">
-                    <form ">
+                    <form>
                         <button class="btn btn-primary">Edit (TODO)</button>
                     </form>
                     <form method="POST" action="{$deleteAccount}" onsubmit="return confirm('Warning ! If you click OK, your account will be deleted.');">
