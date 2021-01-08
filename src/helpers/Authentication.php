@@ -55,11 +55,11 @@ class Authentication
      * @param string $pass
      * @return void
      */
-    public static function CreateUser(string $name, string $lastname, string $email, string $pass)
+    public static function CreateUser(string $firstname, string $lastname, string $email, string $pass)
     {
         $user = new User();
-        $user->nom = $name;
-        $user->prenom = $lastname;
+        $user->nom = $lastname;
+        $user->prenom = $firstname;
         $user->mail = $email;
         $user->password = password_hash($pass, PASSWORD_DEFAULT);
         $user->save();

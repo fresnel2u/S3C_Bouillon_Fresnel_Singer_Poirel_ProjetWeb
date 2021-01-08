@@ -88,7 +88,7 @@ class ConnectionController
     public function register(Request $rq, Response $rs, array $args) : Response
     {
        
-        $name = filter_var($rq->getParsedBodyParam('firstname'), FILTER_SANITIZE_STRING);
+        $firstname = filter_var($rq->getParsedBodyParam('firstname'), FILTER_SANITIZE_STRING);
         $lastname = filter_var($rq->getParsedBodyParam('lastname'), FILTER_SANITIZE_STRING);
         $email = filter_var($rq->getParsedBodyParam('email'), FILTER_SANITIZE_EMAIL);
         $password = filter_var($rq->getParsedBodyParam('password'), FILTER_SANITIZE_STRING);
@@ -96,11 +96,11 @@ class ConnectionController
         echo($password);
         echo($passwordconfirm);
 
-        if($name === "" || $lastname === "" || $email === "" || $password === "" || $passwordconfirm === "" ) {
+        if($firstname === "" || $lastname === "" || $email === "" || $password === "" || $passwordconfirm === "" ) {
             throw new Exception("Veuillez remplir tout les champs.");
         }
         Authentication::CheckData($email,$password, $passwordconfirm);
-        Authentication::CreateUser($name,$lastname,$email,$password);
+        Authentication::CreateUser($firstname,$lastname,$email,$password);
         
         return $rs->withRedirect($this->container->router->pathFor('loginPage'));
 
