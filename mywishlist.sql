@@ -94,6 +94,30 @@ INSERT INTO user (id, nom, prenom, mail, password) VALUES
         (3, 'Maria2', 'Jeanne2', 'c@c.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.');
 
 ALTER TABLE `item` ADD COLUMN user_id int(11);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `cagnotte`
+--
+
+DROP TABLE IF EXISTS `cagnotte`;
+CREATE TABLE `cagnotte` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `liste_id` int(11) NOT NULL,
+  `montant` decimal(5,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Insertion des données de la table `cagnotte`
+--
+INSERT INTO `cagnotte` (`id`, `liste_id`, `montant`) VALUES
+    (1, 1, '250.00'),
+    (2, 2, '450.00'),
+    (3, 3, '650.00');
+
 ALTER TABLE `item` ADD CONSTRAINT fk_item_liste FOREIGN KEY (liste_id) REFERENCES `liste`(`no`);
 ALTER TABLE `item` ADD CONSTRAINT fk_item_user FOREIGN KEY (user_id) REFERENCES `user`(`id`);
 ALTER TABLE `liste` ADD CONSTRAINT fk_liste_user FOREIGN KEY (user_id) REFERENCES `user`(`id`);
+ALTER TABLE `cagnotte` ADD CONSTRAINT fk_cagnotte_liste FOREIGN KEY (liste_id) REFERENCES `liste`(`no`);

@@ -1,4 +1,5 @@
 <?php
+
 namespace Whishlist\modele;
 
 use Illuminate\Database\Eloquent\Model;
@@ -6,12 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Modele Liste : represente une liste de souhaits
  */
-class Liste extends Model{
+class Liste extends Model
+{
     protected $table = 'liste';
     protected $primaryKey = 'no';
     public $timestamps = false;
 
-    public function items() {
+    public function items()
+    {
         return $this->hasMany('wishlist\src\modele\Item', 'liste_id');
+    }
+
+    public function foundingPot()
+    {
+        return $this->hasOne(FoundingPot::class, 'liste_id');
     }
 }
