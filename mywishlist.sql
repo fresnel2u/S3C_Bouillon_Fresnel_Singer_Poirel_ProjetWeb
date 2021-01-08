@@ -76,7 +76,7 @@ INSERT INTO `liste` (`no`, `user_id`, `titre`, `description`, `expiration`, `tok
 
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
-  id int(11) NOT NULL,
+  id int(11) NOT NULL AUTO_INCREMENT,
   nom varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   prenom varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   mail varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -89,9 +89,9 @@ CREATE TABLE user (
 --
 
 INSERT INTO user (id, nom, prenom, mail, password) VALUES
-        (1, 'Dupont', 'Jean', 'a@a.com', '$2y$10$lSlsWvlGqNVZZ.P4ImJOAOcKO.0BZ7re4lNLMvhExNJAaJV.YG4xe'),
-        (2, 'Maria', 'Jeanne', 'b@b.com', '$2y$10$lSlsWvlGqNVZZ.P4ImJOAOcKO.0BZ7re4lNLMvhExNJAaJV.YG4xe'),
-        (3, 'Maria2', 'Jeanne2', 'c@c.com', '$2y$10$lSlsWvlGqNVZZ.P4ImJOAOcKO.0BZ7re4lNLMvhExNJAaJV.YG4xe');
+        (1, 'Dupont', 'Jean', 'a@a.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
+        (2, 'Maria', 'Jeanne', 'b@b.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
+        (3, 'Maria2', 'Jeanne2', 'c@c.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.');
 
 ALTER TABLE `item` ADD COLUMN user_id int(11);
 ALTER TABLE `item` ADD CONSTRAINT fk_item_liste FOREIGN KEY (liste_id) REFERENCES `liste`(`no`);
