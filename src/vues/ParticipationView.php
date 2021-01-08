@@ -247,6 +247,7 @@ class ParticipationView
      */
     private function getAccount(): string
     {
+        $editAccount = $this->container->router->pathFor('editAccountPage');
         $deleteAccount = $this->container->router->pathFor('deleteAccount');
         $logOut = $this->container->router->pathFor('logout');
         $user = Authentication::getUser();
@@ -262,8 +263,8 @@ class ParticipationView
                     <p> Email : {$user->mail}</p>
                 </div>
                 <div class="account-actions">
-                    <form>
-                        <button class="btn btn-primary">Modifier (TODO)</button>
+                    <form method="GET" action="{$editAccount}">
+                        <button class="btn btn-primary">Éditer</button>
                     </form>
                     <form method="POST" action="{$deleteAccount}" onsubmit="return confirm('Warning ! If you click OK, your account will be deleted.');">
                         <button type="submit" class="btn btn-danger"> Supprimer mon compte </button>
@@ -275,6 +276,40 @@ class ParticipationView
 
         return $html;
     }
+
+      /**
+     * Construit le contenu d'un formulaire d'edition de compte
+     *
+     * @return string
+     */
+    private function editAccountPage(): string
+    {
+       $editAccount = $this->container->router->pathFor('editAccount');
+       $user = Authentication::getUser();
+        return <<<HTML
+            <div class="container">
+                <h1>Éditer mon compte</h1>
+                <form method="POST" action="{$editAccount}" onsubmit="return confirm('Voulez-vous sauvegarder les changements effectués ?');">
+                    <div class="form-group">
+                        <label for="lastname">Nom</label>
+                        <input type="text" name="lastname" id="lastname" value="{$user->nom}">
+                    </div>        
+                    <div class="form-group">
+                        <label for="firstname">Prénom</label>
+                        <input type="text" name="firstname" id="firstname" value="{$user->prenom}">
+
+                    </div>        
+                    <div class="form-group">
+                        <label for="mail">Email</label>
+                        <input type="text" name="mail" id="mail" value="{$user->mail}">
+                    </div>        
+                     
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>  
+                </form>
+            </div>
+        HTML;
+    }
+
 
     /** 
      * Construit la page entiere selon le selecteur
@@ -308,9 +343,14 @@ class ParticipationView
                 }
             case 4: {
                     $content = $this->getAccount();
-                    $title .= "My Account";
+                    $title .= "Mon compte";
                     break;
             }
+            case 5: {
+                $content = $this->editAccountPage();
+                $title .= "Editer mon compte";
+                break;
+        }
             default: {
                     $content = '';
                     break;

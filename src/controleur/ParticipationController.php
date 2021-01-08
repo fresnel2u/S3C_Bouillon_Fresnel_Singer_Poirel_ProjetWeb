@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Whishlist\helpers\Authentication;
 use Whishlist\helpers\Flashes;
 use Whishlist\helpers\RedirectHelper;
+use Whishlist\modele\User;
 
 /**
  * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de consultation.
@@ -144,6 +145,61 @@ class ParticipationController
         $v = new ParticipationView(array(), $this->container);
         $rs->getBody()->write($v->render(4));
         return $rs; 
+    } 
+
+    /**
+     * creer une vue pour afficher l'edition du compte utilisateur
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments
+     * @return Response le contenu de la page
+     */
+    public function displayEditAccount(Request $rq, Response $rs, array $args) : Response
+    {
+        $v = new ParticipationView(array(), $this->container);
+        $rs->getBody()->write($v->render(5));
+        return $rs; 
+    } 
+
+    /**
+     * sauvegarde les changements effectues lors de l'edition d'un compte
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments
+     * @return Response le contenu de la page
+     */
+    public function editAccount(Request $rq, Response $rs, array $args) : Response
+    {
+        try {
+            $user_session = Authentication::getUser();
+            
+            $user = User::select('*')->where('id', '=', $user_session->id)->firstOrFail();
+            $post = $rq->getParsedBody();
+
+            $post = array_map(function ($field) {
+                return filter_var($field, FILTER_SANITIZE_STRING);
+            }, $post);
+
+            
+            $user->nom = $post['lastname'];
+            $user_session->nom = $post['lastname'];
+
+            $user->prenom = $post['firstname'];
+            $user_session->prenom = $post['firstname'];
+            
+            $user->mail = $post['mail'];
+            $user_session->mail = $post['mail'];
+
+            $user->save();
+
+            return $rs->withRedirect($this->container->router->pathFor('editAccountPage'));
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('editAccountPage'));
+            return $rs;
+        }
     } 
 
     /**

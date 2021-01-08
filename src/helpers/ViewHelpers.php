@@ -12,7 +12,7 @@ class ViewHelpers
                 </div>
             </form>
         HTML;
-
+        
         return $html;
     }
 }

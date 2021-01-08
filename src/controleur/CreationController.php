@@ -218,7 +218,7 @@ class CreationController
             $post = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $post);
-
+            
             $item->liste_id = $post['liste_id'];
             $item->nom = $post['nom'];
             $item->descr = $post['descr'];

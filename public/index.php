@@ -39,6 +39,8 @@ $app->post('/items/{id}/delete', CreationController::class . ':deleteItem')->set
 $app->get('/login', ConnectionController::class . ':getLogin')->setName('loginPage');
 $app->get('/register', ConnectionController::class.':getRegister')->setName('registerPage');
 $app->get('/account', ParticipationController::class.':displayAccount')->setName('displayAccount');
+$app->get('/account/edit', ParticipationController::class.':displayEditAccount')->setName('editAccountPage');
+$app->post('/account/edit', ParticipationController::class.':editAccount')->setName('editAccount');
 $app->post('/login', ConnectionController::class.':login')->setName('login');
 $app->post('/logout', ConnectionController::class.':logout')->setName('logout');
 $app->post('/register', ConnectionController::class.':register')->setName('register');
