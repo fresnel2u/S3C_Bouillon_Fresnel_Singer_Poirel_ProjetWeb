@@ -107,7 +107,7 @@ class ParticipationView
                 if ($i === 4) {
                     $url = "/img/{$row}";
                     $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";
-                } else {
+                } else if($i !== 7) { // Don't show user_id column
                     $html .= "<td>{$row}</td>";
                 }
                 $i += 1;
