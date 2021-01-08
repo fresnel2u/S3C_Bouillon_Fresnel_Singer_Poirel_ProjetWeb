@@ -1,9 +1,10 @@
 <?php
 
-namespace Whishlist\vues;
+namespace Whishlist\vues; 
+session_start();
 
 use Whishlist\helpers\Authentication;
-
+use \Whishlist\helpers\ViewHelpers;
 class ParticipationView
 {
     private $model;
@@ -27,7 +28,10 @@ class ParticipationView
      */
     private function getAllList(): string
     {
-        $html = <<<HTML
+        $logOut = $this->container->router->pathFor('logout');
+        $html = ViewHelpers::generateLogOut($logOut);
+
+        $html .= <<<HTML
             <h1>Listes de souhaits</h1>
             <a href="{$this->container->router->pathFor('newListPage')}" class="btn btn-primary">Ajouter une liste</a>
             <div>
@@ -81,8 +85,10 @@ class ParticipationView
      */
     private function getList(): string
     {
+        $logOut = $this->container->router->pathFor('logout');
+        $html = ViewHelpers::generateLogOut($logOut);
 
-        $html = <<<HTML
+        $html .= <<<HTML
             <h1>Items de la liste :</h1>
             <div>
                 <table class="table">
@@ -129,7 +135,10 @@ class ParticipationView
      */
     private function getAllItems(): string
     {
-        $html = <<<HTML
+        $logOut = $this->container->router->pathFor('logout');
+        $html = ViewHelpers::generateLogOut($logOut);
+
+        $html .= <<<HTML
             <h1>Résultat de l'affichage de l'item :</h1>
             <a href="{$this->container->router->pathFor('newItemPage')}" class="btn btn-primary">Ajouter un item</a>
             <div>
@@ -192,7 +201,10 @@ class ParticipationView
      */
     private function getItem(): string
     {
-        $html = <<<HTML
+        $logOut = $this->container->router->pathFor('logout');
+        $html = ViewHelpers::generateLogOut($logOut);
+
+        $html .= <<<HTML
             <h1>Tous les items :</h1>
             <div>
                 <table class="table table-bordered table-dark">
@@ -236,9 +248,11 @@ class ParticipationView
     private function getAccount(): string
     {
         $deleteAccount = $this->container->router->pathFor('deleteAccount');
+        $logOut = $this->container->router->pathFor('logout');
         $user = Authentication::getUser();
 
-        $html = <<<HTML
+        $html = ViewHelpers::generateLogOut($logOut);
+        $html .= <<<HTML
         <div class="account">
             <h1> Account informations </h1>
             <div class="account-container">
@@ -262,7 +276,7 @@ class ParticipationView
         return $html;
     }
 
-    /**
+    /** 
      * Construit la page entiere selon le selecteur
      *
      * @param integer $selector - selon sa valeur, la methode execute une methode differente et renvoit une page adaptee a la demande

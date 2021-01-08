@@ -1,6 +1,8 @@
 <?php
 namespace Whishlist\controleur;
 
+session_start();
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -54,6 +56,24 @@ class ConnectionController
             else
                 $rs = $rs->withRedirect($this->container->router->pathFor('home'));
         }
+        return $rs;
+    }
+
+    /**
+     * Permet de gerer la deconnexion d'un utilisateur
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments
+     * @return Response le contenu de la page renvoyee
+     */
+    public function logout(Request $rq, Response $rs, array $args) : Response
+    {   
+        if(isset($_SESSION['user'])) {
+            $_SESSION['user'] = null;
+        }
+        $rs = $rs->withRedirect($this->container->router->pathFor('home'));
+        
         return $rs;
     }
 

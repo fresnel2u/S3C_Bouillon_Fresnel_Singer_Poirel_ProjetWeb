@@ -19,7 +19,7 @@ $app->get('/', ParticipationController::class . ':home')->setName('home');
 $app->get('/lists', ParticipationController::class . ':displayAllList')->setName('displayAllList');
 $app->get('/lists/new', CreationController::class . ':newListPage')->setName('newListPage');
 $app->post('/lists/new', CreationController::class . ':newList')->setName('newList');
-$app->get('/lists/{id}', ParticipationController::class . ':displayList')->setName('displayList');
+$app->get('/lists/{id}[/]', ParticipationController::class . ':displayList')->setName('displayList');
 $app->get('/lists/{id}/edit', CreationController::class . ':editListPage')->setName('editListPage');
 $app->post('/lists/{id}/edit', CreationController::class . ':editList')->setName('editList');
 $app->post('/lists/{no}/delete', CreationController::class . ':deleteList')->setName('deleteList');
@@ -28,7 +28,7 @@ $app->post('/lists/{no}/delete', CreationController::class . ':deleteList')->set
 $app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');
 $app->get('/items/new', CreationController::class . ':newItemPage')->setName('newItemPage');
 $app->post('/items/new', CreationController::class . ':newItem')->setName('newItem');
-$app->get('/items/{id}', ParticipationController::class . ':displayItem')->setName('displayItem');
+$app->get('/items/{id}[/]', ParticipationController::class . ':displayItem')->setName('displayItem');
 $app->get('/items/{id}/edit', CreationController::class . ':editItemPage')->setName('editItemPage');
 $app->post('/items/{id}/edit', CreationController::class . ':editItem')->setName('editItem');
 $app->post('/items/{id}/lock', ParticipationController::class . ':lockItem')->setName('lockItem');
@@ -40,6 +40,7 @@ $app->get('/login', ConnectionController::class . ':getLogin')->setName('loginPa
 $app->get('/register', ConnectionController::class.':getRegister')->setName('registerPage');
 $app->get('/account', ParticipationController::class.':displayAccount')->setName('displayAccount');
 $app->post('/login', ConnectionController::class.':login')->setName('login');
+$app->post('/logout', ConnectionController::class.':logout')->setName('logout');
 $app->post('/register', ConnectionController::class.':register')->setName('register');
 $app->post('/account/delete', CreationController::class . ':deleteAccount')->setName('deleteAccount');
 
