@@ -24,17 +24,12 @@ class HomeView
      */
     private function getHome(): string
     {
-        $deleteAccount = $this->container->router->pathFor('deleteAccount');
+        
         
         $html = <<<HTML
             <h1 style="text-align : center;">Page d'accueil | TODO</h1>
-
-            <form method="POST" action="{$deleteAccount}">
-                <button type="submit" class="btn btn-danger"> Supprimer mon compte </button>
-            </form>
-            
+    
         HTML;
-        $html .= "<p> ". $_SESSION['user']. "</p>" ;
         return $html;
     }
 

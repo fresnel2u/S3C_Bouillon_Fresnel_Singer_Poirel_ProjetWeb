@@ -18,6 +18,7 @@ class Menu
                 <li><a href="/register">Inscription</a></li>
                 <li><a href="/lists">Listes</a></li>
                 <li><a href="/items">Items</a></li>
+                <li><a href="/account">Compte</a></li>
             </ul>
         HTML;
     }

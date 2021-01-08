@@ -1,0 +1,49 @@
+/*
+ * TABLE OF CONTENT
+ * 
+ * LAYOUT
+ */
+
+/* -----------
+ * LAYOUT
+ * -----------
+ */
+
+
+.account {
+    & {
+        display: block;
+        margin: auto;
+        max-width: 60vw;
+        margin-top: 4rem;
+    }
+
+    .account-container {
+        & {
+            background-color: var(--clr-white);
+            border-radius: 5px;
+            box-shadow: var(--eft-neumorphism-shadow);
+            padding: 2rem;
+            margin-top : 1rem;
+        }
+
+        .account-informations {
+            p {
+                margin-bottom: 1rem;
+            }
+        }
+
+        .account-actions {
+            & {
+                justify-content: end;
+                display : flex;
+            }
+
+            button {
+                margin : 1rem 0.75rem 0 0.75rem;
+            }
+        }
+    }
+}
+
+

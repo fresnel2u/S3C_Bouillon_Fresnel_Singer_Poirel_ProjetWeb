@@ -2,6 +2,7 @@
 
 namespace Whishlist\vues;
 
+session_start();
 class ParticipationView
 {
     private $model;
@@ -189,7 +190,7 @@ class ParticipationView
     private function getItem(): string
     {
         $html = <<<HTML
-            <h1>Tous les items :</h1>'
+            <h1>Tous les items :</h1>
             <div>
                 <table class="table table-bordered table-dark">
                     <thead>
@@ -225,6 +226,39 @@ class ParticipationView
     }
 
     /**
+     * Construit le contenu de la page de compte
+     *
+     * @return string l'HTML des informations de compte
+     */
+    private function getAccount(): string
+    {
+        $deleteAccount = $this->container->router->pathFor('deleteAccount');
+
+        $html = <<<HTML
+        <div class="account">
+            <h1> Account informations </h1>
+            <div class="account-container">
+                <div class="account-informations">
+                    <p> Firstname : {$_SESSION['user']->nom}  </p>
+                    <p> Lastname : {$_SESSION['user']->prenom} </p>
+                    <p> Email : {$_SESSION['user']->mail}</p>
+                </div>
+                <div class="account-actions">
+                    <form ">
+                        <button class="btn btn-primary">Edit (TODO)</button>
+                    </form>
+                    <form method="POST" action="{$deleteAccount}" onsubmit="return confirm('Warning ! If you click OK, your account will be deleted.');">
+                        <button type="submit" class="btn btn-danger"> Delete my account </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        HTML;
+
+        return $html;
+    }
+
+    /**
      * Construit la page entiere selon le selecteur
      *
      * @param integer $selector - selon sa valeur, la methode execute une methode differente et renvoit une page adaptee a la demande
@@ -254,6 +288,11 @@ class ParticipationView
                     $title .= "Item";
                     break;
                 }
+            case 4: {
+                    $content = $this->getAccount();
+                    $title .= "My Account";
+                    break;
+            }
             default: {
                     $content = '';
                     break;

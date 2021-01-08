@@ -127,4 +127,19 @@ class ParticipationController
             return $rs;  
         }
     }
+
+    /**
+     * creer une vue pour afficher les informations du compte utilisateur
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments
+     * @return Response le contenu de la page
+     */
+    public function displayAccount(Request $rq, Response $rs, array $args) : Response
+    {
+        $v = new ParticipationView(array(), $this->container);
+        $rs->getBody()->write($v->render(4));
+        return $rs;  
+    }
 }
