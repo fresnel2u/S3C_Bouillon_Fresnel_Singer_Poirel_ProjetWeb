@@ -8,7 +8,7 @@ class ViewHelpers
         $html = <<<HTML
             <form method="POST" action="{$url}" class="logout">
                 <div>
-                    <button class="btn btn-primary">Log out</button>
+                    <button class="btn btn-primary">Déconnexion</button>
                 </div>
             </form>
         HTML;

@@ -254,19 +254,19 @@ class ParticipationView
         $html = ViewHelpers::generateLogOut($logOut);
         $html .= <<<HTML
         <div class="account">
-            <h1> Account informations </h1>
+            <h1> Mon compte - Informations </h1>
             <div class="account-container">
                 <div class="account-informations">
-                    <p> Firstname : {$user->nom}  </p>
-                    <p> Lastname : {$user->prenom} </p>
+                    <p> Nom : {$user->nom}  </p>
+                    <p> Prénom : {$user->prenom} </p>
                     <p> Email : {$user->mail}</p>
                 </div>
                 <div class="account-actions">
                     <form>
-                        <button class="btn btn-primary">Edit (TODO)</button>
+                        <button class="btn btn-primary">Modifier (TODO)</button>
                     </form>
                     <form method="POST" action="{$deleteAccount}" onsubmit="return confirm('Warning ! If you click OK, your account will be deleted.');">
-                        <button type="submit" class="btn btn-danger"> Delete my account </button>
+                        <button type="submit" class="btn btn-danger"> Supprimer mon compte </button>
                     </form>
                 </div>
             </div>
