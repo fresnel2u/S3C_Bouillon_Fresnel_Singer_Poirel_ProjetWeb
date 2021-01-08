@@ -47,7 +47,12 @@ class ConnectionController
             throw new Exception("Veuillez remplir tout les champs.");
         } else {
             Authentication::Authenticate($username, $password);
-            $rs = $rs->withRedirect($this->container->router->pathFor('home'));
+            if(session_status() == PHP_SESSION_NONE)
+                session_start();
+            if(isset($_SESSION['login_success_url']))
+                $rs = $rs->withRedirect($_SESSION['login_success_url']);
+            else
+                $rs = $rs->withRedirect($this->container->router->pathFor('home'));
         }
         return $rs;
     }

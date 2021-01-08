@@ -9,8 +9,9 @@ use Whishlist\modele\Liste;
 use Whishlist\vues\HomeView;
 use Whishlist\vues\ParticipationView;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Symfony\Component\Console\Helper\Dumper;
 use Whishlist\helpers\Authentication;
+use Whishlist\helpers\Flashes;
+use Whishlist\helpers\RedirectHelper;
 
 /**
  * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de consultation.
@@ -158,12 +159,9 @@ class ParticipationController
         $item = Item::find($args['id']);
         $user = Authentication::getUser();
         if($user === null) {
-            // return $rs->withStatus(401);
-            return $rs->withRedirect("/lists/" . $item->liste_id);
+            return RedirectHelper::loginAndRedirect($rs, "/lists/" . $item->liste_id);
         }
         $item->user_id = $user->id;
-        var_dump($item);
-        // return $rs;
         $item->save();
         return $rs->withRedirect("/lists/" . $item->liste_id);
     }
