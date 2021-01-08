@@ -12,6 +12,10 @@ class Item extends Model{
     public $timestamps = false;
 
     public function liste() {
-        return $this->belongsTo('wishlist\src\modele\Liste', 'liste_id');
+        return $this->belongsTo(liste::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

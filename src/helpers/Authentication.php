@@ -1,7 +1,8 @@
 <?php
 namespace Whishlist\helpers;
 
-session_start();
+if(session_status() == PHP_SESSION_NONE)
+    session_start();
 
 use Whishlist\modele\User;
 use Exception;
@@ -74,5 +75,15 @@ class Authentication
         if(isset($_SESSION['user']))
             return true;
         return false;
+    }
+
+    /**
+     * Trouve l'utilisateur connecté
+     * 
+     * @return User|null l'utilisateur connecté
+     */
+    public static function getUser() : ?User
+    {
+        return $_SESSION['user'] ?? null;
     }
 }

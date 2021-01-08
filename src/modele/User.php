@@ -12,6 +12,6 @@ class User extends Model{
     public $timestamps = false;
 
     public function listes() {
-        return $this->hasMany('wishlist\src\modele\Liste', 'user_id');
+        return $this->hasMany(Liste::class);
     }
 }

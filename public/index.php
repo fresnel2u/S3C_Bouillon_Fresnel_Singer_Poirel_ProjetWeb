@@ -31,6 +31,7 @@ $app->post('/items/new', CreationController::class . ':newItem')->setName('newIt
 $app->get('/items/{id}', ParticipationController::class . ':displayItem')->setName('displayItem');
 $app->get('/items/{id}/edit', CreationController::class . ':editItemPage')->setName('editItemPage');
 $app->post('/items/{id}/edit', CreationController::class . ':editItem')->setName('editItem');
+$app->post('/items/{id}/lock', ParticipationController::class . ':lockItem')->setName('lockItem');
 $app->post('/items/{id}/delete', CreationController::class . ':deleteItem')->setName('deleteItem');
 
 // Auth

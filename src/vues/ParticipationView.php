@@ -2,7 +2,6 @@
 
 namespace Whishlist\vues;
 
-session_start();
 class ParticipationView
 {
     private $model;
@@ -94,6 +93,7 @@ class ParticipationView
                             <th scope="col">image</th>
                             <th scope="col">url</th>
                             <th scope="col">tarif</th>
+                            <th scope="col">action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -110,6 +110,7 @@ class ParticipationView
                 }
                 $i += 1;
             }
+            $html .= "<td><form action='/items/" . $item['id'] . "/lock' method='POST'><button type='submit'>Reserver</button></form></td>";
             $html .= "</tr>";
         }
         $html .= "</tbody>

@@ -6,6 +6,7 @@ session_start();
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Whishlist\helpers\Authentication;
 use Whishlist\modele\Item;
 use Whishlist\modele\Liste;
 use Whishlist\modele\User;

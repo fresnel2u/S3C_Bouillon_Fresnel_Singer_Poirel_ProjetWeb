@@ -9,6 +9,8 @@ use Whishlist\modele\Liste;
 use Whishlist\vues\HomeView;
 use Whishlist\vues\ParticipationView;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\Console\Helper\Dumper;
+use Whishlist\helpers\Authentication;
 
 /**
  * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de consultation.
@@ -140,6 +142,29 @@ class ParticipationController
     {
         $v = new ParticipationView(array(), $this->container);
         $rs->getBody()->write($v->render(4));
-        return $rs;  
+        return $rs; 
+    } 
+
+    /**
+     * Reservation d'un item
+     * 
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args arguments
+     * @return Response le contenu de la page
+     */
+    public function lockItem(Request $rq, Response $rs, array $args): Response
+    {
+        $item = Item::find($args['id']);
+        $user = Authentication::getUser();
+        if($user === null) {
+            // return $rs->withStatus(401);
+            return $rs->withRedirect("/lists/" . $item->liste_id);
+        }
+        $item->user_id = $user->id;
+        var_dump($item);
+        // return $rs;
+        $item->save();
+        return $rs->withRedirect("/lists/" . $item->liste_id);
     }
 }

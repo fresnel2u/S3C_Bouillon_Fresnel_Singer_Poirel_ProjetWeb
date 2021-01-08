@@ -13,9 +13,8 @@ class Liste extends Model
     protected $primaryKey = 'no';
     public $timestamps = false;
 
-    public function items()
-    {
-        return $this->hasMany('wishlist\src\modele\Item', 'liste_id');
+    public function items() {
+        return $this->hasMany(Item::class);
     }
 
     public function foundingPot()
