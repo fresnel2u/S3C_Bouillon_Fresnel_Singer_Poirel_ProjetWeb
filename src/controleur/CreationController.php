@@ -1,12 +1,14 @@
 <?php
 
 namespace Whishlist\controleur;
+session_start();
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\modele\Item;
 use Whishlist\modele\Liste;
+use Whishlist\modele\User;
 use \Whishlist\vues\CreationView;
 
 /**
@@ -265,13 +267,36 @@ class CreationController
     public function deleteList(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $item = Liste::select('*')->where('no', '=', $args['no'])->firstOrFail();
-            $item->delete();
+            $list = Liste::select('*')->where('no', '=', $args['no'])->firstOrFail();
+            $list->delete();
 
             return $rs->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
             $rs->withStatus(400);
             $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $rs;
+        }
+    }
+
+    /**
+     * Supprimer un utilisateur
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args 
+     * @return Response
+     */
+    public function deleteAccount(Request $rq, Response $rs, array $args): Response
+    {
+        try {
+            $user = User::select('*')->where('id', '=', $_SESSION['user']->id)->firstOrFail();
+            $user->delete();
+            $_SESSION['user'] = null;
+            
+            return $rs->withRedirect($this->container->router->pathFor('home'));
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('home'));
             return $rs;
         }
     }

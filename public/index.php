@@ -37,9 +37,9 @@ $app->post('/items/{id}/delete', CreationController::class . ':deleteItem')->set
 
 $app->get('/login', ConnectionController::class . ':getLogin')->setName('loginPage');
 $app->get('/register', ConnectionController::class.':getRegister')->setName('registerPage');
-
 $app->post('/login', ConnectionController::class.':login')->setName('login');
 $app->post('/register', ConnectionController::class.':register')->setName('register');
+$app->post('/account/delete', CreationController::class . ':deleteAccount')->setName('deleteAccount');
 
 $app->run();
 
