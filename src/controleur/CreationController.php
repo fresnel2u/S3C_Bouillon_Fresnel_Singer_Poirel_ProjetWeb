@@ -253,4 +253,26 @@ class CreationController
             return $rs;
         }
     }
+
+    /**
+     * Supprimer une liste
+     *
+     * @param Request $rq requete
+     * @param Response $rs reponse
+     * @param array $args 
+     * @return Response
+     */
+    public function deleteList(Request $rq, Response $rs, array $args): Response
+    {
+        try {
+            $item = Liste::select('*')->where('no', '=', $args['no'])->firstOrFail();
+            $item->delete();
+
+            return $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+        } catch (ModelNotFoundException $e) {
+            $rs->withStatus(400);
+            $rs->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $rs;
+        }
+    }
 }

@@ -22,6 +22,7 @@ $app->post('/lists/new', CreationController::class . ':newList')->setName('newLi
 $app->get('/lists/{id}', ParticipationController::class . ':displayList')->setName('displayList');
 $app->get('/lists/{id}/edit', CreationController::class . ':editListPage')->setName('editListPage');
 $app->post('/lists/{id}/edit', CreationController::class . ':editList')->setName('editList');
+$app->post('/lists/{no}/delete', CreationController::class . ':deleteList')->setName('deleteList');
 
 // Items
 $app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');

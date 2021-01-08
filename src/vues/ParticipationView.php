@@ -51,9 +51,17 @@ class ParticipationView
             $editUrl = $this->container->router->pathFor('editListPage', [
                 'id' => $liste['no']
             ]);
+
+            $deleteUrl = $this->container->router->pathFor('deleteList', [
+                'no' => $liste['no']
+            ]);
+
             $html .= <<<HTML
                     <td>
                         <a href="{$editUrl}" class="btn btn-light">Éditer</a>
+                        <form method="POST" action="{$deleteUrl}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
                     </td>
                 </tr>
             HTML;
