@@ -4,18 +4,15 @@ namespace Whishlist\Helpers;
 
 use Slim\Http\Response;
 
-/**
- * Helper for redirecting response
- */
 class RedirectHelper
 {
     /**
-     * Redirect a user to the login page and set in session the target url to go after login success
+     * Redirige l'utilisateur à la page de connection avec une URL de redirection après la connection
      *
-     * @param Response $response response to redirect to login
-     * @param string $target url to go after login success
+     * @param Response $response
+     * @param string $target url à suivre après la connection
      * 
-     * @return Response redirect response
+     * @return Response
      */
     public static function loginAndRedirect(Response $response, string $target): Response
     {

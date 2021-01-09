@@ -9,12 +9,12 @@ use Whishlist\Views\HomeView;
 class HomeController extends BaseController
 {
     /**
-     * creer une vue pour afficher la page d'accueil
+     * Crée une vue pour afficher la page d'accueil
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function home(Request $request, Response $response, array $args): Response
     {

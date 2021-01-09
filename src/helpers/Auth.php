@@ -6,25 +6,25 @@ use Exception;
 use Whishlist\Models\User;
 
 /**
- * Classe permettant de gerer les actions concernant la connexion/l'inscription des utilisateurs
+ * Classe permettant de gérer les actions concernant la connexion/l'inscription des utilisateurs
  */
 class Auth
 {
     /**
-     * Verifie si un utilisateur est deja connecte, le connecte si les informations sont correctes et enregistre les informations 
-     * necessaires dans une variable de session.
+     * Vérifie si un utilisateur est déjà connect", le connecte si les informations sont correctes et enregistre les informations 
+     * nécessaires dans une variable de session
      *
-     * @param string $identifiers nom d'utilisateur (email)
+     * @param string $identifier nom d'utilisateur (email)
      * @param string $password mot de passe 
      * @return void 
      */
-    public static function attempt(string $identifiers, string $password): void
+    public static function attempt(string $identifier, string $password): void
     {
         if (Auth::isLogged()) {
             throw new Exception("Vous êtes déjà connecté.");
         }
 
-        $user = User::where('email', '=', $identifiers)->firstOrFail();
+        $user = User::where('email', '=', $identifier)->firstOrFail();
 
         if (!password_verify($password, $user->password)) {
             throw new Exception('Nom d\'utilisateur ou mot de Passe incorrect.');
@@ -34,7 +34,7 @@ class Auth
     }
 
     /**
-     * Verifie que les informations entrees par l'utilisateur correspondent aux exigences attendues
+     * Vérifie que les informations entrees par l'utilisateur correspondent aux exigences attendues
      *
      * @param string $email
      * @param string $pass
@@ -51,7 +51,7 @@ class Auth
     }
 
     /**
-     * Creer une ligne User dans la base de donnees lors de l'inscription d'un utilisateur
+     * Crée une ligne User dans la base de données lors de l'inscription d'un utilisateur
      *
      * @param string $name
      * @param string $lastname
@@ -70,9 +70,9 @@ class Auth
     }
 
     /**
-     * Verifie si un utilisateur est connecte
+     * Vérifie si un utilisateur est connecté
      *
-     * @return boolean - true si l'utilisateur est connecte
+     * @return boolean si l'utilisateur est connecté ou non
      */
     public static function isLogged(): bool
     {

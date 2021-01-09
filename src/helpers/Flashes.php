@@ -20,7 +20,7 @@ class Flashes
     }
 
     /**
-     * Getter de touts les flash en session
+     * Getter de tous les flash en session
      *
      * @return array flashes
      */

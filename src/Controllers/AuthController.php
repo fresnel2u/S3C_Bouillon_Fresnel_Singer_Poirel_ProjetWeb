@@ -11,12 +11,12 @@ use Whishlist\Views\AuthView;
 class AuthController extends BaseController
 {
     /**
-     * Permet de gerer la connexion d'un utilisateur
+     * Connecte un utilisateur
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page renvoyee
+     * @return Response réponse à la requête renvoyee
      */
     public function login(Request $request, Response $response, array $args): Response
     {
@@ -38,12 +38,12 @@ class AuthController extends BaseController
     }
 
     /**
-     * Permet de gerer la deconnexion d'un utilisateur
+     * Déconnecte d'un utilisateur
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page renvoyee
+     * @return Response réponse à la requête renvoyee
      */
     public function logout(Request $request, Response $response, array $args): Response
     {
@@ -56,12 +56,12 @@ class AuthController extends BaseController
     }
 
     /**
-     * Permet de gerer l'inscription d'un utilisateur
+     * Inscription d'un utilisateur
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page renvoyee
+     * @return Response réponse à la requête renvoyee
      */
     public function register(Request $request, Response $response, array $args): Response
     {
@@ -95,12 +95,12 @@ class AuthController extends BaseController
     }
 
     /**
-     * creer une vue pour afficher la page de login
+     * Crée une vue pour afficher la page de connection
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function getLogin(Request $request, Response $response, array $args): Response
     {
@@ -110,12 +110,12 @@ class AuthController extends BaseController
     }
 
     /**
-     * creer une vue pour afficher la page de register
+     * Crée une vue pour afficher la page d'inscription
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function getRegister(Request $request, Response $response, array $args): Response
     {

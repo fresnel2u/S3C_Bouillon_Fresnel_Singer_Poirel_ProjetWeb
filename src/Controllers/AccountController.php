@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AccountController extends BaseController
 {
     /**
-     * creer une vue pour afficher les informations du compte utilisateur
+     * Crée une vue pour afficher les informations du compte utilisateur
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function displayAccount(Request $request, Response $response, array $args): Response
     {
@@ -29,12 +29,12 @@ class AccountController extends BaseController
     }
 
     /**
-     * creer une vue pour afficher l'edition du compte utilisateur
+     * Crée une vue pour afficher l'edition du compte utilisateur
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function displayEditAccount(Request $request, Response $response, array $args): Response
     {
@@ -46,12 +46,12 @@ class AccountController extends BaseController
     }
 
     /**
-     * sauvegarde les changements effectues lors de l'edition d'un compte
+     * Sauvegarde les changements effectues lors de l'edition d'un compte
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function editAccount(Request $request, Response $response, array $args): Response
     {
@@ -86,8 +86,8 @@ class AccountController extends BaseController
     /**
      * Supprimer un utilisateur
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args 
      * @return Response
      */

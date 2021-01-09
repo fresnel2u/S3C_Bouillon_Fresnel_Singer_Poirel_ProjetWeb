@@ -43,7 +43,7 @@ class AuthView extends BaseView
     }
 
     /**
-     * construit le contenu de la page de register
+     * Construit le contenu de la page de register
      *
      * @return string l'HTML du register
      */

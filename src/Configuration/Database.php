@@ -5,12 +5,12 @@ namespace Whishlist\Configuration;
 use Illuminate\Database\Capsule\Manager as DB;
 
 /**
- * cette classe est la configuration de la base de donnees
+ * cette classe est la configuration de la base de données
  */
 class Database
 {
     /**
-     * connect : connexion a la base de donnees selon le contenu du fichier de configuration
+     * connect : connexion a la base de données selon le contenu du fichier de configuration
      *
      * @return void
      */

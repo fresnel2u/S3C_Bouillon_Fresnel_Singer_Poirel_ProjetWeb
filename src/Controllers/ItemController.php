@@ -15,10 +15,10 @@ class ItemController extends BaseController
     /**
      * Ajouter un item (page)
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments donnes par le createur de la liste
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function newItemPage(Request $request, Response $response, array $args): Response
     {
@@ -30,8 +30,8 @@ class ItemController extends BaseController
     /**
      * Ajouter un item
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response
      */
@@ -61,12 +61,12 @@ class ItemController extends BaseController
     }
     
     /**
-     * creer une vue pour afficher les items
+     * Crée une vue pour afficher les items
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function displayAllItems(Request $request, Response $response, array $args): Response
     {
@@ -83,12 +83,12 @@ class ItemController extends BaseController
     }
 
     /**
-     * creer une vue pour afficher un item
+     * Crée une vue pour afficher un item
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function displayItem(Request $request, Response $response, array $args): Response
     {
@@ -105,12 +105,12 @@ class ItemController extends BaseController
     }
 
     /**
-     * Editer un item (page)
+     * Éditer un item (page)
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments donnes par le createur de la liste
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function editItemPage(Request $request, Response $response, array $args): Response
     {
@@ -128,10 +128,10 @@ class ItemController extends BaseController
     }
 
     /**
-     * Editer un item
+     * Éditer un item
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response
      */
@@ -164,8 +164,8 @@ class ItemController extends BaseController
     /**
      * Supprimer un item
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response
      */
@@ -184,12 +184,12 @@ class ItemController extends BaseController
     }
 
     /**
-     * Reservation d'un item
+     * Réservation d'un item
      * 
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function lockItem(Request $request, Response $response, array $args): Response
     {

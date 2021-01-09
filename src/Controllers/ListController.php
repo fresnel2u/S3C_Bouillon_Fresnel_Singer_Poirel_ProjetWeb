@@ -13,12 +13,12 @@ use Whishlist\Helpers\Auth;
 class ListController extends BaseController
 {
     /**
-     * creer une vue pour afficher le formulaire de creation d'une liste
+     * Crée une vue pour afficher le formulaire de creation d'une liste
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function newListPage(Request $request, Response $response, array $args): Response
     {
@@ -28,12 +28,12 @@ class ListController extends BaseController
     }
 
     /**
-     * creer une nouvelle liste et creer une vue qui affiche la liste des listes de souhaits
+     * Crée une nouvelle liste et Crée une vue qui affiche la liste des listes de souhaits
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments donnes par le createur de la liste
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function newList(Request $request, Response $response, array $args): Response
     {
@@ -60,12 +60,12 @@ class ListController extends BaseController
     }
 
     /**
-     * creer une vue pour afficher la liste des listes de souhaits
+     * Crée une vue pour afficher la liste des listes de souhaits
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function displayAllList(Request $request, Response $response, array $args): Response
     {
@@ -79,12 +79,12 @@ class ListController extends BaseController
     }
 
     /**
-     * creer une vue pour afficher les items d'une liste
+     * Crée une vue pour afficher les items d'une liste
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function displayList(Request $request, Response $response, array $args): Response
     {
@@ -98,10 +98,10 @@ class ListController extends BaseController
     /**
      * Crée une vue pour afficher le formulaire d'édition d'une liste
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function editListPage(Request $request, Response $response, array $args): Response
     {
@@ -121,10 +121,10 @@ class ListController extends BaseController
     /**
      * Modifie une liste existante
      * 
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args arguments donnes par le createur de la liste
-     * @return Response le contenu de la page
+     * @return Response réponse à la requête
      */
     public function editList(Request $request, Response $response, $args): Response
     {
@@ -151,10 +151,10 @@ class ListController extends BaseController
     }
 
     /**
-     * Supprimer une liste
+     * Supprime une liste
      *
-     * @param Request $request requete
-     * @param Response $response reponse
+     * @param Request $request requête
+     * @param Response $response réponse
      * @param array $args 
      * @return Response
      */
