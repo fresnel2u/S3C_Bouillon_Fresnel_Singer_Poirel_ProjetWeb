@@ -1,4 +1,4 @@
-/src/conf/conf.ini
+/src/Configuration/conf.ini
 /vendor
 /node_modules
 /package-lock.json

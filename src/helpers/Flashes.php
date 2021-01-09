@@ -1,14 +1,15 @@
 <?php
+
 namespace Whishlist\helpers;
 
-if(session_status() == PHP_SESSION_NONE)
+if (session_status() == PHP_SESSION_NONE)
     session_start();
 
 /**
  * Classe pour ajouter des flashs
  */
-class Flashes 
-{   
+class Flashes
+{
     /**
      * Ajoute une flash en session
      *
@@ -31,5 +32,5 @@ class Flashes
         $arr = $_SESSION['flashes'] ?? [];
         unset($_SESSION['flashes']);
         return $arr;
-    } 
+    }
 }

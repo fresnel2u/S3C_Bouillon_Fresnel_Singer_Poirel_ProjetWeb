@@ -1,6 +1,9 @@
 <?php
 
-namespace Whishlist\vues;
+namespace Whishlist\Views;
+
+use Whishlist\Views\Components\Menu;
+use Whishlist\Views\Components\Header;
 
 class CreationView
 {
@@ -32,8 +35,8 @@ class CreationView
                 <h1>Créer une liste</h1>
                 <form method="POST" action="{$this->container->router->pathFor('newList')}">
                     <div class="form-group">
-                        <label for="titre">Titre</label>
-                        <input type="text" name="titre" id="titre">
+                        <label for="title">Titre</label>
+                        <input type="text" name="title" id="title">
                     </div>        
                     <div class="form-group">
                         <label for="description">Description</label>
@@ -53,7 +56,7 @@ class CreationView
         HTML;
     }
 
-     /**
+    /**
      * Construit le contenu d'un formulaire d'edition de liste
      *
      * @return string
@@ -62,7 +65,7 @@ class CreationView
     {
         $list = $this->model;
         $editUrl = $this->container->router->pathFor('editList', [
-            'id' => $list['no']
+            'id' => $list['id']
         ]);
 
         return <<<HTML
@@ -70,8 +73,8 @@ class CreationView
                 <h1>Éditer une liste</h1>
                 <form method="POST" action="{$editUrl}">
                     <div class="form-group">
-                        <label for="titre">Titre</label>
-                        <input type="text" name="titre" id="titre" value="{$list['titre']}">
+                        <label for="title">Titre</label>
+                        <input type="text" name="title" id="title" value="{$list['title']}">
                     </div>        
                     <div class="form-group">
                         <label for="description">Description</label>
@@ -103,28 +106,28 @@ class CreationView
                 <h1>Ajouter un item</h1>
                 <form method="POST">
                     <div class="form-group">
-                        <label for="liste_id">ID de la liste</label>
-                        <input type="text" name="liste_id" id="liste_id">
+                        <label for="list_id">ID de la liste</label>
+                        <input type="text" name="list_id" id="list_id">
                     </div>        
                     <div class="form-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" name="nom" id="nom">
+                        <label for="name">Nom</label>
+                        <input type="text" name="name" id="name">
                     </div>        
                     <div class="form-group">
-                        <label for="descr">Description</label>
-                        <textarea name="descr" id="descr" cols="30" rows="10"></textarea>
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" cols="30" rows="10"></textarea>
                     </div>        
                     <div class="form-group">
-                        <label for="img">Image</label>
-                        <input type="text" name="img" id="img">
+                        <label for="image">Image</label>
+                        <input type="text" name="image" id="image">
                     </div>        
                     <div class="form-group">
                         <label for="url">URL</label>
                         <input type="text" name="url" id="url">
                     </div>      
                     <div class="form-group">
-                        <label for="tarif">Tarif</label>
-                        <input type="text" name="tarif" id="tarif">
+                        <label for="price">Tarif</label>
+                        <input type="text" name="price" id="price">
                     </div>
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
                 </form>
@@ -149,28 +152,28 @@ class CreationView
                 <h1>Éditer un item</h1>
                 <form method="POST" action="{$editUrl}">
                     <div class="form-group">
-                        <label for="liste_id">ID de la liste</label>
-                        <input type="text" name="liste_id" id="liste_id" value="{$item['liste_id']}">
+                        <label for="list_id">ID de la liste</label>
+                        <input type="text" name="list_id" id="list_id" value="{$item['list_id']}">
                     </div>        
                     <div class="form-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" name="nom" id="nom" value="{$item['nom']}">
+                        <label for="name">Nom</label>
+                        <input type="text" name="name" id="name" value="{$item['name']}">
                     </div>        
                     <div class="form-group">
-                        <label for="descr">Description</label>
-                        <textarea name="descr" id="descr" cols="30" rows="10">{$item['descr']}</textarea>
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" cols="30" rows="10">{$item['description']}</textarea>
                     </div>        
                     <div class="form-group">
-                        <label for="img">Image</label>
-                        <input type="text" name="img" id="img" value="{$item['img']}">
+                        <label for="image">Image</label>
+                        <input type="text" name="image" id="image" value="{$item['image']}">
                     </div>        
                     <div class="form-group">
                         <label for="url">URL</label>
                         <input type="text" name="url" id="url" value="{$item['url']}">
                     </div>      
                     <div class="form-group">
-                        <label for="tarif">Tarif</label>
-                        <input type="text" name="tarif" id="tarif" value="{$item['tarif']}">
+                        <label for="price">Tarif</label>
+                        <input type="text" name="price" id="price" value="{$item['price']}">
                     </div>
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
                 </form>
@@ -214,8 +217,8 @@ class CreationView
                 }
         }
 
-        $html = composants\Header::getHeader($title);
-        $html .= composants\Menu::getMenu();
+        $html = Header::getHeader($title);
+        $html .= Menu::getMenu();
         $html .= $content;
         $html .= "</body></html>";
         return $html;

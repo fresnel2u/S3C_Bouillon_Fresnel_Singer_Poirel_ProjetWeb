@@ -1,10 +1,14 @@
 <?php
 
-namespace Whishlist\vues; 
+namespace Whishlist\Views;
+
 session_start();
 
 use Whishlist\helpers\Authentication;
 use \Whishlist\helpers\ViewHelpers;
+use Whishlist\Views\Components\Header;
+use Whishlist\Views\Components\Menu;
+
 class ParticipationView
 {
     private $model;
@@ -49,17 +53,17 @@ class ParticipationView
                 </thead>
                         <tbody> 
         HTML;
-        foreach ($this->model as $liste) {
+        foreach ($this->model as $list) {
             $html .= "<tr>";
-            foreach ($liste as $row) {
+            foreach ($list as $row) {
                 $html .= "<td>$row</td>";
             }
             $editUrl = $this->container->router->pathFor('editListPage', [
-                'id' => $liste['no']
+                'id' => $list['id']
             ]);
 
             $deleteUrl = $this->container->router->pathFor('deleteList', [
-                'no' => $liste['no']
+                'id' => $list['id']
             ]);
 
             $html .= <<<HTML
@@ -113,7 +117,7 @@ class ParticipationView
                 if ($i === 4) {
                     $url = "/img/{$row}";
                     $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";
-                } else if($i !== 7) { // Don't show user_id column
+                } else if ($i !== 7) { // Don't show user_id column
                     $html .= "<td>{$row}</td>";
                 }
                 $i += 1;
@@ -152,13 +156,14 @@ class ParticipationView
                             <th scope="col">image</th>
                             <th scope="col">url</th>
                             <th scope="col">tarif</th>
+                            <th scope="col">user id</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
         HTML;
-        
-        
+
+
         foreach ($this->model as $modele) {
             $html .= "<tr>";
             $i = 0;
@@ -258,16 +263,16 @@ class ParticipationView
             <h1> Mon compte - Informations </h1>
             <div class="account-container">
                 <div class="account-informations">
-                    <p> Nom : {$user->nom}  </p>
-                    <p> Prénom : {$user->prenom} </p>
-                    <p> Email : {$user->mail}</p>
+                    <p> Nom : {$user->lastname}  </p>
+                    <p> Prénom : {$user->firstname} </p>
+                    <p> Email : {$user->email}</p>
                 </div>
                 <div class="account-actions">
                     <form method="GET" action="{$editAccount}">
                         <button class="btn btn-primary">Éditer</button>
                     </form>
-                    <form method="POST" action="{$deleteAccount}" onsubmit="return confirm('Warning ! If you click OK, your account will be deleted.');">
-                        <button type="submit" class="btn btn-danger"> Supprimer mon compte </button>
+                    <form method="POST" action="{$deleteAccount}" onsubmit="return confirm('Voulez vous supprimer votre compte ?');">
+                        <button type="submit" class="btn btn-danger">Supprimer mon compte</button>
                     </form>
                 </div>
             </div>
@@ -277,31 +282,31 @@ class ParticipationView
         return $html;
     }
 
-      /**
+    /**
      * Construit le contenu d'un formulaire d'edition de compte
      *
      * @return string
      */
     private function editAccountPage(): string
     {
-       $editAccount = $this->container->router->pathFor('editAccount');
-       $user = Authentication::getUser();
+        $editAccount = $this->container->router->pathFor('editAccount');
+        $user = Authentication::getUser();
         return <<<HTML
             <div class="container">
                 <h1>Éditer mon compte</h1>
                 <form method="POST" action="{$editAccount}" onsubmit="return confirm('Voulez-vous sauvegarder les changements effectués ?');">
                     <div class="form-group">
                         <label for="lastname">Nom</label>
-                        <input type="text" name="lastname" id="lastname" value="{$user->nom}">
+                        <input type="text" name="lastname" id="lastname" value="{$user->lastname}">
                     </div>        
                     <div class="form-group">
                         <label for="firstname">Prénom</label>
-                        <input type="text" name="firstname" id="firstname" value="{$user->prenom}">
+                        <input type="text" name="firstname" id="firstname" value="{$user->firstname}">
 
                     </div>        
                     <div class="form-group">
-                        <label for="mail">Email</label>
-                        <input type="text" name="mail" id="mail" value="{$user->mail}">
+                        <label for="email">Email</label>
+                        <input type="text" name="email" id="email" value="{$user->email}">
                     </div>        
                      
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
@@ -345,20 +350,20 @@ class ParticipationView
                     $content = $this->getAccount();
                     $title .= "Mon compte";
                     break;
-            }
+                }
             case 5: {
-                $content = $this->editAccountPage();
-                $title .= "Editer mon compte";
-                break;
-        }
+                    $content = $this->editAccountPage();
+                    $title .= "Editer mon compte";
+                    break;
+                }
             default: {
                     $content = '';
                     break;
                 }
         }
 
-        $html = composants\Header::getHeader($title);
-        $html .= composants\Menu::getMenu();
+        $html = Header::getHeader($title);
+        $html .= Menu::getMenu();
         $html .= $content;
         $html .= "</body></html>";
         return $html;

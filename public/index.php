@@ -1,10 +1,10 @@
 <?php
 require_once('../vendor/autoload.php');
 
-use Whishlist\conf\Database;
-use Whishlist\controleur\ParticipationController;
-use Whishlist\controleur\CreationController;
-use Whishlist\controleur\ConnectionController;
+use Whishlist\Configuration\Database;
+use Whishlist\Controllers\CreationController;
+use Whishlist\Controllers\ConnectionController;
+use Whishlist\Controllers\ParticipationController;
 
 $config = require_once('../settings.php');
 
@@ -19,16 +19,16 @@ $app->get('/', ParticipationController::class . ':home')->setName('home');
 $app->get('/lists', ParticipationController::class . ':displayAllList')->setName('displayAllList');
 $app->get('/lists/new', CreationController::class . ':newListPage')->setName('newListPage');
 $app->post('/lists/new', CreationController::class . ':newList')->setName('newList');
-$app->get('/lists/{id}[/]', ParticipationController::class . ':displayList')->setName('displayList');
+$app->get('/lists/{id}/show', ParticipationController::class . ':displayList')->setName('displayList');
 $app->get('/lists/{id}/edit', CreationController::class . ':editListPage')->setName('editListPage');
 $app->post('/lists/{id}/edit', CreationController::class . ':editList')->setName('editList');
-$app->post('/lists/{no}/delete', CreationController::class . ':deleteList')->setName('deleteList');
+$app->post('/lists/{id}/delete', CreationController::class . ':deleteList')->setName('deleteList');
 
 // Items
 $app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');
 $app->get('/items/new', CreationController::class . ':newItemPage')->setName('newItemPage');
 $app->post('/items/new', CreationController::class . ':newItem')->setName('newItem');
-$app->get('/items/{id}[/]', ParticipationController::class . ':displayItem')->setName('displayItem');
+$app->get('/items/{id}/show', ParticipationController::class . ':displayItem')->setName('displayItem');
 $app->get('/items/{id}/edit', CreationController::class . ':editItemPage')->setName('editItemPage');
 $app->post('/items/{id}/edit', CreationController::class . ':editItem')->setName('editItem');
 $app->post('/items/{id}/lock', ParticipationController::class . ':lockItem')->setName('lockItem');

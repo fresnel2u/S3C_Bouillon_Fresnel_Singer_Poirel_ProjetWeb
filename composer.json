@@ -1,4 +1,6 @@
 {
+    "name": "projet/web",
+    "description": "",
 	"require":{
 		"illuminate/database": "^8.0",
 		"php": ">=7.0",

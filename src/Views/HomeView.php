@@ -1,10 +1,14 @@
 <?php
-namespace Whishlist\vues;
+
+namespace Whishlist\Views;
+
+use Whishlist\Views\Components\Header;
+use Whishlist\Views\Components\Menu;
 
 session_start();
 class HomeView
 {
-    
+
     /**
      * Constructeur de la vue
      *
@@ -24,8 +28,8 @@ class HomeView
      */
     private function getHome(): string
     {
-        
-        
+
+
         $html = <<<HTML
             <h1 style="text-align : center;">Page d'accueil | TODO</h1>
     
@@ -54,8 +58,8 @@ class HomeView
                 }
         }
 
-        $html = composants\Header::getHeader($title);
-        $html .= composants\Menu::getMenu();
+        $html = Header::getHeader($title);
+        $html .= Menu::getMenu();
         $html .= $content;
         $html .= "</body></html>";
         return $html;

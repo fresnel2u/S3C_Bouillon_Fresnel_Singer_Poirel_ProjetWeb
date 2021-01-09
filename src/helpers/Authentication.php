@@ -1,18 +1,18 @@
 <?php
+
 namespace Whishlist\helpers;
 
-if(session_status() == PHP_SESSION_NONE)
+if (session_status() == PHP_SESSION_NONE)
     session_start();
 
-use Whishlist\modele\User;
 use Exception;
+use Whishlist\Models\User;
 
 /**
  * Classe permettant de gerer les actions concernant la connexion/l'inscription des utilisateurs
  */
-class Authentication 
-{   
-
+class Authentication
+{
     /**
      * Verifie si un utilisateur est deja connecte, le connecte si les informations sont correctes et enregistre les informations 
      * necessaires dans une variable de session.
@@ -21,15 +21,14 @@ class Authentication
      * @param string $p mot de passe 
      * @return void 
      */
-    public static function Authenticate(string $u, string $p) : void
-    {   
-        if(Authentication::is_logged()) 
+    public static function Authenticate(string $u, string $p): void
+    {
+        if (Authentication::is_logged())
             throw new Exception("Vous êtes déjà connecté.");
-        
-        $user = User::where('mail', '=', $u)->firstOrFail();
+
+        $user = User::where('email', '=', $u)->firstOrFail();
         if (!password_verify($p, $user->password)) throw new Exception('Nom d\'utilisateur ou mot de Passe incorrect.');
         $_SESSION['user'] = $user;
-
     }
 
     /**
@@ -42,7 +41,7 @@ class Authentication
      */
     public static function CheckData(string $email, string $pass, string $passConfirm)
     {
-        if (User::where('mail', '=', $email)->exists()) throw new Exception("Cette email est déjà utilisé.");
+        if (User::where('email', '=', $email)->exists()) throw new Exception("Cette email est déjà utilisé.");
         if ($pass != $passConfirm) throw new Exception("Les deux mots de passe ne sont pas identique.");
     }
 
@@ -52,16 +51,16 @@ class Authentication
      * @param string $name
      * @param string $lastname
      * @param string $email
-     * @param string $pass
+     * @param string $password
      * @return void
      */
-    public static function CreateUser(string $firstname, string $lastname, string $email, string $pass)
+    public static function CreateUser(string $firstname, string $lastname, string $email, string $password)
     {
         $user = new User();
-        $user->nom = $lastname;
-        $user->prenom = $firstname;
-        $user->mail = $email;
-        $user->password = password_hash($pass, PASSWORD_DEFAULT);
+        $user->firstname = $firstname;
+        $user->lastname = $lastname;
+        $user->email = $email;
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
         $user->save();
     }
 
@@ -70,9 +69,9 @@ class Authentication
      *
      * @return boolean - true si l'utilisateur est connecte
      */
-    public static function is_logged() : bool 
+    public static function is_logged(): bool
     {
-        if(isset($_SESSION['user']))
+        if (isset($_SESSION['user']))
             return true;
         return false;
     }
@@ -82,7 +81,7 @@ class Authentication
      * 
      * @return User|null l'utilisateur connecté
      */
-    public static function getUser() : ?User
+    public static function getUser(): ?User
     {
         return $_SESSION['user'] ?? null;
     }

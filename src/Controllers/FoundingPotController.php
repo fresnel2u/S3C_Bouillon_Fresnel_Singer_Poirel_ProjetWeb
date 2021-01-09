@@ -1,11 +1,11 @@
 <?php
 
-namespace Whishlist\controleur;
+namespace Whishlist\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Whishlist\modele\FoundingPot;
-use Whishlist\modele\Liste;
+use Whishlist\Models\WishList;
+use Whishlist\Models\FoundingPot;
 
 /**
  * Controleur pour les cagnottes
@@ -40,11 +40,11 @@ class FoundingPotController
         }, $post);
 
         try {
-            $list = Liste::findOrFail($args); // vérifie si la liste existe
+            $list = WishList::findOrFail($args); // vérifie si la liste existe
 
             $foundingPot = new FoundingPot();
-            $foundingPot->liste_id = $list->id;
-            $foundingPot->montant = $post['montant'];
+            $foundingPot->list_id = $list->id;
+            $foundingPot->amount = $post['amount'];
             $foundingPot->save();
 
             return $rs->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
@@ -71,11 +71,11 @@ class FoundingPotController
         }, $post);
 
         try {
-            $list = Liste::findOrFail($args); // vérifie si la liste existe
+            $list = WishList::findOrFail($args); // vérifie si la liste existe
 
             $foundingPot = FoundingPot::findOrFail($args['founding_pot_id']);
-            $foundingPot->liste_id = $list->id;
-            $foundingPot->montant = $post['montant'];
+            $foundingPot->list_id = $list->id;
+            $foundingPot->amount = $post['amount'];
             $foundingPot->save();
 
             return $rs->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
@@ -97,7 +97,7 @@ class FoundingPotController
     public function delete(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $list = Liste::findOrFail($args); // vérifie si la liste existe
+            $list = WishList::findOrFail($args); // vérifie si la liste existe
 
             $foundingPot = FoundingPot::findOrFail($args['founding_pot_id']);
             $foundingPot->delete();

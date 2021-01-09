@@ -1,6 +1,6 @@
 <?php
 
-namespace Whishlist\vues\composants;
+namespace Whishlist\Views\Components;
 
 class Menu
 {

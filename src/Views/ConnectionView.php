@@ -1,6 +1,9 @@
 <?php
 
-namespace Whishlist\vues;
+namespace Whishlist\Views;
+
+use Whishlist\Views\Components\Header;
+use Whishlist\Views\Components\Menu;
 
 class ConnectionView
 {
@@ -46,7 +49,7 @@ class ConnectionView
                     </div>
                     <button type="submit" class="btn btn-primary">Se connecter</button>
                 </form>
-                <p>Pas de compte ? <a class="btn btn-light" href="{$this->container->router->pathFor("registerPage")}">Inscription</a></p>
+                <p>Pas de compte ? <a class="btn btn-light" href="{$this->container->router->pathFor('registerPage')}">Inscription</a></p>
             </div>
         HTML;
 
@@ -93,10 +96,10 @@ class ConnectionView
                         </div>
                     </div>
                     <div class="form-row">
-                        <label for="passwordConfirm">Confirmer le mot de passe</label>
+                        <label for="password_confirm">Confirmer le mot de passe</label>
                         <div class="input">
                             <img src="/img/password.svg" alt="Password icon">
-                            <input type="password" name="passwordConfirm" id="password">
+                            <input type="password" name="password_confirm" id="password_confirm">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Continuer</button>
@@ -134,8 +137,8 @@ class ConnectionView
                 }
         }
 
-        $html = composants\Header::getHeader($title);
-        $html .= composants\Menu::getMenu();
+        $html = Header::getHeader($title);
+        $html .= Menu::getMenu();
         $html .= $content;
         $html .= "</body></html>";
         return $html;

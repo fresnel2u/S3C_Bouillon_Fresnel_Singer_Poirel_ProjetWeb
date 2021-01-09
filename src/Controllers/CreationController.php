@@ -1,16 +1,16 @@
 <?php
 
-namespace Whishlist\controleur;
+namespace Whishlist\Controllers;
+
 session_start();
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Whishlist\helpers\Authentication;
-use Whishlist\modele\Item;
-use Whishlist\modele\Liste;
-use Whishlist\modele\User;
-use \Whishlist\vues\CreationView;
+use Whishlist\Models\Item;
+use Whishlist\Models\User;
+use Whishlist\Models\WishList;
+use \Whishlist\Views\CreationView;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Ce controleur permet de gerer les actions concernant les fonctionnalites de consultation.
@@ -60,9 +60,9 @@ class CreationController
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $post);
 
-            $list = new Liste();
+            $list = new WishList();
             $list->user_id = 1; // TODO: Change to current user id
-            $list->titre = $post['titre'];
+            $list->title = $post['title'];
             $list->description = $post['description'];
             $list->expiration = $post['expiration'];
             $list->token = $post['token'];
@@ -87,7 +87,7 @@ class CreationController
     public function editListPage(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $list = Liste::select('*')->where('no', '=', $args['id'])->firstOrFail();
+            $list = WishList::findOrFail($args['id']);
 
             $v = new CreationView($list, $this->container);
             $rs->getBody()->write($v->render(1));
@@ -107,16 +107,17 @@ class CreationController
      * @param array $args arguments donnes par le createur de la liste
      * @return Response le contenu de la page
      */
-    public function editList(Request $rq, Response $rs, $args): Response {
+    public function editList(Request $rq, Response $rs, $args): Response
+    {
         try {
-            $list = Liste::select('*')->where('no', '=', $args['id'])->firstOrFail();
+            $list = WishList::findOrFail($args['id']);
 
             $post = $rq->getParsedBody();
             $post = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $post);
 
-            $list->titre = $post['titre'];
+            $list->title = $post['title'];
             $list->description = $post['description'];
             $list->expiration = $post['expiration'];
             $list->token = $post['token'];
@@ -127,7 +128,7 @@ class CreationController
             $rs->withStatus(400);
             $rs->withRedirect($this->container->router->pathFor('displayAllList'));
             return $rs;
-        }  
+        }
     }
 
     /**
@@ -162,12 +163,12 @@ class CreationController
             }, $post);
 
             $item = new Item();
-            $item->liste_id = $post['liste_id'];
-            $item->nom = $post['nom'];
-            $item->descr = $post['descr'];
-            $item->img = $post['img'];
+            $item->list_id = $post['list_id'];
+            $item->name = $post['name'];
+            $item->description = $post['description'];
+            $item->image = $post['image'];
             $item->url = $post['url'];
-            $item->tarif = $post['tarif'];
+            $item->price = $post['price'];
             $item->save();
 
             return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
@@ -189,7 +190,7 @@ class CreationController
     public function editItemPage(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $item = Item::select('*')->where('id', '=', $args['id'])->firstOrFail();
+            $item = Item::findOrFail($args['id']);
 
             $v = new CreationView($item->toArray(), $this->container);
             $rs->getBody()->write($v->render(3));
@@ -212,19 +213,19 @@ class CreationController
     public function editItem(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $item = Item::select('*')->where('id', '=', $args['id'])->firstOrFail();
+            $item = Item::findOrFail($args['id']);
 
             $post = $rq->getParsedBody();
             $post = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $post);
-            
-            $item->liste_id = $post['liste_id'];
-            $item->nom = $post['nom'];
-            $item->descr = $post['descr'];
-            $item->img = $post['img'];
+
+            $item->list_id = $post['list_id'];
+            $item->name = $post['name'];
+            $item->description = $post['description'];
+            $item->image = $post['image'];
             $item->url = $post['url'];
-            $item->tarif = $post['tarif'];
+            $item->price = $post['price'];
             $item->save();
 
             return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
@@ -246,7 +247,7 @@ class CreationController
     public function deleteItem(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $item = Item::select('*')->where('id', '=', $args['id'])->firstOrFail();
+            $item = Item::findOrFail($args['id']);
             $item->delete();
 
             return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
@@ -268,7 +269,7 @@ class CreationController
     public function deleteList(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $list = Liste::select('*')->where('no', '=', $args['no'])->firstOrFail();
+            $list = WishList::find($args['id']);
             $list->delete();
 
             return $rs->withRedirect($this->container->router->pathFor('displayAllList'));
@@ -290,10 +291,10 @@ class CreationController
     public function deleteAccount(Request $rq, Response $rs, array $args): Response
     {
         try {
-            $user = User::select('*')->where('id', '=', $_SESSION['user']->id)->firstOrFail();
+            $user = User::findOrFail($_SESSION['user']->id);
             $user->delete();
             $_SESSION['user'] = null;
-            
+
             return $rs->withRedirect($this->container->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
             $rs->withStatus(400);

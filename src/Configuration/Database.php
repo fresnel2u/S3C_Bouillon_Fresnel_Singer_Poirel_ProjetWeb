@@ -1,23 +1,25 @@
 <?php
 
-namespace Whishlist\conf;
+namespace Whishlist\Configuration;
+
 use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * cette classe est la configuration de la base de donnees
  */
-class Database {
-
+class Database
+{
     /**
      * connect : connexion a la base de donnees selon le contenu du fichier de configuration
      *
      * @return void
      */
-    public static function connect(){
+    public static function connect()
+    {
         $bddConfig = parse_ini_file('conf.ini');
 
         $db = new DB();
-        $db->addConnection( [
+        $db->addConnection([
             'driver'    => 'mysql',
             'host'      => $bddConfig['host'],
             'port'      => $bddConfig['port'],
@@ -27,7 +29,7 @@ class Database {
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => ''
-        ] );
+        ]);
         $db->setAsGlobal();
         $db->bootEloquent();
     }

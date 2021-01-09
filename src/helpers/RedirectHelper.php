@@ -1,7 +1,8 @@
 <?php
+
 namespace Whishlist\helpers;
 
-if(session_status() == PHP_SESSION_NONE)
+if (session_status() == PHP_SESSION_NONE)
     session_start();
 
 use Slim\Http\Response;
@@ -9,7 +10,7 @@ use Slim\Http\Response;
 /**
  * Helper for redirecting response
  */
-class RedirectHelper 
+class RedirectHelper
 {
     /**
      * Redirect a user to the login page and set in session the target url to go after login success
@@ -21,7 +22,7 @@ class RedirectHelper
      */
     public static function loginAndRedirect(Response $rs, string $target): Response
     {
-        if(session_status() === PHP_SESSION_NONE)
+        if (session_status() === PHP_SESSION_NONE)
             session_start();
         $_SESSION['login_success_url'] = $target;
         return $rs->withRedirect('/login');

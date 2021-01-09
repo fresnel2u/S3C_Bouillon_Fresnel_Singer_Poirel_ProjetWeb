@@ -1,9 +1,10 @@
 <?php
+
 namespace WhishList\helpers;
 
-class ViewHelpers 
+class ViewHelpers
 {
-    public static function generateLogOut($url) : string
+    public static function generateLogOut($url): string
     {
         $html = <<<HTML
             <form method="POST" action="{$url}" class="logout">
@@ -12,7 +13,7 @@ class ViewHelpers
                 </div>
             </form>
         HTML;
-        
+
         return $html;
     }
 }
