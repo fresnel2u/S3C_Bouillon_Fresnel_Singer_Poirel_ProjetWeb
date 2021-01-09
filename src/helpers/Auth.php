@@ -18,7 +18,7 @@ class Auth
      * @param string $password mot de passe 
      * @return void 
      */
-    public static function attempt(string $identifier, string $password): void
+    public static function attempt(string $identifier, string $password)
     {
         if (Auth::isLogged()) {
             throw new Exception("Vous êtes déjà connecté.");
@@ -31,6 +31,17 @@ class Auth
         } else {
             $_SESSION['user'] = $user->toArray();
         }
+    }
+
+    /**
+     * Définie l'utilisateur courrant
+     *
+     * @param User $user
+     * @return void
+     */
+    public static function setUser(User $user)
+    {
+        $_SESSION['user'] = $user->toArray();
     }
 
     /**

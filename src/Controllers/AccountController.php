@@ -65,15 +65,11 @@ class AccountController extends BaseController
             }, $body);
 
             $user->firstname = $body['firstname'];
-            $user_session->firstname = $body['firstname'];
-
             $user->lastname = $body['lastname'];
-            $user_session->lastname = $body['lastname'];
-
             $user->email = $body['email'];
-            $user_session->email = $body['email'];
-
             $user->save();
+
+            Auth::setUser($user);
 
             return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
         } catch (ModelNotFoundException $e) {
