@@ -5,110 +5,122 @@ namespace Whishlist\Controllers;
 use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use \Whishlist\Views\AuthView;
-use \Whishlist\helpers\Authentication;
+use Whishlist\Helpers\Auth;
+use Whishlist\Views\AuthView;
 
 class AuthController extends BaseController
 {
     /**
      * Permet de gerer la connexion d'un utilisateur
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page renvoyee
      */
-    public function login(Request $rq, Response $rs, array $args): Response
+    public function login(Request $request, Response $response, array $args): Response
     {
-        $username = filter_var($rq->getParsedBodyParam('email'), FILTER_SANITIZE_EMAIL);
-        $password = filter_var($rq->getParsedBodyParam('password'), FILTER_SANITIZE_STRING);
+        $username = filter_var($request->getParsedBodyParam('email'), FILTER_SANITIZE_EMAIL);
+        $password = filter_var($request->getParsedBodyParam('password'), FILTER_SANITIZE_STRING);
 
         if ($username === "" || $password == "") {
             throw new Exception("Veuillez remplir tout les champs.");
         } else {
-            Authentication::Authenticate($username, $password);
+            Auth::attempt($username, $password);
 
-            if (isset($_SESSION['login_success_url']))
-                $rs = $rs->withRedirect($_SESSION['login_success_url']);
-            else
-                $rs = $rs->withRedirect($this->container->router->pathFor('home'));
+            if (isset($_SESSION['login_success_url'])) {
+                $response = $response->withRedirect($_SESSION['login_success_url']);
+            } else {
+                $response = $response->withRedirect($this->container->router->pathFor('home'));
+            }
         }
-        return $rs;
+        return $response;
     }
 
     /**
      * Permet de gerer la deconnexion d'un utilisateur
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page renvoyee
      */
-    public function logout(Request $rq, Response $rs, array $args): Response
+    public function logout(Request $request, Response $response, array $args): Response
     {
         if (isset($_SESSION['user'])) {
             $_SESSION['user'] = null;
         }
-        $rs = $rs->withRedirect($this->container->router->pathFor('home'));
-
-        return $rs;
+        
+        $response = $response->withRedirect($this->container->router->pathFor('home'));
+        return $response;
     }
 
     /**
      * Permet de gerer l'inscription d'un utilisateur
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page renvoyee
      */
-    public function register(Request $rq, Response $rs, array $args): Response
+    public function register(Request $request, Response $response, array $args): Response
     {
+        $authorizedFields = ['firstname', 'lastname', 'email', 'password', 'password_confirm'];
+        $body = $request->getParsedBody();
 
-        $firstname = filter_var($rq->getParsedBodyParam('firstname'), FILTER_SANITIZE_STRING);
-        $lastname = filter_var($rq->getParsedBodyParam('lastname'), FILTER_SANITIZE_STRING);
-        $email = filter_var($rq->getParsedBodyParam('email'), FILTER_SANITIZE_EMAIL);
-        $password = filter_var($rq->getParsedBodyParam('password'), FILTER_SANITIZE_STRING);
-        $passwordconfirm = filter_var($rq->getParsedBodyParam('password_confirm'), FILTER_SANITIZE_STRING);
-        echo ($password);
-        echo ($passwordconfirm);
+        // Supprime les champs indésirés
+        $body = array_filter($body, function ($field) use ($authorizedFields) {
+            return in_array($field, $authorizedFields);
+        }, ARRAY_FILTER_USE_KEY);
 
-        if ($firstname === "" || $lastname === "" || $email === "" || $password === "" || $passwordconfirm === "") {
+        // Protection injection
+        $body = array_map(function ($field) {
+            return filter_var($field, FILTER_SANITIZE_STRING);
+        }, $body);
+
+        // Chercher si un champ est vide
+        $searchEmpty = array_search(function ($field) {
+            return $field === '';
+        }, $body);
+
+        // Validation
+        if (count($body) !== count($authorizedFields) || $searchEmpty) {
             throw new Exception("Veuillez remplir tout les champs.");
         }
-        Authentication::CheckData($email, $password, $passwordconfirm);
-        Authentication::CreateUser($firstname, $lastname, $email, $password);
 
-        return $rs->withRedirect($this->container->router->pathFor('loginPage'));
+        Auth::checkData($body['email'], $body['password'], $body['password_confirm']);
+        Auth::createUser($body['firstname'], $body['lastname'], $body['email'], $body['password']);
+
+        return $response->withRedirect($this->container->router->pathFor('loginPage'));
     }
 
     /**
      * creer une vue pour afficher la page de login
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page
      */
-    public function getLogin(Request $rq, Response $rs, array $args): Response
+    public function getLogin(Request $request, Response $response, array $args): Response
     {
         $v = new AuthView($this->container);
-        $rs->getBody()->write($v->render(0));
-        return $rs;
+        $response->getBody()->write($v->render(0));
+        return $response;
     }
 
     /**
      * creer une vue pour afficher la page de register
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page
      */
-    public function getRegister(Request $rq, Response $rs, array $args): Response
+    public function getRegister(Request $request, Response $response, array $args): Response
     {
         $v = new AuthView($this->container);
-        $rs->getBody()->write($v->render(1));
-        return $rs;
+        $response->getBody()->write($v->render(1));
+        return $response;
     }
 }

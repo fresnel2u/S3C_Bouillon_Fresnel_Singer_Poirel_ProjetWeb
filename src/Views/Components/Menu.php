@@ -2,6 +2,8 @@
 
 namespace Whishlist\Views\Components;
 
+use Whishlist\Helpers\Auth;
+
 class Menu
 {
     /**
@@ -11,6 +13,8 @@ class Menu
      */
     public static function getMenu(): string
     {
+        $accountLink = Auth::isLogged() ? '<li><a href="/account">Compte</a></li>' : '';
+        
         return <<<HTML
             <ul style="display : flex; justify-content : space-between;">
                 <li><a href="/">Accueil</a></li>
@@ -18,7 +22,7 @@ class Menu
                 <li><a href="/register">Inscription</a></li>
                 <li><a href="/lists">Listes</a></li>
                 <li><a href="/items">Items</a></li>
-                <li><a href="/account">Compte</a></li>
+                {$accountLink}
             </ul>
         HTML;
     }

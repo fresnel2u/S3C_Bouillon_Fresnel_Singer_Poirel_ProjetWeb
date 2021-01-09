@@ -12,74 +12,74 @@ class FoundingPotController extends BaseController
     /**
      * Crée une cagnotte
      *
-     * @param Request $rq
-     * @param Response $rs
+     * @param Request $request
+     * @param Response $response
      * @param array $args
      * @return Response
      */
-    public function create(Request $rq, Response $rs, array $args): Response
+    public function create(Request $request, Response $response, array $args): Response
     {
-        $post = $rq->getParsedBody();
-        $post = array_map(function ($field) {
+        $body = $request->getParsedBody();
+        $body = array_map(function ($field) {
             return filter_var($field, FILTER_SANITIZE_STRING);
-        }, $post);
+        }, $body);
 
         try {
             $list = WishList::findOrFail($args); // vérifie si la liste existe
 
             $foundingPot = new FoundingPot();
             $foundingPot->list_id = $list->id;
-            $foundingPot->amount = $post['amount'];
+            $foundingPot->amount = $body['amount'];
             $foundingPot->save();
 
-            return $rs->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
+            return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
-            $rs->withStatus(400);
-            $rs->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $rs;
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response;
         }
     }
 
     /**
      * Met à jour une cagnotte
      *
-     * @param Request $rq
-     * @param Response $rs
+     * @param Request $request
+     * @param Response $response
      * @param array $args
      * @return Response
      */
-    public function update(Request $rq, Response $rs, array $args): Response
+    public function update(Request $request, Response $response, array $args): Response
     {
-        $post = $rq->getParsedBody();
-        $post = array_map(function ($field) {
+        $body = $request->getParsedBody();
+        $body = array_map(function ($field) {
             return filter_var($field, FILTER_SANITIZE_STRING);
-        }, $post);
+        }, $body);
 
         try {
             $list = WishList::findOrFail($args); // vérifie si la liste existe
 
             $foundingPot = FoundingPot::findOrFail($args['founding_pot_id']);
             $foundingPot->list_id = $list->id;
-            $foundingPot->amount = $post['amount'];
+            $foundingPot->amount = $body['amount'];
             $foundingPot->save();
 
-            return $rs->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
+            return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
-            $rs->withStatus(400);
-            $rs->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $rs;
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response;
         }
     }
 
     /**
      * Supprime une cagnotte
      *
-     * @param Request $rq
-     * @param Response $rs
+     * @param Request $request
+     * @param Response $response
      * @param array $args
      * @return Response
      */
-    public function delete(Request $rq, Response $rs, array $args): Response
+    public function delete(Request $request, Response $response, array $args): Response
     {
         try {
             $list = WishList::findOrFail($args); // vérifie si la liste existe
@@ -87,13 +87,13 @@ class FoundingPotController extends BaseController
             $foundingPot = FoundingPot::findOrFail($args['founding_pot_id']);
             $foundingPot->delete();
 
-            return $rs->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
+            return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
-            $rs->withStatus(400);
-            $rs->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $rs;
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response;
         }
 
-        return $rs;
+        return $response;
     }
 }

@@ -14,10 +14,13 @@ class AuthView extends BaseView
      */
     private function getLogin(): string
     {
-        $html = <<<HTML
+        $loginUrl = $this->container->router->pathFor('login');
+        $registerUrl = $this->container->router->pathFor('registerPage');
+
+        return <<<HTML
             <div class="login">
                 <h1>Connexion</h1>
-                <form role="form" method="post" action="{$this->container->router->pathFor("login")}">
+                <form role="form" method="post" action="{$loginUrl}">
                     <div class="form-row">
                         <label for="email">Email</label>
                         <div class="input">
@@ -34,11 +37,9 @@ class AuthView extends BaseView
                     </div>
                     <button type="submit" class="btn btn-primary">Se connecter</button>
                 </form>
-                <p>Pas de compte ? <a class="btn btn-light" href="{$this->container->router->pathFor('registerPage')}">Inscription</a></p>
+                <p>Pas de compte ? <a class="btn btn-light" href="{$registerUrl}">Inscription</a></p>
             </div>
         HTML;
-
-        return $html;
     }
 
     /**
@@ -48,10 +49,13 @@ class AuthView extends BaseView
      */
     private function getRegister(): string
     {
-        $html = <<<HTML
+        $loginUrl = $this->container->router->pathFor('loginPage');
+        $registerUrl = $this->container->router->pathFor('register');
+
+        return <<<HTML
             <div class="register">
                 <h1>Inscription</h1>
-                <form role="form" method="post" action="{$this->container->router->pathFor("register")}">
+                <form role="form" method="post" action="{$registerUrl}">
                     <div class="form-row">
                         <label for="firstname">Prénom</label>
                         <div class="input">
@@ -89,11 +93,9 @@ class AuthView extends BaseView
                     </div>
                     <button type="submit" class="btn btn-primary">Continuer</button>
                 </form>
-                <p>Déjà inscrit ? <a class="btn btn-light" href="{$this->container->router->pathFor("loginPage")}">Connexion</a></p>
+                <p>Déjà inscrit ? <a class="btn btn-light" href="{$loginUrl}">Connexion</a></p>
             </div>
         HTML;
-
-        return $html;
     }
 
     /**

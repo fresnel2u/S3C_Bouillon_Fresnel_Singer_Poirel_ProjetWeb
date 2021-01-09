@@ -6,7 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\Item;
 use Whishlist\Views\ItemView;
-use Whishlist\helpers\Authentication;
+use Whishlist\Helpers\Auth;
 use Whishlist\helpers\RedirectHelper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -15,191 +15,200 @@ class ItemController extends BaseController
     /**
      * Ajouter un item (page)
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response le contenu de la page
      */
-    public function newItemPage(Request $rq, Response $rs, array $args): Response
+    public function newItemPage(Request $request, Response $response, array $args): Response
     {
         $v = new ItemView($this->container);
-        $rs->getBody()->write($v->render(0));
-        return $rs;
+        $response->getBody()->write($v->render(0));
+        return $response;
     }
 
     /**
      * Ajouter un item
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response
      */
-    public function newItem(Request $rq, Response $rs, array $args): Response
+    public function newItem(Request $request, Response $response, array $args): Response
     {
         try {
-            $post = $rq->getParsedBody();
-            $post = array_map(function ($field) {
+            $body = $request->getParsedBody();
+            $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
-            }, $post);
+            }, $body);
 
             $item = new Item();
-            $item->list_id = $post['list_id'];
-            $item->name = $post['name'];
-            $item->description = $post['description'];
-            $item->image = $post['image'];
-            $item->url = $post['url'];
-            $item->price = $post['price'];
+            $item->list_id = $body['list_id'];
+            $item->name = $body['name'];
+            $item->description = $body['description'];
+            $item->image = $body['image'];
+            $item->url = $body['url'];
+            $item->price = $body['price'];
             $item->save();
 
-            return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
-            $rs->withStatus(400);
-            $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $rs;
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response;
         }
     }
     
     /**
      * creer une vue pour afficher les items
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page
      */
-    public function displayAllItems(Request $rq, Response $rs, array $args): Response
+    public function displayAllItems(Request $request, Response $response, array $args): Response
     {
         try {
             $items = Item::all();
 
             $v = new ItemView($this->container, ['items' => $items]);
-            $rs->getBody()->write($v->render(1));
-            return $rs;
+            $response->getBody()->write($v->render(1));
+            return $response;
         } catch (ModelNotFoundException $e) {
-            $rs->getBody()->write("<h1 style=\"text-align : center;\"> L'item " . $args['id'] . " n'a pas été trouvé.</h1>");
-            return $rs;
+            $response->getBody()->write("<h1 style=\"text-align : center;\"> L'item " . $args['id'] . " n'a pas été trouvé.</h1>");
+            return $response;
         }
     }
 
     /**
      * creer une vue pour afficher un item
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page
      */
-    public function displayItem(Request $rq, Response $rs, array $args): Response
+    public function displayItem(Request $request, Response $response, array $args): Response
     {
         try {
             $item = Item::findOrFail($args['id']);
 
             $v = new ItemView($this->container, ['item' => $item]);
-            $rs->getBody()->write($v->render(2));
-            return $rs;
+            $response->getBody()->write($v->render(2));
+            return $response;
         } catch (ModelNotFoundException $e) {
-            $rs->getBody()->write("<h1 style=\"text-align : center;\"> L'item " . $args['id'] . " n'a pas été trouvé.</h1>");
-            return $rs;
+            $response->getBody()->write("<h1 style=\"text-align : center;\"> L'item " . $args['id'] . " n'a pas été trouvé.</h1>");
+            return $response;
         }
     }
 
     /**
      * Editer un item (page)
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response le contenu de la page
      */
-    public function editItemPage(Request $rq, Response $rs, array $args): Response
+    public function editItemPage(Request $request, Response $response, array $args): Response
     {
         try {
             $item = Item::findOrFail($args['id']);
 
             $v = new ItemView($this->container, ['item' => $item]);
-            $rs->getBody()->write($v->render(3));
-            return $rs;
+            $response->getBody()->write($v->render(3));
+            return $response;
         } catch (ModelNotFoundException $e) {
-            $rs->withStatus(400);
-            $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $rs;
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response;
         }
     }
 
     /**
      * Editer un item
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response
      */
-    public function editItem(Request $rq, Response $rs, array $args): Response
+    public function editItem(Request $request, Response $response, array $args): Response
     {
         try {
             $item = Item::findOrFail($args['id']);
 
-            $post = $rq->getParsedBody();
-            $post = array_map(function ($field) {
+            $body = $request->getParsedBody();
+            $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
-            }, $post);
+            }, $body);
 
-            $item->list_id = $post['list_id'];
-            $item->name = $post['name'];
-            $item->description = $post['description'];
-            $item->image = $post['image'];
-            $item->url = $post['url'];
-            $item->price = $post['price'];
+            $item->list_id = $body['list_id'];
+            $item->name = $body['name'];
+            $item->description = $body['description'];
+            $item->image = $body['image'];
+            $item->url = $body['url'];
+            $item->price = $body['price'];
             $item->save();
 
-            return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
-            $rs->withStatus(400);
-            $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $rs;
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response;
         }
     }
 
     /**
      * Supprimer un item
      *
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments donnes par le createur de la liste
      * @return Response
      */
-    public function deleteItem(Request $rq, Response $rs, array $args): Response
+    public function deleteItem(Request $request, Response $response, array $args): Response
     {
         try {
             $item = Item::findOrFail($args['id']);
             $item->delete();
 
-            return $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
-            $rs->withStatus(400);
-            $rs->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $rs;
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response;
         }
     }
 
     /**
      * Reservation d'un item
      * 
-     * @param Request $rq requete
-     * @param Response $rs reponse
+     * @param Request $request requete
+     * @param Response $response reponse
      * @param array $args arguments
      * @return Response le contenu de la page
      */
-    public function lockItem(Request $rq, Response $rs, array $args): Response
+    public function lockItem(Request $request, Response $response, array $args): Response
     {
-        $item = Item::find($args['id']);
-        $user = Authentication::getUser();
-        if ($user === null) {
-            return RedirectHelper::loginAndRedirect($rs, "/lists/" . $item->list_id);
+        try {
+            $item = Item::findOrFail($args['id']);
+            $user = Auth::getUser();
+            $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
+    
+            if ($user === null) {
+                return RedirectHelper::loginAndRedirect($response, $redirectUrl);
+            }
+    
+            $item->user_id = $user['id'];
+            $item->save();
+            return $response->withRedirect($redirectUrl);
+        } catch (\Throwable $th) {
+            $response->withStatus(400);
+            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response;
         }
-        $item->user_id = $user->id;
-        $item->save();
-        return $rs->withRedirect("/lists/" . $item->list_id);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Helpers\ViewHelpers;
 use Whishlist\Views\Components\Menu;
 use Whishlist\Views\Components\Header;
 
@@ -15,10 +14,12 @@ class ListView extends BaseView
      */
     private function newListPage(): string
     {
+        $newListUrl = $this->container->router->pathFor('newList');
+
         return <<<HTML
             <div class="container">
                 <h1>Créer une liste</h1>
-                <form method="POST" action="{$this->container->router->pathFor('newList')}">
+                <form method="POST" action="{$newListUrl}">
                     <div class="form-group">
                         <label for="title">Titre</label>
                         <input type="text" name="title" id="title">
@@ -48,12 +49,11 @@ class ListView extends BaseView
      */
     private function getAllList(): string
     {
-        $logoutUrl = $this->container->router->pathFor('logout');
-        $html = ViewHelpers::generateLogOut($logoutUrl);
+        $newListUrl = $this->container->router->pathFor('newListPage');
 
-        $html .= <<<HTML
+        $html = <<<HTML
             <h1>Listes de souhaits</h1>
-            <a href="{$this->container->router->pathFor('newListPage')}" class="btn btn-primary">Ajouter une liste</a>
+            <a href="{$newListUrl}" class="btn btn-primary">Ajouter une liste</a>
             <div>
                 <table class="table">
                 <thead>
@@ -103,10 +103,7 @@ class ListView extends BaseView
      */
     private function getList(): string
     {
-        $logOut = $this->container->router->pathFor('logout');
-        $html = ViewHelpers::generateLogOut($logOut);
-
-        $html .= <<<HTML
+        $html = <<<HTML
             <h1>Items de la liste :</h1>
             <div>
                 <table class="table">

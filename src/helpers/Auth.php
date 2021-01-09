@@ -8,24 +8,29 @@ use Whishlist\Models\User;
 /**
  * Classe permettant de gerer les actions concernant la connexion/l'inscription des utilisateurs
  */
-class Authentication
+class Auth
 {
     /**
      * Verifie si un utilisateur est deja connecte, le connecte si les informations sont correctes et enregistre les informations 
      * necessaires dans une variable de session.
      *
-     * @param string $u nom d'utilisateur (email)
-     * @param string $p mot de passe 
+     * @param string $identifiers nom d'utilisateur (email)
+     * @param string $password mot de passe 
      * @return void 
      */
-    public static function Authenticate(string $u, string $p): void
+    public static function attempt(string $identifiers, string $password): void
     {
-        if (Authentication::is_logged())
+        if (Auth::isLogged()) {
             throw new Exception("Vous êtes déjà connecté.");
+        }
 
-        $user = User::where('email', '=', $u)->firstOrFail();
-        if (!password_verify($p, $user->password)) throw new Exception('Nom d\'utilisateur ou mot de Passe incorrect.');
-        $_SESSION['user'] = $user;
+        $user = User::where('email', '=', $identifiers)->firstOrFail();
+
+        if (!password_verify($password, $user->password)) {
+            throw new Exception('Nom d\'utilisateur ou mot de Passe incorrect.');
+        } else {
+            $_SESSION['user'] = $user->toArray();
+        }
     }
 
     /**
@@ -36,10 +41,13 @@ class Authentication
      * @param string $passConfirm
      * @return void
      */
-    public static function CheckData(string $email, string $pass, string $passConfirm)
+    public static function checkData(string $email, string $pass, string $passConfirm)
     {
-        if (User::where('email', '=', $email)->exists()) throw new Exception("Cette email est déjà utilisé.");
-        if ($pass != $passConfirm) throw new Exception("Les deux mots de passe ne sont pas identique.");
+        if (User::where('email', '=', $email)->exists()) {
+            throw new Exception("Cette email est déjà utilisé.");
+        } else if ($pass !== $passConfirm) {
+            throw new Exception("Les deux mots de passe ne sont pas identique.");
+        }
     }
 
     /**
@@ -51,7 +59,7 @@ class Authentication
      * @param string $password
      * @return void
      */
-    public static function CreateUser(string $firstname, string $lastname, string $email, string $password)
+    public static function createUser(string $firstname, string $lastname, string $email, string $password)
     {
         $user = new User();
         $user->firstname = $firstname;
@@ -66,19 +74,17 @@ class Authentication
      *
      * @return boolean - true si l'utilisateur est connecte
      */
-    public static function is_logged(): bool
+    public static function isLogged(): bool
     {
-        if (isset($_SESSION['user']))
-            return true;
-        return false;
+        return isset($_SESSION['user']);
     }
 
     /**
      * Trouve l'utilisateur connecté
      * 
-     * @return User|null l'utilisateur connecté
+     * @return array|null l'utilisateur connecté
      */
-    public static function getUser(): ?User
+    public static function getUser(): ?array
     {
         return $_SESSION['user'] ?? null;
     }

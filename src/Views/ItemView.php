@@ -2,7 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Helpers\ViewHelpers;
 use Whishlist\Views\Components\Menu;
 use Whishlist\Views\Components\Header;
 
@@ -56,12 +55,11 @@ class ItemView extends BaseView
      */
     private function getAllItems(): string
     {
-        $logOut = $this->container->router->pathFor('logout');
-        $html = ViewHelpers::generateLogOut($logOut);
+        $newItemUrl = $this->container->router->pathFor('newItemPage');
 
-        $html .= <<<HTML
+        $html = <<<HTML
             <h1>Résultat de l'affichage de l'item :</h1>
-            <a href="{$this->container->router->pathFor('newItemPage')}" class="btn btn-primary">Ajouter un item</a>
+            <a href="{$newItemUrl}" class="btn btn-primary">Ajouter un item</a>
             <div>
                 <table class="table table-bordered table-dark">
                     <thead>
@@ -107,9 +105,11 @@ class ItemView extends BaseView
                 </tr>
             HTML;
         }
-        $html .= '</tbody>
-            </table>
-        </div>';
+        $html .= <<<HTML
+                    </tbody>
+                </table>
+            </div>
+        HTML;
 
         return $html;
     }
@@ -122,9 +122,8 @@ class ItemView extends BaseView
     private function getItem(): string
     {
         $logOut = $this->container->router->pathFor('logout');
-        $html = ViewHelpers::generateLogOut($logOut);
 
-        $html .= <<<HTML
+        $html = <<<HTML
             <h1>Tous les items :</h1>
             <div>
                 <table class="table table-bordered table-dark">
@@ -152,10 +151,12 @@ class ItemView extends BaseView
             }
             $i++;
         }
-        $html .= "</tr>;
-                </tbody>
-            </table>
-        </div>";
+        $html .= <<<HTML
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        HTML;
 
         return $html;
     }
