@@ -7,23 +7,8 @@ use Slim\Http\Response;
 use Whishlist\Models\WishList;
 use Whishlist\Models\FoundingPot;
 
-/**
- * Controleur pour les cagnottes
- */
-class FoundingPotController
+class FoundingPotController extends BaseController
 {
-    private $container;
-
-    /**
-     * Constructeur du controleur
-     *
-     * @param \Slim\Container $c
-     */
-    function __construct(\Slim\Container $c)
-    {
-        $this->container = $c;
-    }
-
     /**
      * Crée une cagnotte
      *

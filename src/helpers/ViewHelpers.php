@@ -1,6 +1,6 @@
 <?php
 
-namespace WhishList\helpers;
+namespace Whishlist\Helpers;
 
 class ViewHelpers
 {

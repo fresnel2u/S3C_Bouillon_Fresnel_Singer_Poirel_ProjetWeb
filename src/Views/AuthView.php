@@ -2,26 +2,11 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Views\Components\Header;
 use Whishlist\Views\Components\Menu;
+use Whishlist\Views\Components\Header;
 
-class ConnectionView
+class AuthView extends BaseView
 {
-
-    private $container;
-
-    /**
-     * Constructeur de la vue
-     *
-     * @param array $m - modeles pour recuperer les donnees de la bdd
-     * @param \Slim\Container $c - container
-     */
-    public function __construct(array $m, \Slim\Container $c)
-    {
-        $this->modeles = $m;
-        $this->container = $c;
-    }
-
     /**
      * Construit le contenu de la page de login
      *
@@ -112,10 +97,7 @@ class ConnectionView
     }
 
     /**
-     * construit la page entiere selon le parametre
-     *
-     * @param integer $selector - selon sa valeur, la methode execute une methode differente et renvoit une page adaptee a la demande
-     * @return string l'HTML de la page complete
+     * @inheritdoc
      */
     public function render(int $selector): string
     {
@@ -123,12 +105,12 @@ class ConnectionView
         switch ($selector) {
             case 0: {
                     $content = $this->getLogin();
-                    $title .= "Login";
+                    $title .= "Connexion";
                     break;
                 }
             case 1: {
                     $content = $this->getRegister();
-                    $title .= "Register";
+                    $title .= "Inscription";
                     break;
                 }
             default: {

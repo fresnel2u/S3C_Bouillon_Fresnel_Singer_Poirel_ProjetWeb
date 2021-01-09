@@ -2,25 +2,13 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Views\Components\Header;
 use Whishlist\Views\Components\Menu;
+use Whishlist\Views\Components\Header;
 
 session_start();
-class HomeView
+
+class HomeView extends BaseView
 {
-
-    /**
-     * Constructeur de la vue
-     *
-     * @param array $m - model pour recuperer les donnees de la bdd
-     * @param \Slim\Container $c - container
-     */
-    public function __construct(array $m, \Slim\Container $c)
-    {
-        $this->model = $m;
-        $this->container = $c;
-    }
-
     /**
      * Construit le contenu de la page d'accueil
      *
@@ -28,20 +16,14 @@ class HomeView
      */
     private function getHome(): string
     {
-
-
         $html = <<<HTML
             <h1 style="text-align : center;">Page d'accueil | TODO</h1>
-    
         HTML;
         return $html;
     }
 
     /**
-     * Construit la page entiere selon le selecteur
-     *
-     * @param integer $selector - selon sa valeur, la methode execute une methode differente et renvoit une page adaptee a la demande
-     * @return string l'HTML de la page complete
+     * @inheritdoc
      */
     public function render(int $selector): string
     {

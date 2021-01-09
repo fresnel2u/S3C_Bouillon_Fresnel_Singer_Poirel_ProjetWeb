@@ -2,9 +2,11 @@
 require_once('../vendor/autoload.php');
 
 use Whishlist\Configuration\Database;
-use Whishlist\Controllers\CreationController;
-use Whishlist\Controllers\ConnectionController;
-use Whishlist\Controllers\ParticipationController;
+use Whishlist\Controllers\AuthController;
+use Whishlist\Controllers\HomeController;
+use Whishlist\Controllers\ItemController;
+use Whishlist\Controllers\ListController;
+use Whishlist\Controllers\AccountController;
 
 $config = require_once('../settings.php');
 
@@ -13,43 +15,41 @@ Database::connect();
 $container = new \Slim\Container($config);
 $app = new \Slim\App($container);
 
-$app->get('/', ParticipationController::class . ':home')->setName('home');
+$app->get('/', HomeController::class . ':home')->setName('home');
 
 // Lists
-$app->get('/lists', ParticipationController::class . ':displayAllList')->setName('displayAllList');
-$app->get('/lists/new', CreationController::class . ':newListPage')->setName('newListPage');
-$app->post('/lists/new', CreationController::class . ':newList')->setName('newList');
-$app->get('/lists/{id}/show', ParticipationController::class . ':displayList')->setName('displayList');
-$app->get('/lists/{id}/edit', CreationController::class . ':editListPage')->setName('editListPage');
-$app->post('/lists/{id}/edit', CreationController::class . ':editList')->setName('editList');
-$app->post('/lists/{id}/delete', CreationController::class . ':deleteList')->setName('deleteList');
+$app->get('/lists', ListController::class . ':displayAllList')->setName('displayAllList');
+$app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
+$app->post('/lists/new', ListController::class . ':newList')->setName('newList');
+$app->get('/lists/{id}/show', ListController::class . ':displayList')->setName('displayList');
+$app->get('/lists/{id}/edit', ListController::class . ':editListPage')->setName('editListPage');
+$app->post('/lists/{id}/edit', ListController::class . ':editList')->setName('editList');
+$app->post('/lists/{id}/delete', ListController::class . ':deleteList')->setName('deleteList');
 
 // Items
-$app->get('/items', ParticipationController::class . ':displayAllItems')->setName('displayAllItems');
-$app->get('/items/new', CreationController::class . ':newItemPage')->setName('newItemPage');
-$app->post('/items/new', CreationController::class . ':newItem')->setName('newItem');
-$app->get('/items/{id}/show', ParticipationController::class . ':displayItem')->setName('displayItem');
-$app->get('/items/{id}/edit', CreationController::class . ':editItemPage')->setName('editItemPage');
-$app->post('/items/{id}/edit', CreationController::class . ':editItem')->setName('editItem');
-$app->post('/items/{id}/lock', ParticipationController::class . ':lockItem')->setName('lockItem');
-$app->post('/items/{id}/delete', CreationController::class . ':deleteItem')->setName('deleteItem');
+$app->get('/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
+$app->get('/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
+$app->post('/items/new', ItemController::class . ':newItem')->setName('newItem');
+$app->get('/items/{id}/show', ItemController::class . ':displayItem')->setName('displayItem');
+$app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
+$app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
+$app->post('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
+$app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
 
 // Auth
+$app->get('/login', AuthController::class . ':getLogin')->setName('loginPage');
+$app->post('/login', AuthController::class.':login')->setName('login');
+$app->get('/register', AuthController::class.':getRegister')->setName('registerPage');
+$app->post('/register', AuthController::class.':register')->setName('register');
+$app->post('/logout', AuthController::class.':logout')->setName('logout');
 
-$app->get('/login', ConnectionController::class . ':getLogin')->setName('loginPage');
-$app->get('/register', ConnectionController::class.':getRegister')->setName('registerPage');
-$app->get('/account', ParticipationController::class.':displayAccount')->setName('displayAccount');
-$app->get('/account/edit', ParticipationController::class.':displayEditAccount')->setName('editAccountPage');
-$app->post('/account/edit', ParticipationController::class.':editAccount')->setName('editAccount');
-$app->post('/login', ConnectionController::class.':login')->setName('login');
-$app->post('/logout', ConnectionController::class.':logout')->setName('logout');
-$app->post('/register', ConnectionController::class.':register')->setName('register');
-$app->post('/account/delete', CreationController::class . ':deleteAccount')->setName('deleteAccount');
+// Account
+$app->get('/account', AccountController::class.':displayAccount')->setName('displayAccount');
+$app->get('/account/edit', AccountController::class.':displayEditAccount')->setName('editAccountPage');
+$app->post('/account/edit', AccountController::class.':editAccount')->setName('editAccount');
+$app->post('/account/delete', AccountController::class . ':deleteAccount')->setName('deleteAccount');
 
 $app->run();
-
- 
-
 
 
 

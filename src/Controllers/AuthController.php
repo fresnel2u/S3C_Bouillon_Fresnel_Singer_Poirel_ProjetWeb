@@ -5,28 +5,13 @@ namespace Whishlist\Controllers;
 session_start();
 
 use Exception;
-use \Whishlist\Views\ConnectionView;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use \Whishlist\Views\AuthView;
 use \Whishlist\helpers\Authentication;
-use \Psr\Http\Message\ResponseInterface as Response;
-use \Psr\Http\Message\ServerRequestInterface as Request;
 
-/**
- * Ce controleur permet de creer de gerer les actions concernant les fonctionnalites de connexion/inscription.
- */
-class ConnectionController
+class AuthController extends BaseController
 {
-    private $container;
-
-    /**
-     * Constructeur du controleur
-     *
-     * @param \Slim\Container $c
-     */
-    function __construct(\Slim\Container $c)
-    {
-        $this->container = $c;
-    }
-
     /**
      * Permet de gerer la connexion d'un utilisateur
      *
@@ -37,7 +22,6 @@ class ConnectionController
      */
     public function login(Request $rq, Response $rs, array $args): Response
     {
-
         $username = filter_var($rq->getParsedBodyParam('email'), FILTER_SANITIZE_EMAIL);
         $password = filter_var($rq->getParsedBodyParam('password'), FILTER_SANITIZE_STRING);
 
@@ -111,7 +95,7 @@ class ConnectionController
      */
     public function getLogin(Request $rq, Response $rs, array $args): Response
     {
-        $v = new ConnectionView(array(), $this->container);
+        $v = new AuthView($this->container);
         $rs->getBody()->write($v->render(0));
         return $rs;
     }
@@ -126,7 +110,7 @@ class ConnectionController
      */
     public function getRegister(Request $rq, Response $rs, array $args): Response
     {
-        $v = new ConnectionView(array(), $this->container);
+        $v = new AuthView($this->container);
         $rs->getBody()->write($v->render(1));
         return $rs;
     }

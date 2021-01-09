@@ -1,6 +1,6 @@
 <?php
 
-namespace Whishlist\helpers;
+namespace Whishlist\Helpers;
 
 if (session_status() == PHP_SESSION_NONE)
     session_start();
