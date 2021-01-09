@@ -8,6 +8,8 @@ use Whishlist\Controllers\ItemController;
 use Whishlist\Controllers\ListController;
 use Whishlist\Controllers\AccountController;
 
+session_start();
+
 $config = require_once('../settings.php');
 
 Database::connect();

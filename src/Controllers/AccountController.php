@@ -2,8 +2,6 @@
 
 namespace Whishlist\Controllers;
 
-session_start();
-
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\User;

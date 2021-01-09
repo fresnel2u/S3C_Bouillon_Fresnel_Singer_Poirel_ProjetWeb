@@ -2,9 +2,6 @@
 
 namespace Whishlist\Helpers;
 
-if (session_status() == PHP_SESSION_NONE)
-    session_start();
-
 use Exception;
 use Whishlist\Models\User;
 

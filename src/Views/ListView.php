@@ -6,8 +6,6 @@ use Whishlist\Helpers\ViewHelpers;
 use Whishlist\Views\Components\Menu;
 use Whishlist\Views\Components\Header;
 
-session_start();
-
 class ListView extends BaseView
 {
     /**

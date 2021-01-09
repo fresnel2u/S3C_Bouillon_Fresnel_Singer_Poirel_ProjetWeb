@@ -5,8 +5,6 @@ namespace Whishlist\Views;
 use Whishlist\Views\Components\Menu;
 use Whishlist\Views\Components\Header;
 
-session_start();
-
 class HomeView extends BaseView
 {
     /**
