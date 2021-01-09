@@ -2,9 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Views\Components\Menu;
-use Whishlist\Views\Components\Header;
-
 class AuthView extends BaseView
 {
     /**
@@ -121,10 +118,6 @@ class AuthView extends BaseView
                 }
         }
 
-        $html = Header::getHeader($title);
-        $html .= Menu::getMenu();
-        $html .= $content;
-        $html .= "</body></html>";
-        return $html;
+        return $this->layout($content, $title);
     }
 }

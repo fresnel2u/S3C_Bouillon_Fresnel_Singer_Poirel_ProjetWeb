@@ -2,9 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Views\Components\Menu;
-use Whishlist\Views\Components\Header;
-
 class AccountView extends BaseView
 {
     /**
@@ -26,7 +23,7 @@ class AccountView extends BaseView
                     <div class="account-informations">
                         <p> Nom : {$user['lastname']}  </p>
                         <p> Prénom : {$user['firstname']} </p>
-                            <p> Email : {$user['email']}</p>
+                        <p> Email : {$user['email']}</p>
                     </div>
                     <div class="account-actions">
                         <form method="GET" action="{$editAccount}">
@@ -103,10 +100,6 @@ class AccountView extends BaseView
                 }
         }
 
-        $html = Header::getHeader($title);
-        $html .= Menu::getMenu();
-        $html .= $content;
-        $html .= "</body></html>";
-        return $html;
+        return $this->layout($content, $title);
     }
 }

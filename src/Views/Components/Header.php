@@ -9,7 +9,7 @@ class Header
      *
      * @return string l'HTML de l'entete du document
      */
-    public static function getHeader($title): string
+    public static function getHeader(?string $title): string
     {
         return <<<HTML
             <!DOCTYPE html>

@@ -2,9 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Views\Components\Menu;
-use Whishlist\Views\Components\Header;
-
 class HomeView extends BaseView
 {
     /**
@@ -14,10 +11,9 @@ class HomeView extends BaseView
      */
     private function getHome(): string
     {
-        $html = <<<HTML
+        return <<<HTML
             <h1 style="text-align : center;">Page d'accueil | TODO</h1>
         HTML;
-        return $html;
     }
 
     /**
@@ -38,10 +34,6 @@ class HomeView extends BaseView
                 }
         }
 
-        $html = Header::getHeader($title);
-        $html .= Menu::getMenu();
-        $html .= $content;
-        $html .= "</body></html>";
-        return $html;
+        return $this->layout($content, $title);
     }
 }
