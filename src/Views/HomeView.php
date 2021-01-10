@@ -12,7 +12,8 @@ class HomeView extends BaseView
     private function getHome(): string
     {
         return <<<HTML
-            <h1 style="text-align : center;">Page d'accueil | TODO</h1>
+            <h1> MyWhishList </h1>
+            
         HTML;
     }
 

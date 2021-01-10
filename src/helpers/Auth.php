@@ -43,11 +43,8 @@ class Auth
     {
         if($user === null) {
             $_SESSION['user'] = null;
-            echo("salut");
         } else {
             $_SESSION['user'] = $user->toArray();
-            echo("saluta");
-
         }
     }
 
