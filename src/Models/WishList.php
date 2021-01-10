@@ -13,9 +13,4 @@ class WishList extends Model
     {
         return $this->hasMany(Item::class, 'list_id', 'id');
     }
-
-    public function foundingPot()
-    {
-        return $this->hasOne(FoundingPot::class, 'list_id', 'id');
-    }
 }

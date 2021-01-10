@@ -18,4 +18,9 @@ class Item extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function foundingPot()
+    {
+        return $this->hasOne(FoundingPot::class, 'item_id', 'id');
+    }
 }

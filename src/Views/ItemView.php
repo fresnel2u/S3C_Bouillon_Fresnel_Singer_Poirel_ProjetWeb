@@ -69,6 +69,7 @@ class ItemView extends BaseView
                             <th scope="col">url</th>
                             <th scope="col">tarif</th>
                             <th scope="col">user id</th>
+                            <th scope="col">Cagnotte</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -87,6 +88,21 @@ class ItemView extends BaseView
                     $html .= "<td>{$col}</td>";
                 }
                 $i++;
+            }
+
+            if ($item->foundingPot) {
+                $html .= <<<HTML
+                    <td>
+                        {$item->foundingPot->amount} €
+                    </td>
+                HTML;
+            } else {
+                $foundingPotUrl = $this->container->router->pathFor('createFoundingPot', ['item_id' => $item->id]);
+                $html .= <<<HTML
+                    <td>
+                        <a href="{$foundingPotUrl}" class="btn btn-light">Créer une cagnotte</a>
+                    </td>
+                HTML;
             }
 
             $editUrl = $this->container->router->pathFor('editItem', ['id' => $item->id]);

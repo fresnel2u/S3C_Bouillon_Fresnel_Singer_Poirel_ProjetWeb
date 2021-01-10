@@ -7,6 +7,7 @@ use Whishlist\Controllers\HomeController;
 use Whishlist\Controllers\ItemController;
 use Whishlist\Controllers\ListController;
 use Whishlist\Controllers\AccountController;
+use Whishlist\Controllers\FoundingPotController;
 
 session_start();
 
@@ -37,6 +38,10 @@ $app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName(
 $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
 $app->post('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
 $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
+
+// Founding pot
+$app->get('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':createPage')->setName('createFoundingPotPage');
+$app->post('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':create')->setName('createFoundingPot');
 
 // Auth
 $app->get('/login', AuthController::class . ':getLogin')->setName('loginPage');

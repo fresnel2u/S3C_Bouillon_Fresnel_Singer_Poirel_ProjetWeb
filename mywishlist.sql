@@ -1,4 +1,8 @@
+DROP TABLE IF EXISTS `founding_pots`;
+DROP TABLE IF EXISTS `items`;
+DROP TABLE IF EXISTS `lists`;
 DROP TABLE IF EXISTS `users`;
+
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -8,7 +12,6 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `lists`;
 CREATE TABLE `lists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -20,7 +23,6 @@ CREATE TABLE `lists` (
   CONSTRAINT `fk_lists_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `items`;
 CREATE TABLE `items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `list_id` int(11) NOT NULL,
@@ -31,20 +33,16 @@ CREATE TABLE `items` (
   `price` decimal(5,2) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_items_lists` (`list_id`),
-  KEY `fk_items_users` (`user_id`),
   CONSTRAINT `fk_items_lists` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_items_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `founding_pots`;
 CREATE TABLE `founding_pots` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `list_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
   `amount` decimal(5,2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_founding_pots_lists` (`list_id`),
-  CONSTRAINT `fk_founding_pots_lists` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_founding_pots_items` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
@@ -78,7 +76,7 @@ INSERT INTO `items` (`id`, `list_id`, `name`, `description`, `image`, `url`, `pr
 (26, 1, 'Planètes Laser', 'Laser game : Gilet électronique et pistolet laser comme matériel, vous voilà équipé.', 'laser.jpg', '', 15.00, NULL),
 (27, 1, 'Fort Aventure', 'Découvrez Fort Aventure à Bainville-sur-Madon, un site Accropierre unique en Lorraine ! Des Parcours Acrobatiques pour petits et grands, Jeu Mission Aventure, Crypte de Crapahute, Tyrolienne, Saut à l\'élastique inversé, Toboggan géant... et bien plus encore.', 'fort.jpg', '', 25.00, NULL);
 
-INSERT INTO `founding_pots` (`id`, `list_id`, `amount`) VALUES
+INSERT INTO `founding_pots` (`id`, `item_id`, `amount`) VALUES
 (1, 1, 250.00),
 (2, 2, 450.00),
 (3, 3, 650.00);

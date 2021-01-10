@@ -9,8 +9,8 @@ class FoundingPot extends Model
     protected $table = 'founding_pots';
     public $timestamps = false;
 
-    public function list()
+    public function item()
     {
-        return $this->belongsTo(WishList::class, 'list_id', 'id');
+        return $this->belongsTo(Item::class, 'item_id', 'id');
     }
 }
