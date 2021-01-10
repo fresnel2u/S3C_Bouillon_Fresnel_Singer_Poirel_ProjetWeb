@@ -48,10 +48,11 @@ abstract class BaseView
      * @param string|null $title
      * @return string html avec son layout
      */
-    public function layout(string $html, ?string $title = null): string
+    public function layout(string $html, ?string $title = null, ?int $set_menu = 1): string
     {
         $result = Header::getHeader($title);
-        $result .= Menu::getMenu();
+        if($set_menu != 0)
+            $result .= Menu::getMenu();
         $result .= $html;
         $result .= "</body></html>";
         return $result;
