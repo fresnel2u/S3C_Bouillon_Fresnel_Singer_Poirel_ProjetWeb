@@ -90,7 +90,7 @@ class AuthController extends BaseController
 
         Auth::checkData($body['email'], $body['password'], $body['password_confirm']);
         Auth::createUser($body['firstname'], $body['lastname'], $body['email'], $body['password']);
-
+        
         return $response->withRedirect($this->container->router->pathFor('loginPage'));
     }
 

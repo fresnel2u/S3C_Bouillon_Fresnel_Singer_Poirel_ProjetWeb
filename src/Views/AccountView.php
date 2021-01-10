@@ -59,17 +59,22 @@ class AccountView extends BaseView
                 <form method="POST" action="{$editAccount}">
                     <div class="form-group">
                         <label for="lastname">Nom</label>
-                        <input type="text" name="lastname" id="lastname" value="{$user['lastname']}">
+                        <input type="text" name="lastname" id="lastname" value="{$user['lastname']}" autocomplete="off" value="">
                     </div>        
                     <div class="form-group">
                         <label for="firstname">Prénom</label>
-                        <input type="text" name="firstname" id="firstname" value="{$user['firstname']}">
+                        <input type="text" name="firstname" id="firstname" value="{$user['firstname']}" autocomplete="off">
 
                     </div>        
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" name="email" id="email" value="{$user['email']}">
-                    </div>        
+                        <label for="password">Mot de passe</label>
+                        <input type="password" name="password" id="password" placeholder="Confidentiel" value="">
+                    </div>   
+
+                    <div class="form-group">
+                        <label for="password_confirm">Confirmez le nouveau mot de passe</label>
+                        <input type="password" name="password_confirm" id="password_confirm" placeholder="Confidentiel" value="">
+                    </div>     
                      
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
                 </form>

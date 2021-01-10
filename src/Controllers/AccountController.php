@@ -63,15 +63,24 @@ class AccountController extends BaseController
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
-
+            
             $user->firstname = $body['firstname'];
             $user->lastname = $body['lastname'];
-            $user->email = $body['email'];
+        
+            $pass = $body['password'];
+            $password_confirm = $body['password_confirm'];
+            if($pass != "" & $pass === $password_confirm) {
+                $user->password = password_hash($pass, PASSWORD_DEFAULT);
+                Auth::setUser(null);
+                $response = $response->withRedirect($this->container->router->pathFor('home'));
+                
+            } else {
+                $response = $response->withRedirect($this->container->router->pathFor('displayAccount'));
+                Auth::setUser($user);
+            }
             $user->save();
 
-            Auth::setUser($user);
-
-            return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
+            return $response;
         } catch (ModelNotFoundException $e) {
             $response->withStatus(400);
             $response->withRedirect($this->container->router->pathFor('editAccountPage'));
@@ -90,10 +99,9 @@ class AccountController extends BaseController
     public function deleteAccount(Request $request, Response $response, array $args): Response
     {
         try {
-            $user = User::findOrFail($_SESSION['user']->id);
+            $user = User::findOrFail(Auth::getUser()['id']);
             $user->delete();
-            $_SESSION['user'] = null;
-
+            Auth::setUser(null);
             return $response->withRedirect($this->container->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
             $response->withStatus(400);

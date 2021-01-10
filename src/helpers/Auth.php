@@ -39,9 +39,16 @@ class Auth
      * @param User $user
      * @return void
      */
-    public static function setUser(User $user)
+    public static function setUser(?User $user)
     {
-        $_SESSION['user'] = $user->toArray();
+        if($user === null) {
+            $_SESSION['user'] = null;
+            echo("salut");
+        } else {
+            $_SESSION['user'] = $user->toArray();
+            echo("saluta");
+
+        }
     }
 
     /**
