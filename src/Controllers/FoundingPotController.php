@@ -56,15 +56,19 @@ class FoundingPotController extends BaseController
      */
     public function createPage(Request $request, Response $response, array $args): Response
     {
-        $alreadyExists = FoundingPot::where('item_id', $args['item_id'])->exists();
-        
-        if ($alreadyExists) {
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-        }
+        try {
+            $item = Item::findOrFail($args['item_id']);
+            $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
+            if ($alreadyExists) {
+                throw new Exception('L\'item possède déjà une cagnotte.');
+            }
 
-        $v = new FoundingPotView($this->container, ['item_id' => $args['item_id']]);
-        $response->getBody()->write($v->render(0));
-        return $response;
+            $v = new FoundingPotView($this->container, ['item_id' => $item->id]);
+            $response->getBody()->write($v->render(0));
+            return $response;
+        } catch (\Throwable $th) {
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+        }
     }
 
     /**
