@@ -53,9 +53,7 @@ class ListController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
 
@@ -112,9 +110,7 @@ class ListController extends BaseController
             $response->getBody()->write($v->render(3));
             return $response;
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
 
@@ -144,9 +140,7 @@ class ListController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
 
@@ -166,9 +160,7 @@ class ListController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
 }

@@ -34,9 +34,7 @@ class FoundingPotController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
 
@@ -65,9 +63,7 @@ class FoundingPotController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
 
@@ -89,9 +85,7 @@ class FoundingPotController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllList'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
 
         return $response;

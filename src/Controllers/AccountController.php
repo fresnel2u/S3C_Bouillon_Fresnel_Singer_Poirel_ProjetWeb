@@ -82,9 +82,7 @@ class AccountController extends BaseController
 
             return $response;
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('editAccountPage'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
         }
     }
     
@@ -104,9 +102,7 @@ class AccountController extends BaseController
             Auth::setUser(null);
             return $response->withRedirect($this->container->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('home'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('home'));
         }
     }
 }

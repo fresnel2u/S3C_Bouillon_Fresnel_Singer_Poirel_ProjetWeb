@@ -54,9 +54,7 @@ class ItemController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
     
@@ -121,9 +119,7 @@ class ItemController extends BaseController
             $response->getBody()->write($v->render(3));
             return $response;
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
 
@@ -155,9 +151,7 @@ class ItemController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
 
@@ -177,9 +171,7 @@ class ItemController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
 
@@ -206,9 +198,7 @@ class ItemController extends BaseController
             $item->save();
             return $response->withRedirect($redirectUrl);
         } catch (\Throwable $th) {
-            $response->withStatus(400);
-            $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-            return $response;
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
 }
