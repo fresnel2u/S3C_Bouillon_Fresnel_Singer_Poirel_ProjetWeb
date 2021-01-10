@@ -1,8 +1,9 @@
 html,
 body {
     width: 100%;
-    min-width: 100vw;
+    max-width: 100vw;
     background-color: var(--clr-light);
+    scroll-behavior: smooth;
 }
 
 :root {
