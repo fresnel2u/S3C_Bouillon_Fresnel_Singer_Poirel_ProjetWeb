@@ -135,7 +135,7 @@ class ItemView extends BaseView
     {
         $item = $this->params['item'];
         $editUrl = $this->container->router->pathFor('editItem', ['id' => $item->id]);
-
+        
         return <<<HTML
             <div class="container">
                 <h1>Éditer un item</h1>

@@ -106,6 +106,7 @@ class ListView extends BaseView
     {
         $list = $this->params['list'];
         $items = $this->params['items'];
+        $user = Auth::getUser();
 
         $html = <<<HTML
             <h1>Items de la liste "{$list->title}":</h1>
@@ -155,8 +156,22 @@ class ListView extends BaseView
             // Réservation
             if ($item->reservation) {
                 $html .= <<<HTML
-                    <td>Réservé par {$item->reservation->user->firstname} {$item->reservation->user->lastname}</td>
+                    <td>Réservé par {$item->reservation->user->firstname} {$item->reservation->user->lastname}
                 HTML;
+                  // annuler la réservation
+                if($item->reservation->user_id === $user['id']) {
+                    $cancelLockItem = $this->container->router->pathFor('cancelLockItem', ['id' => $item->id]);
+                    $html .= <<<HTML
+                        <br> 
+                        <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
+                            <button class="btn btn-danger">Annuler</button>
+                        </form> </td>
+                    HTML;
+                } else {
+                    $html .= <<<HTML
+                        </td>
+                    HTML;
+                }
             } else if (Auth::isLogged()) {
                 $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
                 $html .= <<<HTML

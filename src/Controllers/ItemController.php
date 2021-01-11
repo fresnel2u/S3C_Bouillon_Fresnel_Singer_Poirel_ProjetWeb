@@ -220,4 +220,30 @@ class ItemController extends BaseController
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
+
+    /**
+     * Annulation de la réservation d'un item
+     * 
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
+    public function cancelLockItem(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $item = Item::findOrFail($args['id']);
+           
+            $lock_message = ItemReservation::select('*')->where('item_id', '=', $item->reservation->item_id)->firstOrFail();
+            $lock_message->delete();
+              
+            Flashes::addFlash("Réservation annulée avec succès", 'success');
+
+            $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
+            return $response->withRedirect($redirectUrl);
+        } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible d'annuler la réservation de l'item", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+        }
+    }
 }

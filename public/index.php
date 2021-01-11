@@ -48,6 +48,7 @@ $app->group('', function (App $app) {
     $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
     $app->get('/items/{id}/lock', ItemController::class . ':lockItemPage')->setName('lockItemPage');
     $app->post('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
+    $app->post('/items/{id}/lock/cancel', ItemController::class . ':cancelLockItem')->setName('cancelLockItem');
     $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
 })->add($authMiddleware);
 
