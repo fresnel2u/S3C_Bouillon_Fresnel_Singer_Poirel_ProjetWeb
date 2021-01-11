@@ -56,6 +56,22 @@ CREATE TABLE `founding_pots_participations` (
   CONSTRAINT `fk_founding_pots_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+CREATE TABLE `reservations_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `list_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_reservation_message_lists` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_reservation_message_items` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_reservation_message_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
 (1, 'Jean', 'Dupont', 'a@a.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
 (2, 'Jeanne', 'Maria', 'b@b.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
@@ -67,7 +83,7 @@ INSERT INTO `lists` (`id`, `user_id`, `title`, `description`, `expiration`, `tok
 (3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3');
 
 INSERT INTO `items` (`id`, `list_id`, `name`, `description`, `image`, `url`, `price`, `user_id`) VALUES
-(1, 2, 'Champagne', 'Bouteille de champagne + flutes + jeux à gratter', 'champagne.jpg', '', 20.00, NULL),
+(1, 2, 'Champagne', 'Bouteille de champagne + flutes + jeux à gratter', 'champagne.jpg', '', 20.00, 1),
 (2, 2, 'Musique', 'Partitions de piano à 4 mains', 'musique.jpg', '', 25.00, NULL),
 (3, 2, 'Exposition', 'Visite guidée de l’exposition ‘REGARDER’ à la galerie Poirel', 'poirelregarder.jpg', '', 14.00, NULL),
 (4, 3, 'Goûter', 'Goûter au FIFNL', 'gouter.jpg', '', 20.00, NULL),
@@ -87,7 +103,11 @@ INSERT INTO `items` (`id`, `list_id`, `name`, `description`, `image`, `url`, `pr
 (26, 1, 'Planètes Laser', 'Laser game : Gilet électronique et pistolet laser comme matériel, vous voilà équipé.', 'laser.jpg', '', 15.00, NULL),
 (27, 1, 'Fort Aventure', 'Découvrez Fort Aventure à Bainville-sur-Madon, un site Accropierre unique en Lorraine ! Des Parcours Acrobatiques pour petits et grands, Jeu Mission Aventure, Crypte de Crapahute, Tyrolienne, Saut à l\'élastique inversé, Toboggan géant... et bien plus encore.', 'fort.jpg', '', 25.00, NULL);
 
+
 INSERT INTO `founding_pots` (`id`, `item_id`, `amount`) VALUES
 (1, 1, 250.00),
 (2, 2, 450.00),
 (3, 3, 650.00);
+
+INSERT INTO `reservations_messages` (`id`, `list_id`, `item_id`, `user_id`, `message`) VALUES
+(1,2,1,1, 'Je t\'offre cette bouteille de champagne, déguste la bien.');

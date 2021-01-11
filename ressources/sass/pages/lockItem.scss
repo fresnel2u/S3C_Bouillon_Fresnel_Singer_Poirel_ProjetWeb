@@ -1,0 +1,29 @@
+.lock-item {
+    .item-recap{
+        & {
+            margin-bottom: 1rem;
+        }
+        h2 {
+            margin: 1rem;
+        }
+
+        p {
+            margin : 0.5rem 0 0 2rem;
+        }
+
+    }
+
+    .item-message {
+        & {
+            margin-left: 1rem;
+        }
+        
+        p {
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 80%;
+        }
+    }
+}

@@ -174,6 +174,40 @@ class ItemView extends BaseView
     }
 
     /**
+     * Construit la page de formulaire pour la reservation d'un item
+     *
+     * @return string
+     */
+    public function lockItem() : string {
+
+        $item = $this->params['item'];
+        $saveLock = $this->container->router->pathFor('saveLockItem', ['id' => $item->id]);
+
+        return <<<HTML
+            <div class="container lock-item">
+                <h1>Réserver un item</h1>
+                <div class="item-recap">
+                    <h2>Récapitulatif de l'item à réserver : </h2>
+                    <p>nom : {$item->name}</p>
+                    <p>prix : {$item->price}</p>
+                    <p>description : {$item->description}</p>
+                </div> 
+                <div class="item-message">
+                    <form method="POST" action="{$saveLock}">
+                        <div class="form-group">
+                            <label for="message">Message (optionnel)</label>
+                            <input type="text" name="message" id="message" placeholder="Ecrivez votre message">
+                        </div>        
+                    
+                        <button type="submit" class="btn btn-primary">Confirmer la réservation</button>  
+                    </form>
+                </div>
+               
+            </div>
+        HTML;
+    }
+
+    /**
      * @inheritdoc
      */
     public function render(int $selector): string
@@ -195,6 +229,11 @@ class ItemView extends BaseView
                     $title .= "Éditer un item";
                     break;
                 }
+            case 3: {
+                    $content = $this->lockItem();
+                    $title .= "Réserver un item";
+                    break;
+            }
             default: {
                     $content = '';
                     break;

@@ -6,8 +6,9 @@ use Throwable;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\Item;
-use Whishlist\Helpers\Auth;
+use Whishlist\Models\Reservations_messages;
 use Whishlist\Views\ItemView;
+use Whishlist\Helpers\Auth;
 use Whishlist\Helpers\Flashes;
 use Whishlist\helpers\RedirectHelper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -161,8 +162,8 @@ class ItemController extends BaseController
         }
     }
 
-    /**
-     * Réservation d'un item
+     /**
+     * formulaire de réservation d'un item
      * 
      * @param Request $request requête
      * @param Response $response réponse
@@ -173,8 +174,35 @@ class ItemController extends BaseController
     {
         try {
             $item = Item::findOrFail($args['id']);
+
+            $v = new ItemView($this->container, ['item' => $item]);
+            $response->getBody()->write($v->render(3));
+            return $response;
+        } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
+            return $response;
+        }
+    }
+
+    /**
+     * Réservation d'un item
+     * 
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
+    public function saveLockItem(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $item = Item::findOrFail($args['id']);
             $user = Auth::getUser();
+
             $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
+    
+            if ($user === null) {
+                return RedirectHelper::loginAndRedirect($response, $redirectUrl);
+            }
     
             if($item->user_id === null) {
                 $item->user_id = $user['id'];
@@ -182,6 +210,17 @@ class ItemController extends BaseController
                 Flashes::addFlash("Item réservé avec succès", 'success');
             } else {
                 Flashes::addFlash("Item déjà réservé", 'error');
+            }
+
+            $body = $request->getParsedBody();
+            $message = filter_var($body['message'], FILTER_SANITIZE_STRING);
+            if($message != '') {
+                $lock_message = new Reservations_messages();
+                $lock_message->list_id = $item->list_id;
+                $lock_message->item_id = $item->id;
+                $lock_message->user_id = $item->user_id;
+                $lock_message->message = $message;
+                $lock_message->save();
             }
     
             return $response->withRedirect($redirectUrl);

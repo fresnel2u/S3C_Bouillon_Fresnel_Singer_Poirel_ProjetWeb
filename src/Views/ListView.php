@@ -155,7 +155,7 @@ class ListView extends BaseView
                 $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
                 $html .= <<<HTML
                         <td>
-                            <form action="{$lockUrl}" method="POST">
+                            <form action="{$lockUrl}" method="GET">
                                 <button type="submit" class="btn btn-light">Réserver</button>
                             </form>
                         </td>

@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/fresnel2u/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb#readme",
   "dependencies": {
-    "sass": "^1.32.0"
+    "sass": "^1.32.2"
   }
 }

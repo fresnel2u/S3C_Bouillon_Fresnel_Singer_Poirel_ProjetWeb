@@ -46,7 +46,8 @@ $app->group('', function (App $app) {
     $app->post('/items/new', ItemController::class . ':newItem')->setName('newItem');
     $app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
     $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
-    $app->post('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
+    $app->get('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
+    $app->post('/items/{id}/lock', ItemController::class . ':saveLockItem')->setName('saveLockItem');
     $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
 })->add($authMiddleware);
 
