@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `founding_pots_participations`;
 DROP TABLE IF EXISTS `founding_pots`;
 DROP TABLE IF EXISTS `items`;
 DROP TABLE IF EXISTS `lists`;
@@ -43,6 +44,16 @@ CREATE TABLE `founding_pots` (
   `amount` decimal(5,2) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_founding_pots_items` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `founding_pots_participations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `amount` decimal(5,2) NOT NULL,
+  `founding_pot_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_founding_pots_participations` FOREIGN KEY (`founding_pot_id`) REFERENCES `founding_pots` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_founding_pots_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES

@@ -74,11 +74,13 @@ class ListView extends BaseView
                 $html .= "<td>$row</td>";
             }
             
+            $showUrl = $this->container->router->pathFor('displayList', ['id' => $list->id]);
             $editUrl = $this->container->router->pathFor('editListPage', ['id' => $list->id]);
             $deleteUrl = $this->container->router->pathFor('deleteList', ['id' => $list->id]);
 
             $html .= <<<HTML
                     <td>
+                        <a href="{$showUrl}" class="btn btn-light">Aperçu</a>
                         <a href="{$editUrl}" class="btn btn-light">Éditer</a>
                         <form method="POST" action="{$deleteUrl}">
                             <button type="submit" class="btn btn-danger">Supprimer</button>
@@ -100,57 +102,78 @@ class ListView extends BaseView
      */
     private function getList(): string
     {
+        $list = $this->params['list'];
+        $items = $this->params['items'];
+
         $html = <<<HTML
-            <h1>Items de la liste :</h1>
+            <h1>Items de la liste "{$list->title}":</h1>
             <div>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">item id</th>
-                            <th scope="col">liste id</th>
-                            <th scope="col">nom</th>
-                            <th scope="col">description</th>
-                            <th scope="col">image</th>
-                            <th scope="col">url</th>
-                            <th scope="col">tarif</th>
-                            <th scope="col">action</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">URL</th>
+                            <th scope="col">Tarif</th>
+                            <th scope="col">Cagnotte</th>
+                            <th scope="col">Réservation</th>
                         </tr>
                     </thead>
                     <tbody>
         HTML;
-        foreach ($this->params['items'] as $item) {
-            $html .= "<tr>";
-            $i = 0;
+        foreach ($items as $item) {
+            $html .= <<<HTML
+                <tr>
+                    <td>{$item->id}</td>
+                    <td>{$item->name}</td>
+                    <td>{$item->description}</td>
+                    <td><img src="/img/{$item->image}" alt="Image de l'item {$item->id}" width="150" /></td>
+                    <td>{$item->url}</td>
+                    <td>{$item->price} €</td>
+            HTML;
 
-            foreach ($item->toArray() as $row) {
-                if ($i === 4) {
-                    $url = "/img/{$row}";
-                    $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";
-                } else if ($i !== 7) { // Don't show user_id column
-                    $html .= "<td>{$row}</td>";
-                }
-                $i += 1;
+            // Cagnotte
+            if ($item->foundingPot) {
+                $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
+                    'item_id' => $item->id
+                ]);
+                $html .= <<<HTML
+                    <td>
+                        <a href="{$foundingPotUrl}" class="btn btn-light">Participer à la cagnotte</a>
+                    </td>
+                HTML;
+            } else {
+                $html .= <<<HTML
+                    <td>Pas de cagnotte.</td>
+                HTML;
             }
 
-            $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
-
-            if($item->user_id === null)
+            // Réservation
+            if ($item->user === null) {
+                $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
                 $html .= <<<HTML
                         <td>
                             <form action="{$lockUrl}" method="POST">
-                                <button type="submit">Reserver</button>
+                                <button type="submit" class="btn btn-light">Réserver</button>
                             </form>
                         </td>
-                    </tr>
                 HTML;
-            else
-                $html .= '<td></td>';
-        }
-        $html .= "</tbody>
-            </table>
-        </div>";
+            } else {
+                $html .= <<<HTML
+                    <td>Réservé par {$item->user->firstname} {$item->user->lastname}</td>
+                HTML;
+            }
 
-        return $html;
+            $html .= '<tr>';
+        }
+
+        return $html . <<<HTML
+                    </tbody>
+                </table>
+            </div>
+        HTML;
     }
 
     /**

@@ -33,7 +33,6 @@ $app->post('/lists/{id}/delete', ListController::class . ':deleteList')->setName
 $app->get('/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
 $app->get('/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
 $app->post('/items/new', ItemController::class . ':newItem')->setName('newItem');
-$app->get('/items/{id}/show', ItemController::class . ':displayItem')->setName('displayItem');
 $app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
 $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
 $app->post('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
@@ -42,6 +41,8 @@ $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName
 // Founding pot
 $app->get('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':createPage')->setName('createFoundingPotPage');
 $app->post('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':create')->setName('createFoundingPot');
+$app->get('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participatePage')->setName('participateFoundingPotPage');
+$app->post('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participate')->setName('participateFoundingPot');
 
 // Auth
 $app->get('/login', AuthController::class . ':getLogin')->setName('loginPage');

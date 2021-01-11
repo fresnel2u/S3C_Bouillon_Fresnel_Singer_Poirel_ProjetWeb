@@ -84,28 +84,6 @@ class ItemController extends BaseController
     }
 
     /**
-     * Crée une vue pour afficher un item
-     *
-     * @param Request $request requête
-     * @param Response $response réponse
-     * @param array $args arguments
-     * @return Response réponse à la requête
-     */
-    public function displayItem(Request $request, Response $response, array $args): Response
-    {
-        try {
-            $item = Item::findOrFail($args['id']);
-
-            $v = new ItemView($this->container, ['item' => $item]);
-            $response->getBody()->write($v->render(2));
-            return $response;
-        } catch (ModelNotFoundException $e) {
-            Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-        }
-    }
-
-    /**
      * Éditer un item (page)
      *
      * @param Request $request requête
@@ -119,7 +97,7 @@ class ItemController extends BaseController
             $item = Item::findOrFail($args['id']);
 
             $v = new ItemView($this->container, ['item' => $item]);
-            $response->getBody()->write($v->render(3));
+            $response->getBody()->write($v->render(2));
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');

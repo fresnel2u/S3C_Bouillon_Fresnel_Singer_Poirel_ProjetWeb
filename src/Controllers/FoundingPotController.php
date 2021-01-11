@@ -3,12 +3,16 @@
 namespace Whishlist\Controllers;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Whishlist\Helpers\Auth;
 use Whishlist\Helpers\Flashes;
+use Whishlist\Helpers\RedirectHelper;
 use Whishlist\Models\Item;
 use Whishlist\Models\WishList;
 use Whishlist\Models\FoundingPot;
+use Whishlist\Models\FoundingPotParticipation;
 use Whishlist\Views\FoundingPotView;
 
 class FoundingPotController extends BaseController
@@ -66,10 +70,84 @@ class FoundingPotController extends BaseController
                 throw new Exception('L\'item possède déjà une cagnotte.');
             }
 
-            $v = new FoundingPotView($this->container, ['item_id' => $item->id]);
+            $v = new FoundingPotView($this->container, ['item' => $item]);
             $response->getBody()->write($v->render(0));
             return $response;
         } catch (\Throwable $th) {
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+        }
+    }
+
+    /**
+     * Participation à une cagnotte
+     *
+     * @param Request $request
+     * @param array $args
+     * @param Response $response
+     * @return Response
+     */
+    public function participate(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $item = Item::with('foundingPot')->findOrFail($args['item_id']);
+    
+            if (!Auth::isLogged()) {
+                Flashes::addFlash('Vous devez être connecté pour participer à la cagnotte.', 'error');
+                $target = $this->container->router->pathFor('showFoundingPot', [
+                    'founding_pot_id' => $item->foundingPot->id
+                ]);
+                return RedirectHelper::loginAndRedirect($response, $target);
+            }
+
+            $amount = round(abs(floatval($request->getParsedBodyParam('amount'))), 2);
+            $rest = $item->foundingPot->getRest();
+
+            if ($amount > $rest) {
+                Flashes::addFlash("Vous ne pouvez pas mettre plus d'argent que le reste à payer.", 'error');
+                return $response->withRedirect($this->container->router->pathFor('participateFoundingPotPage', [
+                    'item_id' => $item->id
+                ]));
+            }
+
+            $participation = new FoundingPotParticipation();
+            $participation->amount = $amount;
+            $participation->user_id = Auth::getUser()['id'];
+            $participation->founding_pot_id = $item->foundingPot->id;
+            $participation->save();
+
+            Flashes::addFlash("Vous avez bien ajouté {$amount} € à la cagnotte.", 'success');
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
+                'id' => $item->list_id
+            ]));
+        } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Le model n'existe pas.", 'error');
+        } catch (\Throwable $th) {
+            Flashes::addFlash($th->getMessage(), 'error');
+        }
+        return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+    }
+
+    /**
+     * Affichage d'une cagnotte
+     *
+     * @param Request $request
+     * @param array $args
+     * @param Response $response
+     * @return Response
+     */
+    public function participatePage(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $item = Item::with('foundingPot')->findOrFail($args['item_id']);
+
+            $v = new FoundingPotView($this->container, [
+                'founding_pot' => $item->foundingPot,
+                'item' => $item
+            ]);
+            $response->getBody()->write($v->render(1));
+            return $response;
+        } catch (\Throwable $th) {
+            Flashes::addFlash('Impossible d\'afficher la cagnotte.', 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }

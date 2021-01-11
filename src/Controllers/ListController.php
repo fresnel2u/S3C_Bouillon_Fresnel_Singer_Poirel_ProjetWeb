@@ -88,11 +88,19 @@ class ListController extends BaseController
      */
     public function displayList(Request $request, Response $response, array $args): Response
     {
-        $items = Item::select('*')->where('list_id', '=', $args['id'])->get();
-        
-        $v = new ListView($this->container, ['items' => $items]);
-        $response->getBody()->write($v->render(2));
-        return $response;
+        try {
+            $list = WishList::with('items')->findOrFail($args['id']);
+            
+            $v = new ListView($this->container, [
+                'list' => $list,
+                'items' => $list->items
+            ]);
+            $response->getBody()->write($v->render(2));
+            return $response;
+        } catch (\Throwable $th) {
+            Flashes::addFlash("Impossible de consulter la liste.", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+        }
     }
 
     /**

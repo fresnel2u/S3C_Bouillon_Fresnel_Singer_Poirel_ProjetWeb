@@ -2,6 +2,8 @@
 
 namespace Whishlist\Views;
 
+use Whishlist\Helpers\Auth;
+
 class ItemView extends BaseView
 {
     /**
@@ -128,53 +130,6 @@ class ItemView extends BaseView
     }
 
     /**
-     * Construit le contenu d'un item
-     *
-     * @return string l'HTML d'un item
-     */
-    private function getItem(): string
-    {
-        $logOut = $this->container->router->pathFor('logout');
-
-        $html = <<<HTML
-            <h1>Tous les items :</h1>
-            <div>
-                <table class="table table-bordered table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">liste id</th>
-                            <th scope="col">nom</th>
-                            <th scope="col">description</th>
-                            <th scope="col">image</th>
-                            <th scope="col">url</th>
-                            <th scope="col">tarif</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-        HTML;
-        $i = 0;
-        foreach ($this->params['item']->toArray() as $col) {
-            if ($i === 4) {
-                $url = "/img/{$col}";
-                $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";
-            } else {
-                $html .= "<td>{$col}</td>";
-            }
-            $i++;
-        }
-        $html .= <<<HTML
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        HTML;
-
-        return $html;
-    }
-
-    /**
      * Construit la page d'édition d'un item
      *
      * @return string
@@ -236,11 +191,6 @@ class ItemView extends BaseView
                     break;
                 }
             case 2: {
-                    $content = $this->getItem();
-                    $title .= "Item";
-                    break;
-                }
-            case 3: {
                     $content = $this->editItemPage();
                     $title .= "Éditer un item";
                     break;
