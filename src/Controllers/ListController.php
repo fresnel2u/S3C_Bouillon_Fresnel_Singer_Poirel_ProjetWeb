@@ -5,11 +5,11 @@ namespace Whishlist\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\Item;
+use Whishlist\Helpers\Auth;
 use Whishlist\Views\ListView;
+use Whishlist\Helpers\Flashes;
 use Whishlist\Models\WishList;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Whishlist\Helpers\Auth;
-use Whishlist\Helpers\Flashes;
 
 class ListController extends BaseController
 {

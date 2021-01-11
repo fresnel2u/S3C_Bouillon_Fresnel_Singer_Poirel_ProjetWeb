@@ -2,15 +2,15 @@
 
 namespace Whishlist\Controllers;
 
+use Throwable;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\Item;
-use Whishlist\Views\ItemView;
 use Whishlist\Helpers\Auth;
+use Whishlist\Views\ItemView;
+use Whishlist\Helpers\Flashes;
 use Whishlist\helpers\RedirectHelper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
-use Whishlist\Helpers\Flashes;
 
 class ItemController extends BaseController
 {
@@ -176,10 +176,6 @@ class ItemController extends BaseController
             $user = Auth::getUser();
             $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
     
-            if ($user === null) {
-                return RedirectHelper::loginAndRedirect($response, $redirectUrl);
-            }
-
             if($item->user_id === null) {
                 $item->user_id = $user['id'];
                 $item->save();

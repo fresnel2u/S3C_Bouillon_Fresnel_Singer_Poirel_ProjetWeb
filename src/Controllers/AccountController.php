@@ -85,7 +85,7 @@ class AccountController extends BaseController
 
             return $response;
         } catch (ModelNotFoundException $e) {
-            Flashes::addFlash("Impossible d'éditer le compte'", 'error');
+            Flashes::addFlash("Impossible d'éditer le compte.", 'error');
             return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
         }
     }
@@ -104,7 +104,7 @@ class AccountController extends BaseController
             $user = User::findOrFail(Auth::getUser()['id']);
             $user->delete();
             Auth::setUser(null);
-            Flashes::addFlash('Compte supprimé', 'success');
+            Flashes::addFlash('Compte supprimé.', 'success');
             return $response->withRedirect($this->container->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash('Impossible de supprimer le compte', 'error');

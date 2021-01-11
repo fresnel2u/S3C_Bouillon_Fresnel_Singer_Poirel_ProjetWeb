@@ -3,17 +3,16 @@
 namespace Whishlist\Controllers;
 
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Whishlist\Models\Item;
 use Whishlist\Helpers\Auth;
 use Whishlist\Helpers\Flashes;
-use Whishlist\Helpers\RedirectHelper;
-use Whishlist\Models\Item;
 use Whishlist\Models\WishList;
 use Whishlist\Models\FoundingPot;
-use Whishlist\Models\FoundingPotParticipation;
 use Whishlist\Views\FoundingPotView;
+use Whishlist\Models\FoundingPotParticipation;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FoundingPotController extends BaseController
 {
@@ -90,14 +89,6 @@ class FoundingPotController extends BaseController
     {
         try {
             $item = Item::with('foundingPot')->findOrFail($args['item_id']);
-    
-            if (!Auth::isLogged()) {
-                Flashes::addFlash('Vous devez être connecté pour participer à la cagnotte.', 'error');
-                $target = $this->container->router->pathFor('showFoundingPot', [
-                    'founding_pot_id' => $item->foundingPot->id
-                ]);
-                return RedirectHelper::loginAndRedirect($response, $target);
-            }
 
             $amount = round(abs(floatval($request->getParsedBodyParam('amount'))), 2);
             $rest = $item->foundingPot->getRest();

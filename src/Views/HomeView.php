@@ -2,6 +2,8 @@
 
 namespace Whishlist\Views;
 
+use Whishlist\Helpers\Auth;
+
 class HomeView extends BaseView
 {
     /**
@@ -11,11 +13,7 @@ class HomeView extends BaseView
      */
     private function getHome(): string
     {
-
-        $registerUrl = $this->container->router->pathFor('registerPage');
-        $loginUrl = $this->container->router->pathFor('loginPage');
-
-        return <<<HTML
+        $html = <<<HTML
             <div class="home">
                 <div class=home-header>
                     <div class="header-title">
@@ -23,8 +21,23 @@ class HomeView extends BaseView
                         <h2>MyWishList</h2>
                     </div>
                     <div class="header-log">
-                        <a href="{$loginUrl}"><button class="btn btn-secondary">Connexion</button></a>
-                        <a href="{$registerUrl}"><button class="btn btn-primary">Inscription</button></a>
+        HTML;
+
+        if (Auth::isLogged()) {
+            $accountUrl = $this->container->router->pathFor('displayAccount');
+            $html .= <<<HTML
+                <a href="{$accountUrl}"><button class="btn btn-primary">Mon compte</button></a>
+            HTML;
+        } else {
+            $registerUrl = $this->container->router->pathFor('registerPage');
+            $loginUrl = $this->container->router->pathFor('loginPage');
+            $html .= <<<HTML
+                <a href="{$loginUrl}"><button class="btn btn-secondary">Connexion</button></a>
+                <a href="{$registerUrl}"><button class="btn btn-primary">Inscription</button></a>
+            HTML;
+        }
+        
+        return $html . <<<HTML
                     </div>
                 </div>
 
