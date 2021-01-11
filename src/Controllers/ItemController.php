@@ -11,6 +11,7 @@ use Whishlist\Views\ItemView;
 use Whishlist\Helpers\Flashes;
 use Whishlist\Models\ItemReservation;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Whishlist\Helpers\UploadFile;
 
 class ItemController extends BaseController
 {
@@ -45,11 +46,19 @@ class ItemController extends BaseController
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
 
+            $files = $request->getUploadedFiles();
+            foreach($files as $file) {
+                if ($file->getError() === UPLOAD_ERR_OK) {
+                    $directory = ROUTE . '\img\\';
+                    $filename = UploadFile::moveUploadedFile($directory, $file);
+                }
+            } 
+
             $item = new Item();
             $item->list_id = $body['list_id'];
             $item->name = $body['name'];
             $item->description = $body['description'];
-            $item->image = $body['image'];
+            $item->image = $filename;
             $item->url = $body['url'];
             $item->price = $body['price'];
             $item->save();
