@@ -153,18 +153,14 @@ class ListView extends BaseView
             }
 
             // Réservation
-            if ($item->user !== null) {
+            if ($item->reservation) {
                 $html .= <<<HTML
-                    <td>Réservé par {$item->user->firstname} {$item->user->lastname}</td>
+                    <td>Réservé par {$item->reservation->user->firstname} {$item->reservation->user->lastname}</td>
                 HTML;
             } else if (Auth::isLogged()) {
-                $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
+                $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
                 $html .= <<<HTML
-                        <td>
-                            <form action="{$lockUrl}" method="GET">
-                                <button type="submit" class="btn btn-light">Réserver</button>
-                            </form>
-                        </td>
+                    <td><a href="{$lockUrl}" class="btn btn-light">Réserver</button></td>
                 HTML;
             } else {
                 $html .= <<<HTML

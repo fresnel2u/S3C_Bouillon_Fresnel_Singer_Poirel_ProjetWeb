@@ -57,7 +57,7 @@ class ItemView extends BaseView
         $newItemUrl = $this->container->router->pathFor('newItemPage');
 
         $html = <<<HTML
-            <h1>Résultat de l'affichage de l'item :</h1>
+            <h1>Résultat de l'affichage des items :</h1>
             <a href="{$newItemUrl}" class="btn btn-primary">Ajouter un item</a>
             <div>
                 <table class="table table-bordered table-dark">
@@ -70,7 +70,6 @@ class ItemView extends BaseView
                             <th scope="col">image</th>
                             <th scope="col">url</th>
                             <th scope="col">tarif</th>
-                            <th scope="col">user id</th>
                             <th scope="col">Cagnotte</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -181,19 +180,20 @@ class ItemView extends BaseView
     public function lockItem() : string {
 
         $item = $this->params['item'];
-        $saveLock = $this->container->router->pathFor('saveLockItem', ['id' => $item->id]);
+        $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
 
         return <<<HTML
             <div class="container lock-item">
                 <h1>Réserver un item</h1>
                 <div class="item-recap">
                     <h2>Récapitulatif de l'item à réserver : </h2>
-                    <p>nom : {$item->name}</p>
-                    <p>prix : {$item->price}</p>
-                    <p>description : {$item->description}</p>
+                    <p><strong>Nom :</strong> {$item->name}</p>
+                    <p><strong>Prix :</strong> {$item->price}</p>
+                    <p><strong>Description :</strong> {$item->description}</p>
                 </div> 
+                <br>
                 <div class="item-message">
-                    <form method="POST" action="{$saveLock}">
+                    <form method="POST" action="{$lockUrl}">
                         <div class="form-group">
                             <label for="message">Message (optionnel)</label>
                             <input type="text" name="message" id="message" placeholder="Ecrivez votre message">

@@ -4,7 +4,6 @@ namespace Whishlist\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Whishlist\Models\Item;
 use Whishlist\Helpers\Auth;
 use Whishlist\Views\ListView;
 use Whishlist\Helpers\Flashes;

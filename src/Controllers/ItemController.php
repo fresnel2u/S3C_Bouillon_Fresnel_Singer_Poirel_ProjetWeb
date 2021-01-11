@@ -12,6 +12,8 @@ use Whishlist\Helpers\Auth;
 use Whishlist\Helpers\Flashes;
 use Whishlist\helpers\RedirectHelper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Whishlist\Models\ItemReservation;
+use Whishlist\Models\ReservationMessage;
 
 class ItemController extends BaseController
 {
@@ -170,7 +172,7 @@ class ItemController extends BaseController
      * @param array $args arguments
      * @return Response réponse à la requête
      */
-    public function lockItem(Request $request, Response $response, array $args): Response
+    public function lockItemPage(Request $request, Response $response, array $args): Response
     {
         try {
             $item = Item::findOrFail($args['id']);
@@ -192,37 +194,29 @@ class ItemController extends BaseController
      * @param array $args arguments
      * @return Response réponse à la requête
      */
-    public function saveLockItem(Request $request, Response $response, array $args): Response
+    public function lockItem(Request $request, Response $response, array $args): Response
     {
         try {
-            $item = Item::findOrFail($args['id']);
-            $user = Auth::getUser();
+            $item = Item::with('reservation')->findOrFail($args['id']);
 
-            $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
-    
-            if ($user === null) {
-                return RedirectHelper::loginAndRedirect($response, $redirectUrl);
-            }
-    
-            if($item->user_id === null) {
-                $item->user_id = $user['id'];
-                $item->save();
-                Flashes::addFlash("Item réservé avec succès", 'success');
+            if (!$item->reservation) {
+                $user = Auth::getUser();
+
+                $body = $request->getParsedBody();
+                $message = filter_var($body['message'], FILTER_SANITIZE_STRING);
+                
+                $reservation = new ItemReservation();
+                $reservation->item_id = $item->id;
+                $reservation->user_id = $user['id'];
+                $reservation->message = $message === '' ? null : $message;
+                $reservation->save();
+
+                Flashes::addFlash("Item réservé avec succès.", 'success');
             } else {
-                Flashes::addFlash("Item déjà réservé", 'error');
+                Flashes::addFlash("Item déjà réservé.", 'error');
             }
-
-            $body = $request->getParsedBody();
-            $message = filter_var($body['message'], FILTER_SANITIZE_STRING);
-            if($message != '') {
-                $lock_message = new Reservations_messages();
-                $lock_message->list_id = $item->list_id;
-                $lock_message->item_id = $item->id;
-                $lock_message->user_id = $item->user_id;
-                $lock_message->message = $message;
-                $lock_message->save();
-            }
-    
+            
+            $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
             return $response->withRedirect($redirectUrl);
         } catch (\Throwable $th) {
             Flashes::addFlash("Impossible de réservé l'item", 'error');

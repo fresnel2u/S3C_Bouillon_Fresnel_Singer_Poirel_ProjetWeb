@@ -23,4 +23,9 @@ class Item extends Model
     {
         return $this->hasOne(FoundingPot::class, 'item_id', 'id');
     }
+
+    public function reservation()
+    {
+        return $this->hasOne(ItemReservation::class, 'item_id', 'id');
+    }
 }

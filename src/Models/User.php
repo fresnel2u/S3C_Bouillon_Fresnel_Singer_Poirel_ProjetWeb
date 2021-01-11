@@ -13,4 +13,9 @@ class User extends Model
     {
         return $this->hasMany(WishList::class, 'list_id', 'id');
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(ItemReservation::class, 'user_id', 'id');
+    }
 }
