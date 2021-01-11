@@ -15,6 +15,7 @@ use Whishlist\Controllers\FoundingPotController;
 session_start();
 
 $config = require_once('../settings.php');
+const ROUTE = __DIR__;
 
 Database::connect();
 
