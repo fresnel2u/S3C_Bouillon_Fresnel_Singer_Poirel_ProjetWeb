@@ -61,7 +61,7 @@ class Auth
         if (User::where('email', '=', $email)->exists()) {
             throw new Exception("Cette email est déjà utilisé.");
         } else if ($pass !== $passConfirm) {
-            throw new Exception("Les deux mots de passe ne sont pas identique.");
+            throw new Exception("Les deux mots de passe ne sont pas identiques.");
         }
     }
 

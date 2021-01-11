@@ -5,7 +5,9 @@ namespace Whishlist\Controllers;
 use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Throwable;
 use Whishlist\Helpers\Auth;
+use Whishlist\Helpers\Flashes;
 use Whishlist\Views\AuthView;
 
 class AuthController extends BaseController
@@ -23,16 +25,22 @@ class AuthController extends BaseController
         $username = filter_var($request->getParsedBodyParam('email'), FILTER_SANITIZE_EMAIL);
         $password = filter_var($request->getParsedBodyParam('password'), FILTER_SANITIZE_STRING);
 
-        if ($username === "" || $password == "") {
-            throw new Exception("Veuillez remplir tout les champs.");
-        } else {
-            Auth::attempt($username, $password);
 
-            if (isset($_SESSION['login_success_url'])) {
-                $response = $response->withRedirect($_SESSION['login_success_url']);
+        try {
+            if ($username === "" || $password == "") {
+                throw new Exception("Veuillez remplir tout les champs.");
             } else {
-                $response = $response->withRedirect($this->container->router->pathFor('home'));
+                Auth::attempt($username, $password);
+                if (isset($_SESSION['login_success_url'])) {
+                    $response = $response->withRedirect($_SESSION['login_success_url']);
+                } else {
+                    $response = $response->withRedirect($this->container->router->pathFor('home'));
+                }
+                Flashes::addFlash('Connecté', 'success');
             }
+        } catch (Throwable $throwable) {
+            Flashes::addFlash($throwable->getMessage(), 'error');
+            $response = $response->withRedirect($this->container->router->pathFor('loginPage'));
         }
         return $response;
     }
@@ -49,6 +57,7 @@ class AuthController extends BaseController
     {
         if (isset($_SESSION['user'])) {
             $_SESSION['user'] = null;
+            Flashes::addFlash('Déconnecté', 'success');
         }
         
         $response = $response->withRedirect($this->container->router->pathFor('home'));
@@ -84,12 +93,17 @@ class AuthController extends BaseController
         }, $body);
 
         // Validation
-        if (count($body) !== count($authorizedFields) || $searchEmpty) {
-            throw new Exception("Veuillez remplir tout les champs.");
+        try {
+            if (count($body) !== count($authorizedFields) || $searchEmpty) {
+                throw new Exception("Veuillez remplir tout les champs.");
+            }
+    
+            Auth::checkData($body['email'], $body['password'], $body['password_confirm']);
+            Auth::createUser($body['firstname'], $body['lastname'], $body['email'], $body['password']);
+        } catch (Throwable $throwable) {
+            Flashes::addFlash($throwable->getMessage(), 'error');
+            return $response->withRedirect($this->container->router->pathFor('registerPage'));
         }
-
-        Auth::checkData($body['email'], $body['password'], $body['password_confirm']);
-        Auth::createUser($body['firstname'], $body['lastname'], $body['email'], $body['password']);
         
         return $response->withRedirect($this->container->router->pathFor('loginPage'));
     }

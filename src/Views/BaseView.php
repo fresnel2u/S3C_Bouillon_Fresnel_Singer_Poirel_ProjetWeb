@@ -3,6 +3,7 @@
 namespace Whishlist\Views;
 
 use Slim\Container;
+use Whishlist\Views\Components\Flashes;
 use Whishlist\Views\Components\Menu;
 use Whishlist\Views\Components\Header;
 
@@ -48,11 +49,13 @@ abstract class BaseView
      * @param string|null $title
      * @return string html avec son layout
      */
-    public function layout(string $html, ?string $title = null, ?int $set_menu = 1): string
+    public function layout(string $html, ?string $title = null, ?int $set_menu = 1, ?int $set_flashes = 1): string
     {
         $result = Header::getHeader($title);
         if($set_menu != 0)
             $result .= Menu::getMenu();
+        if($set_flashes)
+            $result .= Flashes::getFlashes();
         $result .= $html;
         $result .= "</body></html>";
         return $result;

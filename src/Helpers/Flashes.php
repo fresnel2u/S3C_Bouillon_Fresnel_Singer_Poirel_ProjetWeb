@@ -16,7 +16,7 @@ class Flashes
      */
     public static function addFlash(string $message, string $type): void
     {
-        $_SESSION['flashes'][] = [$type => $message];
+        $_SESSION['flashes'][] = ['type' => $type, 'message' => $message];
     }
 
     /**

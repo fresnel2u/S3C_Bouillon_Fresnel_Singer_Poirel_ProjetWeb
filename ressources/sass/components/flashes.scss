@@ -1,0 +1,27 @@
+.flashes {
+    & {
+        // position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+    }
+
+    .flash {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .flash-success {
+        background-color: #53cf79;
+    }
+
+    .flash-warning {
+        background-color: #e0d865;
+    }
+
+    .flash-error {
+        background-color: #cf6253;
+    }
+}

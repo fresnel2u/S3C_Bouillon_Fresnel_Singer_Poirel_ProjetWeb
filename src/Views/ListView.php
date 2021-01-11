@@ -134,14 +134,17 @@ class ListView extends BaseView
 
             $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
 
-            $html .= <<<HTML
-                    <td>
-                        <form action="{$lockUrl}" method="POST">
-                            <button type="submit">Reserver</button>
-                        </form>
-                    </td>
-                </tr>
-            HTML;
+            if($item->user_id === null)
+                $html .= <<<HTML
+                        <td>
+                            <form action="{$lockUrl}" method="POST">
+                                <button type="submit">Reserver</button>
+                            </form>
+                        </td>
+                    </tr>
+                HTML;
+            else
+                $html .= '<td></td>';
         }
         $html .= "</tbody>
             </table>

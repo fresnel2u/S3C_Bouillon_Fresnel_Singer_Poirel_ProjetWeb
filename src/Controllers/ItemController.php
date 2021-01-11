@@ -9,6 +9,8 @@ use Whishlist\Views\ItemView;
 use Whishlist\Helpers\Auth;
 use Whishlist\helpers\RedirectHelper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Throwable;
+use Whishlist\Helpers\Flashes;
 
 class ItemController extends BaseController
 {
@@ -54,6 +56,7 @@ class ItemController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash('Impossible de créer l\'item', 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
@@ -75,7 +78,7 @@ class ItemController extends BaseController
             $response->getBody()->write($v->render(1));
             return $response;
         } catch (ModelNotFoundException $e) {
-            $response->getBody()->write("<h1 style=\"text-align : center;\"> L'item " . $args['id'] . " n'a pas été trouvé.</h1>");
+            Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
             return $response;
         }
     }
@@ -97,8 +100,8 @@ class ItemController extends BaseController
             $response->getBody()->write($v->render(2));
             return $response;
         } catch (ModelNotFoundException $e) {
-            $response->getBody()->write("<h1 style=\"text-align : center;\"> L'item " . $args['id'] . " n'a pas été trouvé.</h1>");
-            return $response;
+            Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
 
@@ -119,6 +122,7 @@ class ItemController extends BaseController
             $response->getBody()->write($v->render(3));
             return $response;
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
@@ -149,8 +153,10 @@ class ItemController extends BaseController
             $item->price = $body['price'];
             $item->save();
 
+            Flashes::addFlash("Item modifié avec succès", 'success');
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
-        } catch (ModelNotFoundException $e) {
+        } catch (Throwable $e) {
+            Flashes::addFlash("Impossible de modifier l'item", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
@@ -169,8 +175,10 @@ class ItemController extends BaseController
             $item = Item::findOrFail($args['id']);
             $item->delete();
 
+            Flashes::addFlash("Item supprimé avec succès", 'success');
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible de supprimer l'item", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }
@@ -193,11 +201,18 @@ class ItemController extends BaseController
             if ($user === null) {
                 return RedirectHelper::loginAndRedirect($response, $redirectUrl);
             }
+
+            if($item->user_id === null) {
+                $item->user_id = $user['id'];
+                $item->save();
+                Flashes::addFlash("Item réservé avec succès", 'success');
+            } else {
+                Flashes::addFlash("Item déjà réservé", 'error');
+            }
     
-            $item->user_id = $user['id'];
-            $item->save();
             return $response->withRedirect($redirectUrl);
         } catch (\Throwable $th) {
+            Flashes::addFlash("Impossible de réservé l'item", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
         }
     }

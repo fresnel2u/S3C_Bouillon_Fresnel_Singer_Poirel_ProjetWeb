@@ -9,6 +9,7 @@ use Whishlist\Views\ListView;
 use Whishlist\Models\WishList;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Whishlist\Helpers\Auth;
+use Whishlist\Helpers\Flashes;
 
 class ListController extends BaseController
 {
@@ -53,6 +54,7 @@ class ListController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible d'ajouter la liste", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
@@ -105,11 +107,11 @@ class ListController extends BaseController
     {
         try {
             $list = WishList::findOrFail($args['id']);
-
             $v = new ListView($this->container, ['list' => $list]);
             $response->getBody()->write($v->render(3));
             return $response;
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("La liste n'existe pas", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
@@ -138,8 +140,10 @@ class ListController extends BaseController
             $list->token = $body['token'];
             $list->save();
 
+            Flashes::addFlash("Liste modifiée", 'success');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible de modifier la liste", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
@@ -158,8 +162,10 @@ class ListController extends BaseController
             $list = WishList::find($args['id']);
             $list->delete();
 
+            Flashes::addFlash("Liste supprimée", 'success');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible de supprimer la liste", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }

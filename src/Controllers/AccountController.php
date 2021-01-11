@@ -8,6 +8,7 @@ use Whishlist\Models\User;
 use Whishlist\Helpers\Auth;
 use Whishlist\Views\AccountView;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Whishlist\Helpers\Flashes;
 
 class AccountController extends BaseController
 {
@@ -72,9 +73,11 @@ class AccountController extends BaseController
             if($pass != "" & $pass === $password_confirm) {
                 $user->password = password_hash($pass, PASSWORD_DEFAULT);
                 Auth::setUser(null);
+                Flashes::addFlash('Mot de passe changé, déconnexion', 'success');
                 $response = $response->withRedirect($this->container->router->pathFor('home'));
                 
             } else {
+                Flashes::addFlash('Informations modifiées', 'success');
                 $response = $response->withRedirect($this->container->router->pathFor('displayAccount'));
                 Auth::setUser($user);
             }
@@ -82,6 +85,7 @@ class AccountController extends BaseController
 
             return $response;
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible d'éditer le compte'", 'error');
             return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
         }
     }
@@ -100,8 +104,10 @@ class AccountController extends BaseController
             $user = User::findOrFail(Auth::getUser()['id']);
             $user->delete();
             Auth::setUser(null);
+            Flashes::addFlash('Compte supprimé', 'success');
             return $response->withRedirect($this->container->router->pathFor('home'));
         } catch (ModelNotFoundException $e) {
+            Flashes::addFlash('Impossible de supprimer le compte', 'error');
             return $response->withRedirect($this->container->router->pathFor('home'));
         }
     }

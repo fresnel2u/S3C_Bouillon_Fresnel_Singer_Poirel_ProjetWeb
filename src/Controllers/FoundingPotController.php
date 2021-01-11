@@ -5,6 +5,7 @@ namespace Whishlist\Controllers;
 use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Whishlist\Helpers\Flashes;
 use Whishlist\Models\Item;
 use Whishlist\Models\WishList;
 use Whishlist\Models\FoundingPot;
@@ -32,6 +33,7 @@ class FoundingPotController extends BaseController
 
             $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
             if ($alreadyExists) {
+                Flashes::addFlash('L\'item possède déjà une cagnotte.', 'error');
                 throw new Exception('L\'item possède déjà une cagnotte.');
             }
 
@@ -60,6 +62,7 @@ class FoundingPotController extends BaseController
             $item = Item::findOrFail($args['item_id']);
             $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
             if ($alreadyExists) {
+                Flashes::addFlash('L\'item possède déjà une cagnotte.', 'error');
                 throw new Exception('L\'item possède déjà une cagnotte.');
             }
 
@@ -96,6 +99,7 @@ class FoundingPotController extends BaseController
 
             return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
+            Flashes::addFlash('Impossible de mettre à jour la cagnotte', 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
@@ -116,8 +120,10 @@ class FoundingPotController extends BaseController
             $foundingPot = FoundingPot::findOrFail($args['founding_pot_id']);
             $foundingPot->delete();
 
+            Flashes::addFlash('Cagnotte supprimée', 'success');
             return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
+            Flashes::addFlash('Impossible de supprimer la cagnotte', 'erorr');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
 
