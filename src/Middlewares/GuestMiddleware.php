@@ -6,7 +6,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Helpers\Auth;
 use Whishlist\Helpers\Flashes;
-use Whishlist\Helpers\RedirectHelper;
 
 class GuestMiddleware extends BaseMiddleware
 {

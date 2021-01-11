@@ -6,14 +6,11 @@ use Throwable;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\Item;
-use Whishlist\Models\Reservations_messages;
-use Whishlist\Views\ItemView;
 use Whishlist\Helpers\Auth;
+use Whishlist\Views\ItemView;
 use Whishlist\Helpers\Flashes;
-use Whishlist\helpers\RedirectHelper;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Whishlist\Models\ItemReservation;
-use Whishlist\Models\ReservationMessage;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ItemController extends BaseController
 {

@@ -3,9 +3,9 @@
 namespace Whishlist\Views;
 
 use Slim\Container;
-use Whishlist\Views\Components\Flashes;
 use Whishlist\Views\Components\Menu;
 use Whishlist\Views\Components\Header;
+use Whishlist\Views\Components\Flashes;
 
 abstract class BaseView
 {

@@ -6,9 +6,9 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\User;
 use Whishlist\Helpers\Auth;
+use Whishlist\Helpers\Flashes;
 use Whishlist\Views\AccountView;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Whishlist\Helpers\Flashes;
 
 class AccountController extends BaseController
 {

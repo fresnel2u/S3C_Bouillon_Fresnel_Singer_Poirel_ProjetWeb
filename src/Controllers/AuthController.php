@@ -3,12 +3,12 @@
 namespace Whishlist\Controllers;
 
 use Exception;
+use Throwable;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Throwable;
 use Whishlist\Helpers\Auth;
-use Whishlist\Helpers\Flashes;
 use Whishlist\Views\AuthView;
+use Whishlist\Helpers\Flashes;
 
 class AuthController extends BaseController
 {

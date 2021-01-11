@@ -2,8 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Helpers\Auth;
-
 class ItemView extends BaseView
 {
     /**
