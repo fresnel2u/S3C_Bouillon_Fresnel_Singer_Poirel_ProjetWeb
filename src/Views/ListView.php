@@ -2,6 +2,8 @@
 
 namespace Whishlist\Views;
 
+use Whishlist\Helpers\Auth;
+
 class ListView extends BaseView
 {
     /**
@@ -151,7 +153,11 @@ class ListView extends BaseView
             }
 
             // Réservation
-            if ($item->user === null) {
+            if ($item->user !== null) {
+                $html .= <<<HTML
+                    <td>Réservé par {$item->user->firstname} {$item->user->lastname}</td>
+                HTML;
+            } else if (Auth::isLogged()) {
                 $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
                 $html .= <<<HTML
                         <td>
@@ -162,7 +168,7 @@ class ListView extends BaseView
                 HTML;
             } else {
                 $html .= <<<HTML
-                    <td>Réservé par {$item->user->firstname} {$item->user->lastname}</td>
+                    <td>Vous devez être connecté pour réserver.</td>
                 HTML;
             }
 
