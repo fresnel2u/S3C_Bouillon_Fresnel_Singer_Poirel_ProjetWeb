@@ -97,9 +97,9 @@ INSERT INTO `items` (`id`, `list_id`, `name`, `description`, `image`, `url`, `pr
 (19, 1, 'Fort Aventure', 'Découvrez Fort Aventure à Bainville-sur-Madon, un site Accropierre unique en Lorraine ! Des Parcours Acrobatiques pour petits et grands, Jeu Mission Aventure, Crypte de Crapahute, Tyrolienne, Saut à l\'élastique inversé, Toboggan géant... et bien plus encore.', 'fort.jpg', '', 25.00);
 
 INSERT INTO `founding_pots` (`id`, `item_id`, `amount`) VALUES
-(1, 1, 25.00),
-(2, 2, 450.00),
-(3, 3, 650.00);
+(1, 2, 25.00),
+(2, 7, 60.00),
+(3, 16, 100.00);
 
 INSERT INTO `items_reservations` (`id`, `item_id`, `user_id`, `message`) VALUES
 (1, 1, 1, 'Je t\'offre cette bouteille de champagne, déguste la bien.');
