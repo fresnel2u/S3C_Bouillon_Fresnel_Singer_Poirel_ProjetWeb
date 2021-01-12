@@ -37,10 +37,15 @@ class FoundingPotView extends BaseView
      */
     public function participatePage(): string
     {
+        $list = $this->params['list'];
         $item = $this->params['item'];
 
         $participateUrl = $this->container->router->pathFor('participateFoundingPot', [
             'item_id' => $item->id
+        ]);
+        $cancelUrl = $this->container->router->pathFor('displayItem', [
+            'token' => $list->token,
+            'id' => $item->id
         ]);
 
         $amount = number_format($item->foundingPot->amount, 2);
@@ -57,6 +62,7 @@ class FoundingPotView extends BaseView
                         <input type="text" name="amount" id="amount">
                     </div>             
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
+                    <a href="{$cancelUrl}" class="btn btn-secondary">Annuler</a>
                 </form>
             </div>
         HTML;

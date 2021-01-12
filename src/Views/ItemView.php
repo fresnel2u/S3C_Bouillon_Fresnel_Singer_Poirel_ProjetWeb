@@ -139,8 +139,13 @@ class ItemView extends BaseView
         $list = $this->params['list'];
         $user = Auth::getUser();
 
+        $listUrl = $this->container->router->pathFor('displayList', [
+            'token' => $list->token
+        ]);
+
         $html = <<<HTML
-            <div class="container">
+            <div class="container page-item-show">
+                <a href="{$listUrl}">Retour à la liste</a><br><br>
                 <h1>{$item->name}</h1>
                 <p>{$item->description}</p>
                 <img src="/img/{$item->image}" alt="Image de l'item" width="250">
@@ -166,7 +171,6 @@ class ItemView extends BaseView
                 $html .= <<<HTML
                     <p><strong>Cagnotte : </strong> {$item->foundingPot->getRest()} € restant à payer</p>
                     <a href="{$foundingPotUrl}" class="btn btn-secondary">Participer à la cagnotte</a>
-                    <br>
                 HTML;
             } else {
                 $html .= <<<HTML
@@ -179,11 +183,12 @@ class ItemView extends BaseView
         if ($item->reservation) {
             if ($list->isExpired() && $user && $list->user_id !== $user['id']) {
                 $html .= <<<HTML
-                    <br><hr><br>
+                    <br><br><hr><br>
                     <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
                 HTML;
             } else {
                 $html .= <<<HTML
+                    <br><hr><br>
                     <p><i>Réservé.</i></p>
                 HTML;
             }
@@ -260,19 +265,24 @@ class ItemView extends BaseView
      */
     public function lockItem(): string
     {
-
+        $list = $this->params['list'];
         $item = $this->params['item'];
-        $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
         $imgUrl = "/img/{$item->image}";
+        $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
+        $cancelUrl = $this->container->router->pathFor('displayItem', [
+            'token' => $list->token,
+            'id' => $item->id
+        ]);
+
         return <<<HTML
             <div class="container lock-item">
                 <h1>Réserver un item</h1>
                 <div class="item-recap">
                     <h2>Récapitulatif de l'item à réserver : </h2>
-                    <img src="{$imgUrl}" alt="">
+                    <img src="{$imgUrl}" alt="Image de l'item">
                     <p><strong>Nom :</strong> {$item->name}</p>
-                    <p><strong>Prix :</strong> {$item->price} €</p>
                     <p><strong>Description :</strong> {$item->description}</p>
+                    <p><strong>Prix :</strong> {$item->price} €</p>
                 </div> 
                 <br>
                 <div class="item-message">
@@ -283,6 +293,7 @@ class ItemView extends BaseView
                         </div>        
                     
                         <button type="submit" class="btn btn-primary">Confirmer la réservation</button>  
+                        <a href="{$cancelUrl}" class="btn btn-secondary">Annuler</a>
                     </form>
                 </div>
                

@@ -234,9 +234,12 @@ class ItemController extends BaseController
     public function lockItemPage(Request $request, Response $response, array $args): Response
     {
         try {
-            $item = Item::findOrFail($args['id']);
+            $item = Item::with('list')->findOrFail($args['id']);
 
-            $v = new ItemView($this->container, ['item' => $item]);
+            $v = new ItemView($this->container, [
+                'item' => $item,
+                'list' => $item->list
+            ]);
             $response->getBody()->write($v->render(4));
             return $response;
         } catch (ModelNotFoundException $e) {
@@ -304,7 +307,10 @@ class ItemController extends BaseController
               
             Flashes::addFlash("Réservation annulée avec succès", 'success');
 
-            $redirectUrl = $this->container->router->pathFor('displayList', ['token' => $item->list->token]);
+            $redirectUrl = $this->container->router->pathFor('displayItem', [
+                'token' => $item->list->token,
+                'id' => $item->id
+            ]);
             return $response->withRedirect($redirectUrl);
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'annuler la réservation de l'item", 'error');

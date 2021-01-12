@@ -146,10 +146,11 @@ class FoundingPotController extends BaseController
     public function participatePage(Request $request, Response $response, array $args): Response
     {
         try {
-            $item = Item::with('foundingPot')->findOrFail($args['item_id']);
+            $item = Item::with('foundingPot')->with('list')->findOrFail($args['item_id']);
 
             $v = new FoundingPotView($this->container, [
                 'founding_pot' => $item->foundingPot,
+                'list' => $item->list,
                 'item' => $item
             ]);
             $response->getBody()->write($v->render(1));
