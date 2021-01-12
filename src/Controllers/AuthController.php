@@ -9,6 +9,7 @@ use Slim\Http\Response;
 use Whishlist\Helpers\Auth;
 use Whishlist\Views\AuthView;
 use Whishlist\Helpers\Flashes;
+use Whishlist\Helpers\Validator;
 
 class AuthController extends BaseController
 {
@@ -27,7 +28,7 @@ class AuthController extends BaseController
 
         try {
             if ($username === "" || $password == "") {
-                throw new Exception("Veuillez remplir tout les champs.");
+                Validator::failIfEmptyOrNull(compact('username', 'password'));
             } else {
                 Auth::attempt($username, $password);
                 if (isset($_SESSION['login_success_url'])) {

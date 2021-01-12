@@ -2,6 +2,7 @@
 
 namespace Whishlist\Controllers;
 
+use Exception;
 use Throwable;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -12,6 +13,7 @@ use Whishlist\Helpers\Flashes;
 use Whishlist\Models\ItemReservation;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Whishlist\Helpers\UploadFile;
+use Whishlist\Helpers\Validator;
 
 class ItemController extends BaseController
 {
@@ -45,6 +47,13 @@ class ItemController extends BaseController
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
+
+            try {
+                Validator::failIfEmptyOrNull($body, ['image']);
+            } catch(Exception $e) {
+                Flashes::addFlash($e->getMessage(), 'error');
+                return $response->withRedirect($this->container->router->pathFor('newItemPage'));
+            }
 
             $files = $request->getUploadedFiles();
             foreach($files as $file) {
@@ -131,6 +140,13 @@ class ItemController extends BaseController
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
+
+            try {
+                Validator::failIfEmptyOrNull($body, ['image', 'url']);
+            } catch(Exception $e) {
+                Flashes::addFlash($e->getMessage(), 'error');
+                return $response->withRedirect($this->container->router->pathFor('editItemPage', ['id' => $args['id']]));
+            }
 
             $item->list_id = $body['list_id'];
             $item->name = $body['name'];

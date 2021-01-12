@@ -2,6 +2,7 @@
 
 namespace Whishlist\Controllers;
 
+use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Models\User;
@@ -9,6 +10,7 @@ use Whishlist\Helpers\Auth;
 use Whishlist\Helpers\Flashes;
 use Whishlist\Views\AccountView;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Whishlist\Helpers\Validator;
 
 class AccountController extends BaseController
 {
@@ -64,6 +66,13 @@ class AccountController extends BaseController
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
+
+            try {
+                Validator::failIfEmptyOrNull($body, ['password', 'password_confirm']);
+            } catch(Exception $e) {
+                Flashes::addFlash($e->getMessage(), 'error');
+                return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
+            }
             
             $user->firstname = $body['firstname'];
             $user->lastname = $body['lastname'];

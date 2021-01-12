@@ -2,6 +2,7 @@
 
 namespace Whishlist\Controllers;
 
+use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Whishlist\Helpers\Auth;
@@ -9,6 +10,7 @@ use Whishlist\Views\ListView;
 use Whishlist\Helpers\Flashes;
 use Whishlist\Models\WishList;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Whishlist\Helpers\Validator;
 
 class ListController extends BaseController
 {
@@ -42,6 +44,13 @@ class ListController extends BaseController
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
+
+            try {
+                Validator::failIfEmptyOrNull($body);
+            } catch(Exception $e) {
+                Flashes::addFlash($e->getMessage(), 'error');
+                return $response->withRedirect($this->container->router->pathFor('newListPage'));
+            }
 
             $list = new WishList();
             $list->user_id = Auth::getUser()['id'];
@@ -148,6 +157,13 @@ class ListController extends BaseController
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
+
+            try {
+                Validator::failIfEmptyOrNull($body);
+            } catch(Exception $e) {
+                Flashes::addFlash($e->getMessage(), 'error');
+                return $response->withRedirect($this->container->router->pathFor('editListPage', ['id' => $args['id']]));
+            }
 
             $list->title = $body['title'];
             $list->description = $body['description'];
