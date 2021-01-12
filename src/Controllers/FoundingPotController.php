@@ -33,7 +33,12 @@ class FoundingPotController extends BaseController
 
         try {
             $item = Item::findOrFail($args['item_id']); // vérifie si l'item existe
-
+            $list = WishList::findOrFail($item->list_id); // liste de l'item
+            $user = Auth::getUser();
+            if($user['id'] !== $list->user_id) {
+                Flashes::addFlash('Vous devez être le propriétaire de la liste pour créer une cagnotte.', 'error');
+                throw new Exception('Vous devez être le propriétaire de la liste pour créer une cagnotte.');
+            }
             $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
             if ($alreadyExists) {
                 Flashes::addFlash('L\'item possède déjà une cagnotte.', 'error');
