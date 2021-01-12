@@ -174,7 +174,11 @@ class ListView extends BaseView
                         </td>
                     HTML;
                 }
-            } else if (Auth::isLogged()) {
+            } else if (!is_null($item->foundingPot)) { 
+                    $html .= <<<HTML
+                        <td>Participez à la cagnotte</td>
+                    HTML;
+            }else if (Auth::isLogged()) {
                 $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
                 $html .= <<<HTML
                     <td><a href="{$lockUrl}" class="btn btn-light">Réserver</button></td>
