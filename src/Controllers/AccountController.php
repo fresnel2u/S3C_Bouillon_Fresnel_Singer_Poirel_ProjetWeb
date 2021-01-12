@@ -79,7 +79,10 @@ class AccountController extends BaseController
         
             $pass = $body['password'];
             $password_confirm = $body['password_confirm'];
-            if($pass != "" & $pass === $password_confirm) {
+            if($pass !== "" || $password_confirm !== "") {
+                if($pass !== $password_confirm) {
+                    throw new Exception('les mots de passe ne correspondent pas');
+                }
                 $user->password = password_hash($pass, PASSWORD_DEFAULT);
                 Auth::setUser(null);
                 Flashes::addFlash('Mot de passe changé, déconnexion', 'success');
@@ -95,6 +98,9 @@ class AccountController extends BaseController
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'éditer le compte.", 'error');
+            return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
+        } catch (Exception $e) {
+            Flashes::addFlash($e->getMessage(), 'error');
             return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
         }
     }
