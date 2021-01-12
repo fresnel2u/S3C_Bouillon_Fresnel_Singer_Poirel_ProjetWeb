@@ -9,6 +9,10 @@ class WishList extends Model
     protected $table = 'lists';
     public $timestamps = false;
 
+    protected $casts = [
+        'expiration' => 'date'
+    ];
+
     public function items()
     {
         return $this->hasMany(Item::class, 'list_id', 'id');

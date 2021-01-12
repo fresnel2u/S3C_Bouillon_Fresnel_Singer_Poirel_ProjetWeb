@@ -116,7 +116,7 @@ class ListView extends BaseView
                 <h1>{$list->title}</h1>
                 <p>{$list->description}</p>
                 <br><br>
-                <p><i>Expiration : {$list->expiration}</i></p> 
+                <p><i>Expiration : {$list->expiration->format('d/m/Y')}</i></p> 
                 <p><i>Créée par : {$list->user->firstname} {$list->user->lastname}</i></p> 
 
                 <h2>Items de la liste</h2>
