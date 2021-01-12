@@ -2,6 +2,7 @@
 
 namespace Whishlist\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 
 class WishList extends Model
@@ -21,5 +22,10 @@ class WishList extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expiration->lessThan(new DateTime());
     }
 }

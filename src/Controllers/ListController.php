@@ -213,7 +213,11 @@ class ListController extends BaseController
     {
         try {
             $list = WishList::with('items')->findOrFail($args['id']);
-            
+            if(!$list->isExpired()) {
+                Flashes::addFlash("Impossible de consulter les réservations d'une liste avant échéance", 'error');
+                return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            }
+
             $v = new ListView($this->container, [
                 'list' => $list,
                 'items' => $list->items

@@ -4,6 +4,7 @@ namespace Whishlist\Views;
 
 use Illuminate\Support\Facades\Date;
 use Whishlist\Helpers\Auth;
+use Whishlist\Models\WishList;
 
 class ListView extends BaseView
 {
@@ -85,14 +86,19 @@ class ListView extends BaseView
             $html .= <<<HTML
                     <td>
                         <a href="{$showUrl}" class="btn btn-light">Aperçu</a>
-                        <a href="{$editUrl}" class="btn btn-light">Éditer</a>
                         <form method="POST" action="{$deleteUrl}">
                             <button type="submit" class="btn btn-danger">Supprimer</button>
                         </form>
-                        <a href="{$resultsUrl}" class="btn btn-light">Réservations</a>
-                    </td>
-                </tr>
+                        <a href="{$editUrl}" class="btn btn-light">Éditer</a>
             HTML;
+
+           
+            if($list->isExpired()) {
+                $html .= <<<HTML
+                 <a href="{$resultsUrl}" class="btn btn-light">Bilan</a>    
+                HTML;
+            }
+            $html .= '</td> </tr>';
         }
         $html .= '</tbody>
             </table>
