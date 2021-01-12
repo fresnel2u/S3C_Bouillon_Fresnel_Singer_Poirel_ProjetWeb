@@ -227,7 +227,7 @@ class ItemView extends BaseView
         return <<<HTML
             <div class="container">
                 <h1>Éditer un item</h1>
-                <form method="POST" action="{$editUrl}">
+                <form method="POST" action="{$editUrl}" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="list_id">ID de la liste</label>
                         <input type="text" name="list_id" id="list_id" value="{$item->list_id}">
@@ -242,7 +242,7 @@ class ItemView extends BaseView
                     </div>        
                     <div class="form-group">
                         <label for="image">Image</label>
-                        <input type="file" name="image" id="image" value="{$item->image}" accept="image">
+                        <input type="file" name="image" id="image" value="{$item->image}" accept=".png, .jpg">
                     </div>        
                     <div class="form-group">
                         <label for="url">URL</label>

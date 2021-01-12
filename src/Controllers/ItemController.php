@@ -57,11 +57,10 @@ class ItemController extends BaseController
             }
 
             $files = $request->getUploadedFiles();
-            foreach($files as $file) {
-                if ($file->getError() === UPLOAD_ERR_OK) {
-                    $directory = ROUTE . '\img\\';
-                    $filename = UploadFile::moveUploadedFile($directory, $file);
-                }
+            $file = $files['image'];
+            if ($file->getError() === UPLOAD_ERR_OK) {
+                $directory = ROUTE . '\img\\';
+                $filename = UploadFile::moveUploadedFile($directory, $file);
             } 
 
             $item = new Item();
@@ -184,11 +183,23 @@ class ItemController extends BaseController
                 Flashes::addFlash($e->getMessage(), 'error');
                 return $response->withRedirect($this->container->router->pathFor('editItemPage', ['id' => $args['id']]));
             }
+            
+            $files = $request->getUploadedFiles();
+            $file = $files['image'];
+            if($file !== null) {
+                if ($file->getError() === UPLOAD_ERR_OK) {
+                    $directory = ROUTE . '\img\\';
+                    unlink($directory . $item->image);
+                    $filename = UploadFile::moveUploadedFile($directory, $file);
+                }
+            } else {
+                $filename = $item->image;
+            }
 
             $item->list_id = $body['list_id'];
             $item->name = $body['name'];
             $item->description = $body['description'];
-            $item->image = $body['image'];
+            $item->image = $filename;
             $item->url = $body['url'];
             $item->price = $body['price'];
             $item->save();
@@ -213,6 +224,8 @@ class ItemController extends BaseController
     {
         try {
             $item = Item::findOrFail($args['id']);
+            $directory = ROUTE . '\img\\';
+            unlink($directory . $item->image);
             $item->delete();
 
             Flashes::addFlash("Item supprimé avec succès", 'success');
