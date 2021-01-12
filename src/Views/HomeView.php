@@ -22,14 +22,14 @@ class HomeView extends BaseView
                     </div>
                     <div class="header-log">
         HTML;
-
+        $registerUrl = $this->container->router->pathFor('registerPage');
         if (Auth::isLogged()) {
             $accountUrl = $this->container->router->pathFor('displayAccount');
             $html .= <<<HTML
                 <a href="{$accountUrl}"><button class="btn btn-primary">Mon compte</button></a>
             HTML;
         } else {
-            $registerUrl = $this->container->router->pathFor('registerPage');
+            
             $loginUrl = $this->container->router->pathFor('loginPage');
             $html .= <<<HTML
                 <a href="{$loginUrl}"><button class="btn btn-secondary">Connexion</button></a>
@@ -40,7 +40,6 @@ class HomeView extends BaseView
         return $html . <<<HTML
                     </div>
                 </div>
-
                 <div class="home-intro">
                     <img src="/img/icons/online_whishlist.svg" alt="a whish list">
                     <div class="intro-container">
