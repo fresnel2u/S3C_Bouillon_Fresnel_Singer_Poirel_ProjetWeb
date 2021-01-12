@@ -8,6 +8,7 @@ use Whishlist\Controllers\HomeController;
 use Whishlist\Controllers\ItemController;
 use Whishlist\Controllers\ListController;
 use Whishlist\Middlewares\AuthMiddleware;
+use Whishlist\Middlewares\OwnerMiddleware;
 use Whishlist\Middlewares\GuestMiddleware;
 use Whishlist\Controllers\AccountController;
 use Whishlist\Controllers\FoundingPotController;
@@ -25,35 +26,43 @@ $app = new \Slim\App($container);
 // Middlewares
 $authMiddleware = new AuthMiddleware($container);
 $guestMiddleware = new GuestMiddleware($container);
+$ownerMiddleware = new OwnerMiddleware($container);
 
 // Home
 $app->get('/', HomeController::class . ':home')->setName('home');
 
 // Lists
+$app->get('/lists/{token}/show', ListController::class . ':displayList')->setName('displayList');
+
 $app->group('', function (App $app) {
     $app->get('/lists', ListController::class . ':displayAllList')->setName('displayAllList');
     $app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
+})->add($authMiddleware);
+
+$app->group('', function (App $app) {
     $app->get('/lists/{id}/edit', ListController::class . ':editListPage')->setName('editListPage');
     $app->post('/lists/{id}/edit', ListController::class . ':editList')->setName('editList');
     $app->post('/lists/{id}/delete', ListController::class . ':deleteList')->setName('deleteList');
     $app->get('/lists/{id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
-})->add($authMiddleware);
-$app->get('/lists/{token}/show', ListController::class . ':displayList')->setName('displayList');
+})->add($authMiddleware)->add($ownerMiddleware->userOwnsList('id'));
 
 // Items
 $app->group('', function (App $app) {
     $app->get('/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
     $app->get('/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
     $app->post('/items/new', ItemController::class . ':newItem')->setName('newItem');
-    $app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
-    $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
     $app->get('/items/{id}/lock', ItemController::class . ':lockItemPage')->setName('lockItemPage');
     $app->post('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
     $app->post('/items/{id}/lock/cancel', ItemController::class . ':cancelLockItem')->setName('cancelLockItem');
-    $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
 })->add($authMiddleware);
 $app->get('/lists/{token}/item/{id}', ItemController::class . ':displayItem')->setName('displayItem');
+
+$app->group('', function (App $app) {
+    $app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
+    $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
+    $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
+})->add($authMiddleware)->add($ownerMiddleware->userOwnsItem('id'));
 
 // Founding pot
 $app->group('', function (App $app) {
@@ -61,7 +70,7 @@ $app->group('', function (App $app) {
     $app->post('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':create')->setName('createFoundingPot');
     $app->get('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participatePage')->setName('participateFoundingPotPage');
     $app->post('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participate')->setName('participateFoundingPot');
-})->add($authMiddleware);
+})->add($authMiddleware)->add($ownerMiddleware->userOwnsItem('item_id'));
 
 // Auth
 $app->group('', function (App $app) {
