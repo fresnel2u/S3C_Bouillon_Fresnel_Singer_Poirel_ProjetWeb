@@ -176,4 +176,29 @@ class ListController extends BaseController
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
     }
+
+    /**
+     * Crée une vue pour afficher les reservations et les messages d'une liste après échéance.
+     *
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
+    public function displayListResults(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $list = WishList::with('items')->findOrFail($args['id']);
+            
+            $v = new ListView($this->container, [
+                'list' => $list,
+                'items' => $list->items
+            ]);
+            $response->getBody()->write($v->render(4));
+            return $response;
+        } catch (\Throwable $th) {
+            Flashes::addFlash("Impossible de consulter les réservations de la liste.", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+        }
+    }
 }

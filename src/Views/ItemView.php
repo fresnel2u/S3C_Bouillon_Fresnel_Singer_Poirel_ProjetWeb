@@ -186,7 +186,7 @@ class ItemView extends BaseView
                 <div class="item-recap">
                     <h2>Récapitulatif de l'item à réserver : </h2>
                     <p><strong>Nom :</strong> {$item->name}</p>
-                    <p><strong>Prix :</strong> {$item->price}</p>
+                    <p><strong>Prix :</strong> {$item->price} €</p>
                     <p><strong>Description :</strong> {$item->description}</p>
                 </div> 
                 <br>

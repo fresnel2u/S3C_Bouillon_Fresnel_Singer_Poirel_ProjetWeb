@@ -1,0 +1,30 @@
+.list-results {
+
+    h1 {
+        text-align: center;
+    }
+
+    .results-container {
+        .item-result {
+            & {
+                display: flex;
+                margin: 3rem auto;
+            }
+
+            img {
+                width : 20%;
+                border: 1px solid black;
+                box-shadow : var(--eft-neumorphism-shadow);
+                margin-right: 3rem;
+            }
+
+            div {
+                p {
+                    font-size: 1.1rem;
+                    margin-bottom: 0.25rem;
+                }
+            }
+
+        }
+    }
+}

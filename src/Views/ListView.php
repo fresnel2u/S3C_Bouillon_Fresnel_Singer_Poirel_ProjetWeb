@@ -79,6 +79,7 @@ class ListView extends BaseView
             $showUrl = $this->container->router->pathFor('displayList', ['id' => $list->id]);
             $editUrl = $this->container->router->pathFor('editListPage', ['id' => $list->id]);
             $deleteUrl = $this->container->router->pathFor('deleteList', ['id' => $list->id]);
+            $resultsUrl = $this->container->router->pathFor('displayListResults', ['id' => $list->id]);
 
             $html .= <<<HTML
                     <td>
@@ -87,6 +88,7 @@ class ListView extends BaseView
                         <form method="POST" action="{$deleteUrl}">
                             <button type="submit" class="btn btn-danger">Supprimer</button>
                         </form>
+                        <a href="{$resultsUrl}" class="btn btn-light">Réservations</a>
                     </td>
                 </tr>
             HTML;
@@ -230,6 +232,75 @@ class ListView extends BaseView
     }
 
     /**
+     * Construit le contenu du bilan de reservations d'une liste
+     *
+     * @return string
+     */
+    public function getListResults() : string
+    {
+        $list = $this->params['list'];
+        $items = $this->params['items'];
+        $html = <<<HTML
+            <div class="container big list-results">
+                <h1>Bilan des réservations de votre liste : <br> $list->title</h1>
+                <div class="results-container">
+        HTML;        
+        
+        foreach($items as $item) {
+            if(!is_null($item->reservation) || !is_null($item->foundingPot)){
+                $imgUrl = "/img/{$item->image}";
+                $reservation = $item->reservation;
+                $foundingPot = $item->foundingPot;
+                
+                if(!is_null($foundingPot)) {
+                    $type = 'Cagnotte';
+                    $content = '<div class="item-participants">
+                    <p> <strong>Participants :</strong> </p>';
+                    
+                   foreach($foundingPot->participations as $participant) {
+                        $content .= <<<HTML
+                            <div>
+                                <p><strong>-</strong>  {$participant->user->firstname} {$participant->user->lastname} 
+                                   | {$participant->amount} €</p>
+                            </div>
+                        HTML;
+                    }
+                    $content .= '</div>
+                    <p> <strong> Montant restant : </strong>' . $foundingPot->getRest() . '</p>';
+                } else {
+                    $type = 'Réservation';
+                    $content = <<<HTML
+                        <p><strong>auteur de la réservation : </strong> {$reservation->user->firstname} {$reservation->user->lastname}</p>
+                    HTML;
+                    if($reservation->message != '') {
+                        $content .= <<<HTML
+                            <p><strong>message de l'expéditeur :</strong> {$reservation->message} </p>
+                        HTML;
+                    } 
+                }   
+                $html .= <<<HTML
+                    <div class="item-result">
+                        <img src="{$imgUrl}"/>
+                        <div>
+                            <h3><strong>Nom : </strong> {$item->name} </h3>
+                            <p><strong>Type :</strong> {$type}</p>
+                            <p><strong>prix :</strong> {$item->price} €</p>
+                            {$content}
+                        </div>
+                    </div>
+                HTML;
+            } 
+        }
+        
+        $html .= <<<HTML
+                </div>
+            </div>
+        HTML;
+
+        return $html;
+    }
+
+    /**
      * @inheritdoc
      */
     public function render(int $selector): string
@@ -254,6 +325,11 @@ class ListView extends BaseView
             case 3: {
                     $content = $this->editListPage();
                     $title .= "Éditer une liste";
+                    break;
+                }
+            case 4: {
+                    $content = $this->getListResults();
+                    $title .= "Bilan réservations";
                     break;
                 }
             default: {
