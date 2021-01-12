@@ -179,12 +179,13 @@ class ItemView extends BaseView
 
         $item = $this->params['item'];
         $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
-
+        $imgUrl = "/img/{$item->image}";
         return <<<HTML
             <div class="container lock-item">
                 <h1>Réserver un item</h1>
                 <div class="item-recap">
                     <h2>Récapitulatif de l'item à réserver : </h2>
+                    <img src="{$imgUrl}" alt="">
                     <p><strong>Nom :</strong> {$item->name}</p>
                     <p><strong>Prix :</strong> {$item->price} €</p>
                     <p><strong>Description :</strong> {$item->description}</p>
