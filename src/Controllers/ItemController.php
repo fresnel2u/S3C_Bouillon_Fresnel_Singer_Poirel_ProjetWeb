@@ -10,10 +10,11 @@ use Whishlist\Models\Item;
 use Whishlist\Helpers\Auth;
 use Whishlist\Views\ItemView;
 use Whishlist\Helpers\Flashes;
+use Whishlist\Models\WishList;
+use Whishlist\Helpers\Validator;
+use Whishlist\Helpers\UploadFile;
 use Whishlist\Models\ItemReservation;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Whishlist\Helpers\UploadFile;
-use Whishlist\Helpers\Validator;
 
 class ItemController extends BaseController
 {
@@ -102,6 +103,42 @@ class ItemController extends BaseController
     }
 
     /**
+     * Affichage public d'un item
+     *
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
+    public function displayItem(Request $request, Response $response, array $args): Response
+    {
+        $list = WishList::where('token', $args['token'])->first();
+
+        if (!$list) {
+            Flashes::addFlash("Liste introuvable.", 'error');
+            return $response->withRedirect($this->container->router->pathFor('home'));
+        }
+        
+        $item = Item::find($args['id']);
+        if (!$item) {
+            Flashes::addFlash("Item introuvable.", 'error');
+            return $response->withRedirect($this->container->router->pathFor('home'));
+        }
+        
+        if ($list->id !== $item->list_id) {
+            Flashes::addFlash("L'item ne correspond pas à la liste.", 'error');
+            return $response->withRedirect($this->container->router->pathFor('home'));
+        }
+
+        $v = new ItemView($this->container, [
+            'list' => $list,
+            'item' => $item
+        ]);
+        $response->getBody()->write($v->render(2));
+        return $response;
+    }
+
+    /**
      * Éditer un item (page)
      *
      * @param Request $request requête
@@ -115,7 +152,7 @@ class ItemController extends BaseController
             $item = Item::findOrFail($args['id']);
 
             $v = new ItemView($this->container, ['item' => $item]);
-            $response->getBody()->write($v->render(2));
+            $response->getBody()->write($v->render(3));
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
@@ -200,7 +237,7 @@ class ItemController extends BaseController
             $item = Item::findOrFail($args['id']);
 
             $v = new ItemView($this->container, ['item' => $item]);
-            $response->getBody()->write($v->render(3));
+            $response->getBody()->write($v->render(4));
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
@@ -238,7 +275,10 @@ class ItemController extends BaseController
                 Flashes::addFlash("Item déjà réservé.", 'error');
             }
             
-            $redirectUrl = $this->container->router->pathFor('displayList', ['token' => $item->list->token]);
+            $redirectUrl = $this->container->router->pathFor('displayItem', [
+                'token' => $item->list->token,
+                'id' => $item->id
+            ]);
             return $response->withRedirect($redirectUrl);
         } catch (\Throwable $th) {
             Flashes::addFlash("Impossible de réservé l'item", 'error');

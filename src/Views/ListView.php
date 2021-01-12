@@ -2,7 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Illuminate\Support\Facades\Date;
 use Whishlist\Helpers\Auth;
 use Whishlist\Models\WishList;
 
@@ -130,51 +129,24 @@ class ListView extends BaseView
         HTML;
         
         foreach ($items as $item) {
+            $itemUrl = $this->container->router->pathFor('displayItem', [
+                'token' => $list->token,
+                'id' => $item->id
+            ]);
             $html .= <<<HTML
                 <div class="item">
-                    <img src="/img/{$item->image}" alt="Image de l'item" />
-                    <div>
-                        <a href="{$item->url}" target="_blank"><h3>{$item->name}</h3></a>
-                        <p>{$item->description}</p>
-                        <p><strong>Prix : </strong> {$item->price} €</p>
+                    <a href="{$itemUrl}">
+                        <img src="/img/{$item->image}" alt="Image de l'item" />
+                        <h3>{$item->name}</h3>
+                    </a>
             HTML;
-
-            // Cagnotte
-            if ($item->foundingPot) {
-                $rest = $item->foundingPot->getRest();
-
-                if ($rest > 0) {
-                    $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
-                        'item_id' => $item->id
-                    ]);
-                    $html .= <<<HTML
-                        <p><strong>Cagnotte : </strong> {$item->foundingPot->getRest()} € restant à payer</p>
-                        <a href="{$foundingPotUrl}" class="btn btn-secondary">Participer à la cagnotte</a>
-                    HTML;
-                } else {
-                    $html .= <<<HTML
-                        <p><strong>Cagnotte : </strong> complétée.</p>
-                    HTML;
-                }
-            }
 
             // Réservation
             if ($item->reservation) {
-                // Annuler la réservation
-                if ($user && $item->reservation->user_id === $user['id']) {
-                    $cancelLockItem = $this->container->router->pathFor('cancelLockItem', ['id' => $item->id]);
-                    $html .= <<<HTML
-                        <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
-                            <button class="btn btn-danger">Annuler la réservation</button>
-                        </form>
-                    HTML;
-                }
-
-                if ($list->expiration < new Date()) {
+                if ($list->expiration->lessThan(new \DateTime())) {
                     $reservationMessage = $item->reservation->message ? trim($item->reservation->message) : '';
                     $message = ($reservationMessage !== '') ? $reservationMessage : 'Pas de message.';
                     $html .= <<<HTML
-                        <br><br><hr><br>
                         <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
                         <p><strong>Message : </strong><i>{$message}</i></p>
                     HTML;
@@ -184,14 +156,12 @@ class ListView extends BaseView
                     HTML;
                 }
             } else {
-                $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
                 $html .= <<<HTML
-                    <a href="{$lockUrl}" class="btn btn-primary">Réserver</a>
+                    <p><i>Non réservé.</i></p>
                 HTML;
             }
 
             $html .= <<<HTML
-                    </div>
                 </div>
             HTML;
         }

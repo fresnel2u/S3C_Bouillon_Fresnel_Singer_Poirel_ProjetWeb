@@ -31,7 +31,6 @@ $app->get('/', HomeController::class . ':home')->setName('home');
 
 // Lists
 $app->group('', function (App $app) {
-    
     $app->get('/lists', ListController::class . ':displayAllList')->setName('displayAllList');
     $app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
@@ -54,6 +53,7 @@ $app->group('', function (App $app) {
     $app->post('/items/{id}/lock/cancel', ItemController::class . ':cancelLockItem')->setName('cancelLockItem');
     $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
 })->add($authMiddleware);
+$app->get('/lists/{token}/item/{id}', ItemController::class . ':displayItem')->setName('displayItem');
 
 // Founding pot
 $app->group('', function (App $app) {

@@ -2,16 +2,25 @@
 
     & .items-list {
         display: grid;
-        grid-gap: 40px;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 24px;
+        align-items: center;
 
         & > .item {
             padding: 16px;
             display: flex;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ececec;
+            text-align: center;
 
+            & h3 {
+                display: inline-block;
+            }
+            
             & img {
-                width: 200px;
-                margin-right: 24px;
+                width: 100%;
+                margin-bottom: 16px;
             }
 
             & button, & form, & a.btn {
@@ -21,8 +30,5 @@
             }
         }
 
-        & > .item:nth-child(odd) {
-            background-color: #fafafa;
-        }
     }
 }

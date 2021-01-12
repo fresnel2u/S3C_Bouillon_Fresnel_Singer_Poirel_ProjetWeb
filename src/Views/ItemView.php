@@ -2,6 +2,8 @@
 
 namespace Whishlist\Views;
 
+use Whishlist\Helpers\Auth;
+
 class ItemView extends BaseView
 {
     /**
@@ -127,6 +129,87 @@ class ItemView extends BaseView
     }
 
     /**
+     * Affichage d'un item
+     *
+     * @return string
+     */
+    private function displayItem(): string
+    {
+        $item = $this->params['item'];
+        $list = $this->params['list'];
+        $user = Auth::getUser();
+
+        $html = <<<HTML
+            <div class="container">
+                <h1>{$item->name}</h1>
+                <p>{$item->description}</p>
+                <img src="/img/{$item->image}" alt="Image de l'item" width="250">
+                <br>
+                <p><strong>Prix : </strong>{$item->price} €</p>
+        HTML;
+
+        // URL
+        if ($item->url && $item->url !== '') {
+            $html .= <<<HTML
+                <p><strong>Lien externe : </strong><a href="{$item->url}" target="_blank">{$item->url}</a></p>
+            HTML;
+        }
+
+        // Cagnotte
+        if ($item->foundingPot) {
+            $rest = $item->foundingPot->getRest();
+
+            if ($rest > 0) {
+                $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
+                    'item_id' => $item->id
+                ]);
+                $html .= <<<HTML
+                    <p><strong>Cagnotte : </strong> {$item->foundingPot->getRest()} € restant à payer</p>
+                    <a href="{$foundingPotUrl}" class="btn btn-secondary">Participer à la cagnotte</a>
+                    <br>
+                HTML;
+            } else {
+                $html .= <<<HTML
+                    <p><strong>Cagnotte : </strong> complétée.</p>
+                HTML;
+            }
+        }
+
+        // Réservation
+        if ($item->reservation) {
+            if ($list->isExpired() && $user && $list->user_id !== $user['id']) {
+                $html .= <<<HTML
+                    <br><hr><br>
+                    <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
+                HTML;
+            } else {
+                $html .= <<<HTML
+                    <p><i>Réservé.</i></p>
+                HTML;
+            }
+
+            // Annuler la réservation
+            if ($user && $item->reservation->user_id === $user['id']) {
+                $cancelLockItem = $this->container->router->pathFor('cancelLockItem', ['id' => $item->id]);
+                $html .= <<<HTML
+                    <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
+                        <button class="btn btn-danger">Annuler la réservation</button>
+                    </form>
+                HTML;
+            }
+        } else {
+            $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
+            $html .= <<<HTML
+                <a href="{$lockUrl}" class="btn btn-primary">Réserver</a>
+            HTML;
+        }
+
+        return $html . <<<HTML
+            </div>
+        HTML;
+    }
+
+    /**
      * Construit la page d'édition d'un item
      *
      * @return string
@@ -135,7 +218,7 @@ class ItemView extends BaseView
     {
         $item = $this->params['item'];
         $editUrl = $this->container->router->pathFor('editItem', ['id' => $item->id]);
-        
+
         return <<<HTML
             <div class="container">
                 <h1>Éditer un item</h1>
@@ -175,7 +258,8 @@ class ItemView extends BaseView
      *
      * @return string
      */
-    public function lockItem() : string {
+    public function lockItem(): string
+    {
 
         $item = $this->params['item'];
         $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
@@ -224,15 +308,20 @@ class ItemView extends BaseView
                     break;
                 }
             case 2: {
+                    $content = $this->displayItem();
+                    $title .= "Affichage d'un item";
+                    break;
+                }
+            case 3: {
                     $content = $this->editItemPage();
                     $title .= "Éditer un item";
                     break;
                 }
-            case 3: {
+            case 4: {
                     $content = $this->lockItem();
                     $title .= "Réserver un item";
                     break;
-            }
+                }
             default: {
                     $content = '';
                     break;

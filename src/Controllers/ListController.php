@@ -108,7 +108,7 @@ class ListController extends BaseController
 
         if (!$list) {
             Flashes::addFlash("Liste introuvable", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->container->router->pathFor('home'));
         }
         
         $v = new ListView($this->container, [
