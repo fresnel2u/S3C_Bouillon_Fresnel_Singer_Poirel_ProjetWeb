@@ -14,11 +14,12 @@ class FoundingPotView extends BaseView
         $createFoundingPotUrl = $this->container->router->pathFor('createFoundingPot', [
             'item_id' => $this->params['item']->id
         ]);
-
+        $item = $this->params['item'];
         return <<<HTML
             <div class="container">
                 <h1>Créer une cagnotte</h1>
                 <form method="POST" action="{$createFoundingPotUrl}">
+                    <p><strong> Prix de l'item : </strong> {$item->price} € </p>
                     <div class="form-group">
                         <label for="amount">Montant de la cagnotte</label>
                         <input type="text" name="amount" id="amount">
