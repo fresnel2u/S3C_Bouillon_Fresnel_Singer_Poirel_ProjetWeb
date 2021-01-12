@@ -144,11 +144,8 @@ class ListView extends BaseView
             // Réservation
             if ($item->reservation) {
                 if ($list->expiration->lessThan(new \DateTime())) {
-                    $reservationMessage = $item->reservation->message ? trim($item->reservation->message) : '';
-                    $message = ($reservationMessage !== '') ? $reservationMessage : 'Pas de message.';
                     $html .= <<<HTML
                         <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
-                        <p><strong>Message : </strong><i>{$message}</i></p>
                     HTML;
                 } else {
                     $html .= <<<HTML
