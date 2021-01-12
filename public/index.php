@@ -35,12 +35,12 @@ $app->group('', function (App $app) {
     $app->get('/lists', ListController::class . ':displayAllList')->setName('displayAllList');
     $app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
-    $app->get('/lists/{id}/show', ListController::class . ':displayList')->setName('displayList');
     $app->get('/lists/{id}/edit', ListController::class . ':editListPage')->setName('editListPage');
     $app->post('/lists/{id}/edit', ListController::class . ':editList')->setName('editList');
     $app->post('/lists/{id}/delete', ListController::class . ':deleteList')->setName('deleteList');
     $app->get('/lists/{id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
 })->add($authMiddleware);
+$app->get('/lists/{token}/show', ListController::class . ':displayList')->setName('displayList');
 
 // Items
 $app->group('', function (App $app) {

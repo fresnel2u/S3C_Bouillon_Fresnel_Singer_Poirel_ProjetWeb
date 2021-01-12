@@ -51,6 +51,11 @@ class ListController extends BaseController
             $list->token = $body['token'];
             $list->save();
 
+            if ($list->token === '') {
+                $list->token = bin2hex($list->id . random_bytes(10));
+                $list->save();
+            }
+
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'ajouter la liste", 'error');
@@ -87,19 +92,22 @@ class ListController extends BaseController
      */
     public function displayList(Request $request, Response $response, array $args): Response
     {
-        try {
-            $list = WishList::with('items')->findOrFail($args['id']);
-            
-            $v = new ListView($this->container, [
-                'list' => $list,
-                'items' => $list->items
-            ]);
-            $response->getBody()->write($v->render(2));
-            return $response;
-        } catch (\Throwable $th) {
-            Flashes::addFlash("Impossible de consulter la liste.", 'error');
+        $list = WishList::with('items')
+            ->with('user')
+            ->where('token', $args['token'])
+            ->first();
+
+        if (!$list) {
+            Flashes::addFlash("Liste introuvable", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
         }
+        
+        $v = new ListView($this->container, [
+            'list' => $list,
+            'items' => $list->items
+        ]);
+        $response->getBody()->write($v->render(2));
+        return $response;
     }
 
     /**
@@ -144,7 +152,7 @@ class ListController extends BaseController
             $list->title = $body['title'];
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
-            $list->token = $body['token'];
+            $list->token = $body['token'] !== '' ? $body['token'] : bin2hex($list->id . random_bytes(10));
             $list->save();
 
             Flashes::addFlash("Liste modifiée", 'success');

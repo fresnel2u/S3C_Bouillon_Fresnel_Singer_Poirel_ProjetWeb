@@ -222,7 +222,7 @@ class ItemController extends BaseController
                 Flashes::addFlash("Item déjà réservé.", 'error');
             }
             
-            $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
+            $redirectUrl = $this->container->router->pathFor('displayList', ['token' => $item->list->token]);
             return $response->withRedirect($redirectUrl);
         } catch (\Throwable $th) {
             Flashes::addFlash("Impossible de réservé l'item", 'error');
@@ -248,7 +248,7 @@ class ItemController extends BaseController
               
             Flashes::addFlash("Réservation annulée avec succès", 'success');
 
-            $redirectUrl = $this->container->router->pathFor('displayList', ['id' => $item->list_id]);
+            $redirectUrl = $this->container->router->pathFor('displayList', ['token' => $item->list->token]);
             return $response->withRedirect($redirectUrl);
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'annuler la réservation de l'item", 'error');

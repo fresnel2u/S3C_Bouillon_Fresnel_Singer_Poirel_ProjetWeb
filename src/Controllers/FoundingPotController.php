@@ -120,7 +120,7 @@ class FoundingPotController extends BaseController
 
             Flashes::addFlash("Vous avez bien ajouté {$amount} € à la cagnotte.", 'success');
             return $response->withRedirect($this->container->router->pathFor('displayList', [
-                'id' => $item->list_id
+                'token' => $item->list->token
             ]));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Le model n'existe pas.", 'error');

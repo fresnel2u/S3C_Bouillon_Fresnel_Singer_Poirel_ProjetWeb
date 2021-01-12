@@ -1,0 +1,28 @@
+.page-list-show {
+
+    & .items-list {
+        display: grid;
+        grid-gap: 40px;
+
+        & > .item {
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+
+            & img {
+                width: 200px;
+                margin-right: 24px;
+            }
+
+            & button, & form, & a.btn {
+                display: inline-block;
+                margin-right: 8px;
+                margin-bottom: 8px;
+            }
+        }
+
+        & > .item:nth-child(odd) {
+            background-color: #fafafa;
+        }
+    }
+}

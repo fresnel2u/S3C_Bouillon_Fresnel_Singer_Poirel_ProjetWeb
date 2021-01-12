@@ -2,6 +2,7 @@
 
 namespace Whishlist\Views;
 
+use Illuminate\Support\Facades\Date;
 use Whishlist\Helpers\Auth;
 
 class ListView extends BaseView
@@ -76,7 +77,7 @@ class ListView extends BaseView
                 $html .= "<td>$row</td>";
             }
             
-            $showUrl = $this->container->router->pathFor('displayList', ['id' => $list->id]);
+            $showUrl = $this->container->router->pathFor('displayList', ['token' => $list->token]);
             $editUrl = $this->container->router->pathFor('editListPage', ['id' => $list->id]);
             $deleteUrl = $this->container->router->pathFor('deleteList', ['id' => $list->id]);
             $resultsUrl = $this->container->router->pathFor('displayListResults', ['id' => $list->id]);
@@ -111,92 +112,174 @@ class ListView extends BaseView
         $user = Auth::getUser();
 
         $html = <<<HTML
-            <h1>Items de la liste "{$list->title}":</h1>
-            <div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Nom</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">URL</th>
-                            <th scope="col">Tarif</th>
-                            <th scope="col">Cagnotte</th>
-                            <th scope="col">Réservation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <div class="container page-list-show">
+                <h1>{$list->title}</h1>
+                <p>{$list->description}</p>
+                <br><br>
+                <p><i>Expiration : {$list->expiration}</i></p> 
+                <p><i>Créée par : {$list->user->firstname} {$list->user->lastname}</i></p> 
+
+                <h2>Items de la liste</h2>
+                <div class="items-list">
         HTML;
+        
         foreach ($items as $item) {
             $html .= <<<HTML
-                <tr>
-                    <td>{$item->id}</td>
-                    <td>{$item->name}</td>
-                    <td>{$item->description}</td>
-                    <td><img src="/img/{$item->image}" alt="Image de l'item {$item->id}" width="150" /></td>
-                    <td>{$item->url}</td>
-                    <td>{$item->price} €</td>
+                <div class="item">
+                    <img src="/img/{$item->image}" alt="Image de l'item" />
+                    <div>
+                        <a href="{$item->url}" target="_blank"><h3>{$item->name}</h3></a>
+                        <p>{$item->description}</p>
+                        <p><strong>Prix : </strong> {$item->price} €</p>
             HTML;
 
             // Cagnotte
             if ($item->foundingPot) {
-                $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
-                    'item_id' => $item->id
-                ]);
-                $html .= <<<HTML
-                    <td>
-                        <a href="{$foundingPotUrl}" class="btn btn-light">Participer à la cagnotte</a>
-                    </td>
-                HTML;
-            } else {
-                $html .= <<<HTML
-                    <td>Pas de cagnotte.</td>
-                HTML;
+                $rest = $item->foundingPot->getRest();
+
+                if ($rest > 0) {
+                    $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
+                        'item_id' => $item->id
+                    ]);
+                    $html .= <<<HTML
+                        <p><strong>Cagnotte : </strong> {$item->foundingPot->getRest()} € restant à payer</p>
+                        <a href="{$foundingPotUrl}" class="btn btn-secondary">Participer à la cagnotte</a>
+                    HTML;
+                } else {
+                    $html .= <<<HTML
+                        <p><strong>Cagnotte : </strong> complétée.</p>
+                    HTML;
+                }
             }
 
             // Réservation
             if ($item->reservation) {
-                $html .= <<<HTML
-                    <td>Réservé par {$item->reservation->user->firstname} {$item->reservation->user->lastname}
-                HTML;
-                  // annuler la réservation
-                if($item->reservation->user_id === $user['id']) {
+                // Annuler la réservation
+                if ($user && $item->reservation->user_id === $user['id']) {
                     $cancelLockItem = $this->container->router->pathFor('cancelLockItem', ['id' => $item->id]);
                     $html .= <<<HTML
-                        <br> 
                         <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
-                            <button class="btn btn-danger">Annuler</button>
-                        </form> </td>
+                            <button class="btn btn-danger">Annuler la réservation</button>
+                        </form>
+                    HTML;
+                }
+
+                if ($list->expiration < new Date()) {
+                    $reservationMessage = $item->reservation->message ? trim($item->reservation->message) : '';
+                    $message = ($reservationMessage !== '') ? $reservationMessage : 'Pas de message.';
+                    $html .= <<<HTML
+                        <br><br><hr><br>
+                        <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
+                        <p><strong>Message : </strong><i>{$message}</i></p>
                     HTML;
                 } else {
                     $html .= <<<HTML
-                        </td>
+                        <p><i>Réservé.</i></p>
                     HTML;
                 }
-            } else if (!is_null($item->foundingPot)) { 
-                    $html .= <<<HTML
-                        <td>Participez à la cagnotte</td>
-                    HTML;
-            }else if (Auth::isLogged()) {
+            } else {
                 $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
                 $html .= <<<HTML
-                    <td><a href="{$lockUrl}" class="btn btn-light">Réserver</button></td>
-                HTML;
-            } else {
-                $html .= <<<HTML
-                    <td>Vous devez être connecté pour réserver.</td>
+                    <a href="{$lockUrl}" class="btn btn-primary">Réserver</a>
                 HTML;
             }
 
-            $html .= '<tr>';
+            $html .= <<<HTML
+                    </div>
+                </div>
+            HTML;
         }
 
-        return $html . <<<HTML
-                    </tbody>
-                </table>
+        $html .= <<<HTML
+                </div>
             </div>
         HTML;
+
+        return $html;
+
+        // $html = <<<HTML
+        //     <h1>Items de la liste "{$list->title}":</h1>
+        //     <div>
+        //         <table class="table">
+                    // <thead>
+                    //     <tr>
+                    //         <th scope="col">ID</th>
+                    //         <th scope="col">Nom</th>
+                    //         <th scope="col">Description</th>
+                    //         <th scope="col">Image</th>
+                    //         <th scope="col">URL</th>
+                    //         <th scope="col">Tarif</th>
+                    //         <th scope="col">Cagnotte</th>
+                    //         <th scope="col">Réservation</th>
+                    //     </tr>
+                    // </thead>
+                    // <tbody>
+        // HTML;
+        // foreach ($items as $item) {
+        //     $html .= <<<HTML
+        //         <tr>
+        //             <td>{$item->id}</td>
+        //             <td>{$item->name}</td>
+        //             <td>{$item->description}</td>
+        //             <td><img src="/img/{$item->image}" alt="Image de l'item {$item->id}" width="150" /></td>
+        //             <td>{$item->url}</td>
+        //             <td>{$item->price} €</td>
+        //     HTML;
+
+        //     // Cagnotte
+        //     if ($item->foundingPot) {
+                // $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
+                //     'item_id' => $item->id
+                // ]);
+        //         $html .= <<<HTML
+        //             <td>
+        //                 <a href="{$foundingPotUrl}" class="btn btn-light">Participer à la cagnotte</a>
+        //             </td>
+        //         HTML;
+        //     } else {
+        //         $html .= <<<HTML
+        //             <td>Pas de cagnotte.</td>
+        //         HTML;
+        //     }
+
+        //     // Réservation
+        //     if ($item->reservation) {
+        //         $html .= <<<HTML
+        //             <td>Réservé par {$item->reservation->user->firstname} {$item->reservation->user->lastname}
+        //         HTML;
+                
+        //         // annuler la réservation
+        //         if ($item->reservation->user_id === $user['id']) {
+        //             $cancelLockItem = $this->container->router->pathFor('cancelLockItem', ['id' => $item->id]);
+        //             $html .= <<<HTML
+        //                 <br> 
+        //                 <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
+        //                     <button class="btn btn-danger">Annuler</button>
+        //                 </form>
+        //             HTML;
+        //         }
+        //         $html .= <<<HTML
+        //             </td>
+        //         HTML;
+        //     } else if (Auth::isLogged()) {
+        //         $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
+        //         $html .= <<<HTML
+        //             <td><a href="{$lockUrl}" class="btn btn-light">Réserver</button></td>
+        //         HTML;
+        //     } else {
+        //         $html .= <<<HTML
+        //             <td>Vous devez être connecté pour réserver.</td>
+        //         HTML;
+        //     }
+
+        //     $html .= '<tr>';
+        // }
+
+        // return $html . <<<HTML
+        //             </tbody>
+        //         </table>
+        //     </div>
+        // HTML;
     }
 
     /**

@@ -12,8 +12,23 @@
         margin-right: auto;
     }
 
-    & > h1 {
+    & p + * {
+        margin-top: 16px;
+    }
+
+    & h1 {
         margin-bottom: 24px;
+    }
+
+    & h2 {
+        margin-top: 32px;
+        margin-bottom: 16px;
+    }
+    
+    & h3 {
+        font-weight: bolder;
+        font-size: 18px;
+        margin-bottom: 16px;
     }
 }
 

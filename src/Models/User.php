@@ -18,4 +18,9 @@ class User extends Model
     {
         return $this->hasMany(ItemReservation::class, 'user_id', 'id');
     }
+
+    public function getFullname(): string
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
 }
