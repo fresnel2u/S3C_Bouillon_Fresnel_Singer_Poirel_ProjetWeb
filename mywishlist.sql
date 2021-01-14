@@ -65,6 +65,17 @@ CREATE TABLE `items_reservations` (
   CONSTRAINT `fk_items_reservations_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `list_messages` (
+	`list_id` INT(11) NOT NULL,
+	`user_id` INT(11) NOT NULL,
+	`message` VARCHAR(1024) NOT NULL,
+	PRIMARY KEY (`list_id`, `message`, `user_id`),
+	INDEX `fk_list_id` (`list_id`),
+	INDEX `fk_user_id` (`user_id`),
+	CONSTRAINT `list` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`),
+	CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
 (1, 'Jean', 'Dupont', 'a@a.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
 (2, 'Jeanne', 'Maria', 'b@b.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),

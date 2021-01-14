@@ -4,6 +4,7 @@ namespace Whishlist\Views;
 
 use Whishlist\Helpers\Auth;
 use Whishlist\Models\WishList;
+use Whishlist\Models\Message;
 
 class ListView extends BaseView
 {
@@ -114,6 +115,7 @@ class ListView extends BaseView
     {
         $list = $this->params['list'];
         $items = $this->params['items'];
+        $messages = $this->params['messages'];
         $user = Auth::getUser();
 
         $html = <<<HTML
@@ -165,8 +167,28 @@ class ListView extends BaseView
 
         $html .= <<<HTML
                 </div>
-            </div>
         HTML;
+
+        $addListMessageUrl = $this->container->router->pathFor('newListMessage', ['token' => $list->token]);
+
+        $html .= <<<HTML
+        <div class="messages">
+            <form method="POST" action="{$addListMessageUrl}">
+                <label for="descr"><br><p><i>Messages : </i></p></label>
+                <input type="text" name ="message" id="message">
+            </form>
+        <br>
+        HTML;
+
+        foreach ($messages as $message) {
+            $html .= <<<HTML
+                <br><p><i>$message->message</i></p>
+            HTML;
+        }
+
+        $html .= <<<HTML
+                </div>
+            HTML;
 
         return $html;
 

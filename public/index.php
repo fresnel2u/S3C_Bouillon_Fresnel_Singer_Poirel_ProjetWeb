@@ -38,6 +38,7 @@ $app->group('', function (App $app) {
     $app->get('/lists', ListController::class . ':displayAllList')->setName('displayAllList');
     $app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
+    $app->post('/lists/{token}/show', ListController::class . ':addListMessage')->setName('newListMessage');
 })->add($authMiddleware);
 
 $app->group('', function (App $app) {

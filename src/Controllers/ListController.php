@@ -9,6 +9,7 @@ use Whishlist\Helpers\Auth;
 use Whishlist\Views\ListView;
 use Whishlist\Helpers\Flashes;
 use Whishlist\Models\WishList;
+use Whishlist\Models\ListMessage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Whishlist\Helpers\Validator;
 
@@ -103,6 +104,7 @@ class ListController extends BaseController
     {
         $list = WishList::with('items')
             ->with('user')
+            ->with('messages')
             ->where('token', $args['token'])
             ->first();
 
@@ -113,7 +115,8 @@ class ListController extends BaseController
         
         $v = new ListView($this->container, [
             'list' => $list,
-            'items' => $list->items
+            'items' => $list->items,
+            'messages' => $list->messages
         ]);
         $response->getBody()->write($v->render(2));
         return $response;
@@ -227,6 +230,33 @@ class ListController extends BaseController
         } catch (\Throwable $th) {
             Flashes::addFlash("Impossible de consulter les réservations de la liste.", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+        }
+    }
+
+    public function addListMessage(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $list = WishList::select('id')->where('token', '=', $args['token'])->firstOrFail();
+
+            $body = $request->getParsedBody();
+            $body = array_map(function ($field) {
+                return filter_var($field, FILTER_SANITIZE_STRING);
+            }, $body);
+
+            $message = new ListMessage();
+            $message->list_id = $list->id;
+            $message->user_id = Auth::getUser()['id']; 
+            $message->message = $body['message'];
+            $message->save();
+
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
+                'token' => $args['token']
+            ]));
+        } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible d'ajouter la liste", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
+                'token' => $args['token']
+            ]));
         }
     }
 }

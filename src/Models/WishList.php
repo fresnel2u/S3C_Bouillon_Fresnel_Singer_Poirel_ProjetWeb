@@ -24,6 +24,11 @@ class WishList extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function messages()
+    {
+        return $this->hasMany(ListMessage::class, 'list_id', 'id');
+    }
+
     public function isExpired(): bool
     {
         return $this->expiration->lessThan(new DateTime());
