@@ -254,6 +254,7 @@ class ListView extends BaseView
         $hasContent = false;
         foreach($items as $item) {
             if (!is_null($item->reservation) || !is_null($item->foundingPot)) {
+                $hasContent = true;
                 $imgUrl = "/img/{$item->image}";
                 $reservation = $item->reservation;
                 $foundingPot = $item->foundingPot;
