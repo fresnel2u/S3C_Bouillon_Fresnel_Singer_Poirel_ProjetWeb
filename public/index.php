@@ -9,6 +9,7 @@ use Whishlist\Controllers\ItemController;
 use Whishlist\Controllers\ListController;
 use Whishlist\Middlewares\AuthMiddleware;
 use Whishlist\Middlewares\GuestMiddleware;
+use Whishlist\Middlewares\OwnerMiddleware;
 use Whishlist\Controllers\AccountController;
 use Whishlist\Controllers\FoundingPotController;
 
@@ -25,6 +26,9 @@ $app = new \Slim\App($container);
 // Middlewares
 $authMiddleware = new AuthMiddleware($container);
 $guestMiddleware = new GuestMiddleware($container);
+$itemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM);
+$listOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::WISHLIST);
+$foundingPotItemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
 
 // Home
 $app->get('/', HomeController::class . ':home')->setName('home');
@@ -44,7 +48,7 @@ $app->group('', function (App $app) {
     $app->post('/lists/{id}/edit', ListController::class . ':editList')->setName('editList');
     $app->post('/lists/{id}/delete', ListController::class . ':deleteList')->setName('deleteList');
     $app->get('/lists/{id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
-})->add($authMiddleware)/*->add($ownerMiddleware->userOwnsList('id'))*/;
+})->add($authMiddleware)->add($listOwnerMiddleware);
 
 // Items
 $app->group('', function (App $app) {
@@ -61,7 +65,7 @@ $app->group('', function (App $app) {
     $app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
     $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
     $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
-})->add($authMiddleware)/*->add($ownerMiddleware->userOwnsItem('id'))*/;
+})->add($authMiddleware)->add($itemOwnerMiddleware);
 
 // Founding pot
 $app->group('', function (App $app) {
@@ -69,7 +73,7 @@ $app->group('', function (App $app) {
     $app->post('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':create')->setName('createFoundingPot');
     $app->get('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participatePage')->setName('participateFoundingPotPage');
     $app->post('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participate')->setName('participateFoundingPot');
-})->add($authMiddleware)/*->add($ownerMiddleware->userOwnsItem('item_id'))*/;
+})->add($authMiddleware)->add($foundingPotItemOwnerMiddleware);
 
 // Auth
 $app->group('', function (App $app) {
