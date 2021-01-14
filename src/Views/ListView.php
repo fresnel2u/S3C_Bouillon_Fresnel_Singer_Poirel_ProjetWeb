@@ -90,7 +90,7 @@ class ListView extends BaseView
                             <a href="{$editUrl}" class="btn btn-light">Éditer</a>
             HTML;
 
-            if ($list->isExpired()) {
+            if($list->isExpired()) {
                 $html .= <<<HTML
                     <a href="{$resultsUrl}" class="btn btn-light">Bilan</a>    
                 HTML;
@@ -250,8 +250,10 @@ class ListView extends BaseView
                 <div class="results-container">
         HTML;        
         
+        $hasContent = false;
         foreach($items as $item) {
             if(!is_null($item->reservation) || !is_null($item->foundingPot)){
+                $hasContent = true;
                 $imgUrl = "/img/{$item->image}";
                 $reservation = $item->reservation;
                 $foundingPot = $item->foundingPot;
@@ -294,6 +296,12 @@ class ListView extends BaseView
                     </div>
                 HTML;
             } 
+        }
+
+        if($hasContent === false) {
+            $html .= <<<HTML
+                    <p> Aucune réservation n'a été effectué sur cette liste. </p>
+                HTML;
         }
         
         $html .= <<<HTML
