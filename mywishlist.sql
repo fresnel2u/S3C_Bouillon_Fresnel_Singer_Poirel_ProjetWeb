@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `lists_messages`;
 DROP TABLE IF EXISTS `items_reservations`;
 DROP TABLE IF EXISTS `founding_pots_participations`;
 DROP TABLE IF EXISTS `founding_pots`;
@@ -65,15 +66,13 @@ CREATE TABLE `items_reservations` (
   CONSTRAINT `fk_items_reservations_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `list_messages` (
+CREATE TABLE `lists_messages` (
 	`list_id` INT(11) NOT NULL,
 	`user_id` INT(11) NOT NULL,
 	`message` VARCHAR(1024) NOT NULL,
-	PRIMARY KEY (`list_id`, `message`, `user_id`),
-	INDEX `fk_list_id` (`list_id`),
-	INDEX `fk_user_id` (`user_id`),
-	CONSTRAINT `list` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`),
-	CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+	PRIMARY KEY (`list_id`, `user_id`),
+	CONSTRAINT `fk_lists_messages_lists` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`) ON DELETE CASCADE,
+	CONSTRAINT `fk_lists_messages_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
