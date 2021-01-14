@@ -11,10 +11,14 @@ class FoundingPotView extends BaseView
      */
     public function createPage(): string
     {
-        $createFoundingPotUrl = $this->pathFor('createFoundingPot', [
-            'item_id' => $this->params['item']->id
-        ]);
+        $list = $this->params['list'];
         $item = $this->params['item'];
+
+        $createFoundingPotUrl = $this->pathFor('createFoundingPot', [
+            'list_id' => $list->id,
+            'item_id' => $item->id
+        ]);
+
         return <<<HTML
             <div class="container">
                 <h1>Créer une cagnotte</h1>
@@ -41,11 +45,12 @@ class FoundingPotView extends BaseView
         $item = $this->params['item'];
 
         $participateUrl = $this->pathFor('participateFoundingPot', [
+            'list_id' => $list->id,
             'item_id' => $item->id
         ]);
         $cancelUrl = $this->pathFor('displayItem', [
             'token' => $list->token,
-            'id' => $item->id
+            'item_id' => $item->id
         ]);
 
         $amount = number_format($item->foundingPot->amount, 2);

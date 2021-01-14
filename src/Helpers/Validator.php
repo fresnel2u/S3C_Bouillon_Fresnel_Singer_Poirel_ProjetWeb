@@ -16,7 +16,7 @@ class Validator {
     public static function failIfEmptyOrNull(array $arr, array $exclude_keys = [])
     {
         foreach($arr as $key => $val) {
-            if(!in_array($key, $exclude_keys) && ($val === '' || $val === null))
+            if (!in_array($key, $exclude_keys) && ($val === '' || $val === null))
                 throw new Exception("$key ne peut pas être vide");
         }
     }

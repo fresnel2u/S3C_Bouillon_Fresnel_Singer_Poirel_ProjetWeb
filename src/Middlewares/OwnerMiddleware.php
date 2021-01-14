@@ -77,7 +77,7 @@ class OwnerMiddleware extends BaseMiddleware
         if(Auth::getUser()['id'] === $list->user_id)
             return $next($request, $response);
         Flashes::addFlash('Vous devez être le propriétaire de la liste pour accéder à cet URL', 'error');
-        return $response->withRedirect($this->container->router->pathFor('displayAllList')); 
+        return $response->withRedirect($this->container->router->pathFor('displayAllLists')); 
     }
 
     /**
@@ -89,14 +89,15 @@ class OwnerMiddleware extends BaseMiddleware
     {
         $route = $request->getAttribute('route');
         $item = Item::find($route->getArgument($this->idParamName));
-        if($item !== null) {
+        if($item) {
             $list = WishList::find($item->list_id);
             if(Auth::getUser()['id'] === $list->user_id)
                 return $next($request, $response);
             Flashes::addFlash('Vous devez être le propriétaire de la liste de cet item pour accéder à cet URL', 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayAllItems', ['list_id' => $list->id])); 
         } else {
             Flashes::addFlash('Item inaccessible', 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayAllLists')); 
         }
-        return $response->withRedirect($this->container->router->pathFor('displayAllItems')); 
     }
 }

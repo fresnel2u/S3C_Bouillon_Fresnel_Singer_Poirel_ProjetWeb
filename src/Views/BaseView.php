@@ -55,9 +55,9 @@ abstract class BaseView
     public function layout(string $html, ?string $title = null, ?int $set_menu = 1, ?int $set_flashes = 1): string
     {
         $result = Header::getHeader($title);
-        if($set_menu != 0)
+        if ($set_menu != 0)
             $result .= Menu::getMenu();
-        if($set_flashes)
+        if ($set_flashes)
             $result .= Flashes::getFlashes();
         $result .= $html;
         $result .= "</body></html>";

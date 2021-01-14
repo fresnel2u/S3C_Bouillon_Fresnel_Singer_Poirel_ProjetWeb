@@ -26,8 +26,8 @@ $app = new \Slim\App($container);
 // Middlewares
 $authMiddleware = new AuthMiddleware($container);
 $guestMiddleware = new GuestMiddleware($container);
-$itemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM);
-$listOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::WISHLIST);
+$itemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
+$listOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::WISHLIST, 'id');
 $foundingPotItemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
 
 // Home
@@ -37,7 +37,7 @@ $app->get('/', HomeController::class . ':home')->setName('home');
 $app->get('/lists/{token}/show', ListController::class . ':displayList')->setName('displayList');
 
 $app->group('', function (App $app) {
-    $app->get('/lists', ListController::class . ':displayAllList')->setName('displayAllList');
+    $app->get('/lists', ListController::class . ':displayAllLists')->setName('displayAllLists');
     $app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
     $app->post('/lists/{token}/show', ListController::class . ':addListMessage')->setName('newListMessage');
@@ -52,27 +52,27 @@ $app->group('', function (App $app) {
 
 // Items
 $app->group('', function (App $app) {
-    $app->get('/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
-    $app->get('/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
-    $app->post('/items/new', ItemController::class . ':newItem')->setName('newItem');
-    $app->get('/items/{id}/lock', ItemController::class . ':lockItemPage')->setName('lockItemPage');
-    $app->post('/items/{id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
-    $app->post('/items/{id}/lock/cancel', ItemController::class . ':cancelLockItem')->setName('cancelLockItem');
+    $app->get('/lists/{list_id}/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
+    $app->get('/lists/{list_id}/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
+    $app->post('/lists/{list_id}/items/new', ItemController::class . ':newItem')->setName('newItem');
+    $app->get('/lists/{list_id}/items/{item_id}/lock', ItemController::class . ':lockItemPage')->setName('lockItemPage');
+    $app->post('/lists/{list_id}/items/{item_id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
+    $app->post('/lists/{list_id}/items/{item_id}/lock/cancel', ItemController::class . ':cancelLockItem')->setName('cancelLockItem');
 })->add($authMiddleware);
-$app->get('/lists/{token}/item/{id}', ItemController::class . ':displayItem')->setName('displayItem');
+$app->get('/lists/{token}/item/{item_id}', ItemController::class . ':displayItem')->setName('displayItem');
 
 $app->group('', function (App $app) {
-    $app->get('/items/{id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
-    $app->post('/items/{id}/edit', ItemController::class . ':editItem')->setName('editItem');
-    $app->post('/items/{id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
+    $app->get('/lists/{list_id}/items/{item_id}/edit', ItemController::class . ':editItemPage')->setName('editItemPage');
+    $app->post('/lists/{list_id}/items/{item_id}/edit', ItemController::class . ':editItem')->setName('editItem');
+    $app->post('/lists/{list_id}/items/{item_id}/delete', ItemController::class . ':deleteItem')->setName('deleteItem');
 })->add($authMiddleware)->add($itemOwnerMiddleware);
 
 // Founding pot
 $app->group('', function (App $app) {
-    $app->get('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':createPage')->setName('createFoundingPotPage');
-    $app->post('/items/{item_id}/founding_pot/create', FoundingPotController::class . ':create')->setName('createFoundingPot');
-    $app->get('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participatePage')->setName('participateFoundingPotPage');
-    $app->post('/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participate')->setName('participateFoundingPot');
+    $app->get('/lists/{list_id}/items/{item_id}/founding_pot/create', FoundingPotController::class . ':createPage')->setName('createFoundingPotPage');
+    $app->post('/lists/{list_id}/items/{item_id}/founding_pot/create', FoundingPotController::class . ':create')->setName('createFoundingPot');
+    $app->get('/lists/{list_id}/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participatePage')->setName('participateFoundingPotPage');
+    $app->post('/lists/{list_id}/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participate')->setName('participateFoundingPot');
 })->add($authMiddleware)->add($foundingPotItemOwnerMiddleware);
 
 // Auth

@@ -41,7 +41,7 @@ class Auth
      */
     public static function setUser(?User $user)
     {
-        if($user === null) {
+        if ($user === null) {
             $_SESSION['user'] = null;
         } else {
             $_SESSION['user'] = $user->toArray();

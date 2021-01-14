@@ -26,46 +26,58 @@ class FoundingPotController extends BaseController
      */
     public function create(Request $request, Response $response, array $args): Response
     {
+        $list = WishList::where('id', $args['list_id'])->first();
+        if (!$list) {
+            Flashes::addFlash("Liste introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('displayAllLists'));
+        }
+
+        $item = Item::find($args['item_id']);
+        if (!$item) {
+            Flashes::addFlash("Item introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
+        if ($list->id !== $item->list_id) {
+            Flashes::addFlash("L'item ne correspond pas à la liste.", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
+        $user = Auth::getUser();
+        if ($user['id'] !== $list->user_id) {
+            Flashes::addFlash('Vous devez être le propriétaire de la liste pour créer une cagnotte.', 'error');
+            return $response->withRedirect($this->pathFor('displayAllLists'));
+        }
+        $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
+        if ($alreadyExists) {
+            Flashes::addFlash('L\'item possède déjà une cagnotte.', 'error');
+            return $response->withRedirect($this->pathFor('displayAllLists'));
+        }
+
         $body = $request->getParsedBody();
         $body = array_map(function ($field) {
             return filter_var($field, FILTER_SANITIZE_STRING);
         }, $body);
 
-        try {
-            $item = Item::findOrFail($args['item_id']); // vérifie si l'item existe
-            $list = WishList::findOrFail($item->list_id); // liste de l'item
-            $user = Auth::getUser();
-            if($user['id'] !== $list->user_id) {
-                Flashes::addFlash('Vous devez être le propriétaire de la liste pour créer une cagnotte.', 'error');
-                throw new Exception('Vous devez être le propriétaire de la liste pour créer une cagnotte.');
-            }
-            $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
-            if ($alreadyExists) {
-                Flashes::addFlash('L\'item possède déjà une cagnotte.', 'error');
-                throw new Exception('L\'item possède déjà une cagnotte.');
-            }
-            if($body['amount'] > $item->price) {
-                Flashes::addFlash("Vous ne pouvez pas demander plus d'argent que le montant de l'item.", 'error');
-                return $response->withRedirect($this->pathFor('createFoundingPotPage', [
-                    'item_id' => $item->id
-                ]));
-            }
-            if($body['amount'] === '0' || $body['amount'] === '') {
-                Flashes::addFlash("Vous ne pouvez pas créer une cagnotte avec un montant nul.", 'error');
-                return $response->withRedirect($this->pathFor('createFoundingPotPage', [
-                    'item_id' => $item->id
-                ]));
-            }
-
-            $foundingPot = new FoundingPot();
-            $foundingPot->item_id = $item->id;
-            $foundingPot->amount = $body['amount'];
-            $foundingPot->save();
-
-            return $response->withRedirect($this->pathFor('displayAllItems'));
-        } catch (\Throwable $th) {
-            return $response->withRedirect($this->pathFor('displayAllList'));
+        if ($body['amount'] > $item->price) {
+            Flashes::addFlash("Vous ne pouvez pas demander plus d'argent que le montant de l'item.", 'error');
+            return $response->withRedirect($this->pathFor('createFoundingPotPage', [
+                'item_id' => $item->id
+            ]));
         }
+        if ($body['amount'] === '0' || $body['amount'] === '') {
+            Flashes::addFlash("Vous ne pouvez pas créer une cagnotte avec un montant nul.", 'error');
+            return $response->withRedirect($this->pathFor('createFoundingPotPage', [
+                'item_id' => $item->id
+            ]));
+        }
+
+        $foundingPot = new FoundingPot();
+        $foundingPot->item_id = $item->id;
+        $foundingPot->amount = $body['amount'];
+        $foundingPot->save();
+
+        return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
     }
 
     /**
@@ -78,20 +90,32 @@ class FoundingPotController extends BaseController
      */
     public function createPage(Request $request, Response $response, array $args): Response
     {
-        try {
-            $item = Item::findOrFail($args['item_id']);
-            $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
-            if ($alreadyExists) {
-                Flashes::addFlash('L\'item possède déjà une cagnotte.', 'error');
-                throw new Exception('L\'item possède déjà une cagnotte.');
-            }
-
-            $v = new FoundingPotView($this->container, ['item' => $item]);
-            $response->getBody()->write($v->render(0));
-            return $response;
-        } catch (\Throwable $th) {
-            return $response->withRedirect($this->pathFor('displayAllList'));
+        $list = WishList::where('id', $args['list_id'])->first();
+        if (!$list) {
+            Flashes::addFlash("Liste introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('displayAllLists'));
         }
+
+        $item = Item::find($args['item_id']);
+        if (!$item) {
+            Flashes::addFlash("Item introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
+        if ($list->id !== $item->list_id) {
+            Flashes::addFlash("L'item ne correspond pas à la liste.", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
+        $alreadyExists = FoundingPot::where('item_id', $item->id)->exists();
+        if ($alreadyExists) {
+            Flashes::addFlash('L\'item possède déjà une cagnotte.', 'error');
+            throw new Exception('L\'item possède déjà une cagnotte.');
+        }
+
+        $v = new FoundingPotView($this->container, ['list' => $list, 'item' => $item]);
+        $response->getBody()->write($v->render(0));
+        return $response;
     }
 
     /**
@@ -132,7 +156,7 @@ class FoundingPotController extends BaseController
         } catch (\Throwable $th) {
             Flashes::addFlash($th->getMessage(), 'error');
         }
-        return $response->withRedirect($this->pathFor('displayAllList'));
+        return $response->withRedirect($this->pathFor('displayAllLists'));
     }
 
     /**
@@ -157,7 +181,7 @@ class FoundingPotController extends BaseController
             return $response;
         } catch (\Throwable $th) {
             Flashes::addFlash('Impossible d\'afficher la cagnotte.', 'error');
-            return $response->withRedirect($this->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllLists'));
         }
     }
 
@@ -180,14 +204,13 @@ class FoundingPotController extends BaseController
             $list = WishList::findOrFail($args); // vérifie si la liste existe
 
             $foundingPot = FoundingPot::findOrFail($args['founding_pot_id']);
-            $foundingPot->list_id = $list->id;
             $foundingPot->amount = $body['amount'];
             $foundingPot->save();
 
-            return $response->withRedirect($this->pathFor('editList', ['id' => $list->id]));
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
         } catch (\Throwable $th) {
             Flashes::addFlash('Impossible de mettre à jour la cagnotte', 'error');
-            return $response->withRedirect($this->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllLists'));
         }
     }
 
@@ -208,10 +231,10 @@ class FoundingPotController extends BaseController
             $foundingPot->delete();
 
             Flashes::addFlash('Cagnotte supprimée', 'success');
-            return $response->withRedirect($this->pathFor('editList', ['id' => $list->id]));
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
         } catch (\Throwable $th) {
             Flashes::addFlash('Impossible de supprimer la cagnotte', 'erorr');
-            return $response->withRedirect($this->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllLists'));
         }
 
         return $response;

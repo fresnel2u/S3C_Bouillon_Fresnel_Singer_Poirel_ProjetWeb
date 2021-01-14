@@ -20,8 +20,7 @@ class Menu
                 <li><a href="/">Accueil</a></li>
                 <li><a href="/login">Connexion</a></li>
                 <li><a href="/register">Inscription</a></li>
-                <li><a href="/lists">Listes</a></li>
-                <li><a href="/items">Items</a></li>
+                <li><a href="/lists">Mes listes</a></li>
                 {$accountLink}
             </ul>
         HTML;

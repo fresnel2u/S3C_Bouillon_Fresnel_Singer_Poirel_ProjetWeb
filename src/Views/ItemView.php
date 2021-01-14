@@ -16,11 +16,7 @@ class ItemView extends BaseView
         return <<<HTML
             <div class="container">
                 <h1>Ajouter un item</h1>
-                <form method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="list_id">ID de la liste</label>
-                        <input type="text" name="list_id" id="list_id">
-                    </div>        
+                <form method="POST" enctype="multipart/form-data">    
                     <div class="form-group">
                         <label for="name">Nom</label>
                         <input type="text" name="name" id="name">
@@ -54,78 +50,98 @@ class ItemView extends BaseView
      */
     private function getAllItems(): string
     {
-        $newItemUrl = $this->pathFor('newItemPage');
+        $list = $this->params['list'];
+        $items = $this->params['items'];
 
+        $newItemUrl = $this->pathFor('newItemPage', ['list_id' => $list->id]);
+        $backUrl = $this->pathFor('displayAllLists');
+        
         $html = <<<HTML
-            <h1>Résultat de l'affichage des items :</h1>
-            <a href="{$newItemUrl}" class="btn btn-primary">Ajouter un item</a>
-            <div>
-                <table class="table table-bordered table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">id</th>
-                            <th scope="col">liste id</th>
-                            <th scope="col">nom</th>
-                            <th scope="col">description</th>
-                            <th scope="col">image</th>
-                            <th scope="col">url</th>
-                            <th scope="col">tarif</th>
-                            <th scope="col">Cagnotte</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <div class="container container-full">
+                <a href="{$backUrl}">Retour</a><br><br>
+                <h1>Items de la liste "{$list->title}"</h1>
+                <a href="{$newItemUrl}" class="btn btn-primary">Ajouter un item</a>
+                <div class="table-wrapper">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Image</th>
+                                <th>Nom</th>
+                                <th class="table-center">Lien externe</th>
+                                <th>Prix</th>
+                                <th>Cagnotte</th>
+                                <th class="table-actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
         HTML;
 
-
-        foreach ($this->params['items'] as $item) {
-            $html .= "<tr>";
-            $i = 0;
-            foreach ($item->toArray() as $col) {
-                if ($i === 4) {
-                    $url = "/img/{$col}";
-                    $html .= "<td><img src=\"{$url}\" width=\"150\"/></td>";
-                } else {
-                    $html .= "<td>{$col}</td>";
-                }
-                $i++;
+        foreach ($items as $item) {
+            $img = '';
+            if ($item->image && $item->image !== '') {
+                $img = <<<HTML
+                    <img src="/img/{$item->image}" alt="Image de l'item {$item->id}" width="50" />
+                HTML;
+            }
+            $extern = '/';
+            if ($item->url && $item->url !== '') {
+                $extern = <<<HTML
+                    <a href="{$item->url}" target="_blank">{$item->url}</a>
+                HTML;
             }
 
+            $price = number_format($item->price, 2);
+
+            $html .= <<<HTML
+                <tr>
+                    <td>{$item->id}</td>
+                    <td>{$img}</td>
+                    <td>{$item->name}</td>
+                    <td class="table-center">{$extern}</td>
+                    <td>{$price} €</td>
+            HTML;
+
             if ($item->foundingPot) {
+                $goal = number_format($item->foundingPot->amount, 2);
+                $current = number_format($goal - $item->foundingPot->getRest(), 2);
+
                 $html .= <<<HTML
                     <td>
-                        {$item->foundingPot->amount} €
+                      {$current}  / {$goal} €
                     </td>
                 HTML;
             } else {
-                $foundingPotUrl = $this->pathFor('createFoundingPot', ['item_id' => $item->id]);
+                $newFoundingPotUrl = $this->pathFor('createFoundingPotPage', ['list_id' => $list->id, 'item_id' => $item->id]);
                 $html .= <<<HTML
                     <td>
-                        <a href="{$foundingPotUrl}" class="btn btn-light">Créer une cagnotte</a>
+                      <a href="{$newFoundingPotUrl}" class="btn btn-light">Créer une cagnotte</a>
                     </td>
                 HTML;
             }
 
-            $editUrl = $this->pathFor('editItem', ['id' => $item->id]);
-            $deleteUrl = $this->pathFor('deleteItem', ['id' => $item->id]);
+            $editUrl = $this->pathFor('editItemPage', ['list_id' => $list->id, 'item_id' => $item->id]);
+            $deleteUrl = $this->pathFor('deleteItem', ['list_id' => $list->id, 'item_id' => $item->id]);
 
             $html .= <<<HTML
-                    <td>
-                        <a href="{$editUrl}" class="btn btn-light">Éditer</a>
-                        <form method="POST" action="{$deleteUrl}">
-                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                        </form>
+                    <td class="table-actions">
+                        <div>
+                            <a href="{$editUrl}" class="btn btn-light">Éditer</a>
+                            <form method="POST" action="{$deleteUrl}" onsubmit=" return confirm('Êtes-vous sûr de vouloir supprimer cet item ?')">
+                                <button class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             HTML;
         }
-        $html .= <<<HTML
-                    </tbody>
-                </table>
+
+        return $html . <<<HTML
+                        </tbody>
+                    </table>
+                </div>
             </div>
         HTML;
-
-        return $html;
     }
 
     /**
@@ -139,9 +155,7 @@ class ItemView extends BaseView
         $list = $this->params['list'];
         $user = Auth::getUser();
 
-        $listUrl = $this->pathFor('displayList', [
-            'token' => $list->token
-        ]);
+        $listUrl = $this->pathFor('displayList', ['token' => $list->token]);
 
         $html = <<<HTML
             <div class="container page-item-show">
@@ -165,9 +179,7 @@ class ItemView extends BaseView
             $rest = $item->foundingPot->getRest();
 
             if ($rest > 0) {
-                $foundingPotUrl = $this->pathFor('participateFoundingPotPage', [
-                    'item_id' => $item->id
-                ]);
+                $foundingPotUrl = $this->pathFor('participateFoundingPotPage', ['item_id' => $item->id]);
                 $html .= <<<HTML
                     <p><strong>Cagnotte : </strong> {$item->foundingPot->getRest()} € restant à payer</p>
                     <a href="{$foundingPotUrl}" class="btn btn-secondary">Participer à la cagnotte</a>
@@ -195,7 +207,7 @@ class ItemView extends BaseView
 
             // Annuler la réservation
             if ($user && $item->reservation->user_id === $user['id']) {
-                $cancelLockItem = $this->pathFor('cancelLockItem', ['id' => $item->id]);
+                $cancelLockItem = $this->pathFor('cancelLockItem', ['list_id' => $list->id, 'item_id' => $item->id]);
                 $html .= <<<HTML
                     <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
                         <button class="btn btn-danger">Annuler la réservation</button>
@@ -203,7 +215,7 @@ class ItemView extends BaseView
                 HTML;
             }
         } else {
-            $lockUrl = $this->pathFor('lockItemPage', ['id' => $item->id]);
+            $lockUrl = $this->pathFor('lockItemPage', ['list_id' => $list->id, 'item_id' => $item->id]);
             $html .= <<<HTML
                 <a href="{$lockUrl}" class="btn btn-primary">Réserver</a>
             HTML;
@@ -221,17 +233,14 @@ class ItemView extends BaseView
      */
     private function editItemPage(): string
     {
+        $list = $this->params['list'];
         $item = $this->params['item'];
-        $editUrl = $this->pathFor('editItem', ['id' => $item->id]);
+        $editUrl = $this->pathFor('editItem', ['list_id' => $list->id, 'item_id' => $item->id]);
 
         return <<<HTML
             <div class="container">
                 <h1>Éditer un item</h1>
-                <form method="POST" action="{$editUrl}" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="list_id">ID de la liste</label>
-                        <input type="text" name="list_id" id="list_id" value="{$item->list_id}">
-                    </div>        
+                <form method="POST" action="{$editUrl}" enctype="multipart/form-data">   
                     <div class="form-group">
                         <label for="name">Nom</label>
                         <input type="text" name="name" id="name" value="{$item->name}">
@@ -267,11 +276,12 @@ class ItemView extends BaseView
     {
         $list = $this->params['list'];
         $item = $this->params['item'];
+
         $imgUrl = "/img/{$item->image}";
-        $lockUrl = $this->pathFor('lockItem', ['id' => $item->id]);
+        $lockUrl = $this->pathFor('lockItem', ['list_id' => $list->id, 'item_id' => $item->id]);
         $cancelUrl = $this->pathFor('displayItem', [
             'token' => $list->token,
-            'id' => $item->id
+            'item_id' => $item->id
         ]);
 
         return <<<HTML
@@ -296,7 +306,6 @@ class ItemView extends BaseView
                         <a href="{$cancelUrl}" class="btn btn-secondary">Annuler</a>
                     </form>
                 </div>
-               
             </div>
         HTML;
     }

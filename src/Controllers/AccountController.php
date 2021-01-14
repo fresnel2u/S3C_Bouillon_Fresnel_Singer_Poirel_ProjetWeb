@@ -79,8 +79,8 @@ class AccountController extends BaseController
         
             $pass = $body['password'];
             $password_confirm = $body['password_confirm'];
-            if($pass !== "" || $password_confirm !== "") {
-                if($pass !== $password_confirm) {
+            if ($pass !== "" || $password_confirm !== "") {
+                if ($pass !== $password_confirm) {
                     throw new Exception('les mots de passe ne correspondent pas');
                 }
                 $user->password = password_hash($pass, PASSWORD_DEFAULT);

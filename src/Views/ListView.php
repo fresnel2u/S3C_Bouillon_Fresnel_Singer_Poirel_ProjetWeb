@@ -54,7 +54,7 @@ class ListView extends BaseView
         $addUrl = $this->pathFor('newListPage');
 
         $html = <<<HTML
-            <div class="container page-lists">
+            <div class="container container-full">
                 <h1>Mes listes de souhaits</h1>
                 <a href="{$addUrl}" class="btn btn-primary">Ajouter une liste</a>
                 <div class="table-wrapper">
@@ -75,6 +75,7 @@ class ListView extends BaseView
         foreach ($lists as $list) {
             $publicUrl = $this->pathFor('displayList', ['token' => $list->token]);
             $editUrl = $this->pathFor('editListPage', ['id' => $list->id]);
+            $itemsUrl = $this->pathFor('displayAllItems', ['list_id' => $list->id]);
             $deleteUrl = $this->pathFor('deleteList', ['id' => $list->id]);
             $resultsUrl = $this->pathFor('displayListResults', ['id' => $list->id]);
 
@@ -88,6 +89,7 @@ class ListView extends BaseView
                     <td class="table-actions">
                         <div>
                             <a href="{$editUrl}" class="btn btn-light">Éditer</a>
+                            <a href="{$itemsUrl}" class="btn btn-light">Items</a>
             HTML;
 
             if($list->isExpired()) {
@@ -124,7 +126,6 @@ class ListView extends BaseView
         $list = $this->params['list'];
         $items = $this->params['items'];
         $messages = $this->params['messages'];
-        $user = Auth::getUser();
 
         $html = <<<HTML
             <div class="container page-list-show">
@@ -141,7 +142,7 @@ class ListView extends BaseView
         foreach ($items as $item) {
             $itemUrl = $this->pathFor('displayItem', [
                 'token' => $list->token,
-                'id' => $item->id
+                'item_id' => $item->id
             ]);
             $html .= <<<HTML
                 <div class="item">
@@ -252,13 +253,12 @@ class ListView extends BaseView
         
         $hasContent = false;
         foreach($items as $item) {
-            if(!is_null($item->reservation) || !is_null($item->foundingPot)){
-                $hasContent = true;
+            if (!is_null($item->reservation) || !is_null($item->foundingPot)) {
                 $imgUrl = "/img/{$item->image}";
                 $reservation = $item->reservation;
                 $foundingPot = $item->foundingPot;
                 
-                if(!is_null($foundingPot)) {
+                if (!is_null($foundingPot)) {
                     $type = 'Cagnotte';
                     $content = '<div class="item-participants">
                     <p> <strong>Participants :</strong> </p>';
@@ -278,7 +278,7 @@ class ListView extends BaseView
                     $content = <<<HTML
                         <p><strong>auteur de la réservation : </strong> {$reservation->user->firstname} {$reservation->user->lastname}</p>
                     HTML;
-                    if($reservation->message != '') {
+                    if ($reservation->message != '') {
                         $content .= <<<HTML
                             <p><strong>message de l'expéditeur :</strong> {$reservation->message} </p>
                         HTML;
