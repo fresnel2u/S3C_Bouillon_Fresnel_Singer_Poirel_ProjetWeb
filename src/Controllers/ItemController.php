@@ -205,14 +205,13 @@ class ItemController extends BaseController
 
         $files = $request->getUploadedFiles();
         $file = $files['image'];
+        $filename = $item->image;
         if ($file !== null) {
             if ($file->getError() === UPLOAD_ERR_OK) {
                 $directory = ROUTE . '\img\\';
                 unlink($directory . $item->image);
                 $filename = UploadFile::moveUploadedFile($directory, $file);
             }
-        } else {
-            $filename = $item->image;
         }
 
         $item->name = $body['name'];
