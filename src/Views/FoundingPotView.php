@@ -11,7 +11,7 @@ class FoundingPotView extends BaseView
      */
     public function createPage(): string
     {
-        $createFoundingPotUrl = $this->container->router->pathFor('createFoundingPot', [
+        $createFoundingPotUrl = $this->pathFor('createFoundingPot', [
             'item_id' => $this->params['item']->id
         ]);
         $item = $this->params['item'];
@@ -40,10 +40,10 @@ class FoundingPotView extends BaseView
         $list = $this->params['list'];
         $item = $this->params['item'];
 
-        $participateUrl = $this->container->router->pathFor('participateFoundingPot', [
+        $participateUrl = $this->pathFor('participateFoundingPot', [
             'item_id' => $item->id
         ]);
-        $cancelUrl = $this->container->router->pathFor('displayItem', [
+        $cancelUrl = $this->pathFor('displayItem', [
             'token' => $list->token,
             'id' => $item->id
         ]);

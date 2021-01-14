@@ -11,8 +11,8 @@ class AuthView extends BaseView
      */
     private function getLogin(): string
     {
-        $loginUrl = $this->container->router->pathFor('login');
-        $registerUrl = $this->container->router->pathFor('registerPage');
+        $loginUrl = $this->pathFor('login');
+        $registerUrl = $this->pathFor('registerPage');
 
         return <<<HTML
             <div class="login">
@@ -46,8 +46,8 @@ class AuthView extends BaseView
      */
     private function getRegister(): string
     {
-        $loginUrl = $this->container->router->pathFor('loginPage');
-        $registerUrl = $this->container->router->pathFor('register');
+        $loginUrl = $this->pathFor('loginPage');
+        $registerUrl = $this->pathFor('register');
 
         return <<<HTML
             <div class="register">

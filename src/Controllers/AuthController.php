@@ -35,13 +35,13 @@ class AuthController extends BaseController
                     $response = $response->withRedirect($_SESSION['login_success_url']);
                     $_SESSION['login_success_url'] = null;
                 } else {
-                    $response = $response->withRedirect($this->container->router->pathFor('displayAccount'));
+                    $response = $response->withRedirect($this->pathFor('displayAccount'));
                 }
                 Flashes::addFlash('Vous vous êtes bien connecté.', 'success');
             }
         } catch (Throwable $throwable) {
             Flashes::addFlash($throwable->getMessage(), 'error');
-            $response = $response->withRedirect($this->container->router->pathFor('loginPage'));
+            $response = $response->withRedirect($this->pathFor('loginPage'));
         }
         return $response;
     }
@@ -84,10 +84,10 @@ class AuthController extends BaseController
             Auth::createUser($body['firstname'], $body['lastname'], $body['email'], $body['password']);
         } catch (Throwable $throwable) {
             Flashes::addFlash($throwable->getMessage(), 'error');
-            return $response->withRedirect($this->container->router->pathFor('registerPage'));
+            return $response->withRedirect($this->pathFor('registerPage'));
         }
         
-        return $response->withRedirect($this->container->router->pathFor('loginPage'));
+        return $response->withRedirect($this->pathFor('loginPage'));
     }
 
     /**
@@ -135,7 +135,7 @@ class AuthController extends BaseController
             Flashes::addFlash('Déconnecté', 'success');
         }
         
-        $response = $response->withRedirect($this->container->router->pathFor('login'));
+        $response = $response->withRedirect($this->pathFor('login'));
         return $response;
     }
 }

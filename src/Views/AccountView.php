@@ -11,9 +11,9 @@ class AccountView extends BaseView
      */
     private function getAccount(): string
     {
-        $editAccount = $this->container->router->pathFor('editAccountPage');
-        $deleteAccount = $this->container->router->pathFor('deleteAccount');
-        $logoutUrl = $this->container->router->pathFor('logout');
+        $editAccount = $this->pathFor('editAccountPage');
+        $deleteAccount = $this->pathFor('deleteAccount');
+        $logoutUrl = $this->pathFor('logout');
         $user = $this->params['user'];
 
         return <<<HTML
@@ -50,7 +50,7 @@ class AccountView extends BaseView
      */
     private function editAccountPage(): string
     {
-        $editAccount = $this->container->router->pathFor('editAccount');
+        $editAccount = $this->pathFor('editAccount');
         $user = $this->params['user'];
 
         return <<<HTML

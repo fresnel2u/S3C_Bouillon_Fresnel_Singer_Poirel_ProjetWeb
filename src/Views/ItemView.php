@@ -54,7 +54,7 @@ class ItemView extends BaseView
      */
     private function getAllItems(): string
     {
-        $newItemUrl = $this->container->router->pathFor('newItemPage');
+        $newItemUrl = $this->pathFor('newItemPage');
 
         $html = <<<HTML
             <h1>Résultat de l'affichage des items :</h1>
@@ -98,7 +98,7 @@ class ItemView extends BaseView
                     </td>
                 HTML;
             } else {
-                $foundingPotUrl = $this->container->router->pathFor('createFoundingPot', ['item_id' => $item->id]);
+                $foundingPotUrl = $this->pathFor('createFoundingPot', ['item_id' => $item->id]);
                 $html .= <<<HTML
                     <td>
                         <a href="{$foundingPotUrl}" class="btn btn-light">Créer une cagnotte</a>
@@ -106,8 +106,8 @@ class ItemView extends BaseView
                 HTML;
             }
 
-            $editUrl = $this->container->router->pathFor('editItem', ['id' => $item->id]);
-            $deleteUrl = $this->container->router->pathFor('deleteItem', ['id' => $item->id]);
+            $editUrl = $this->pathFor('editItem', ['id' => $item->id]);
+            $deleteUrl = $this->pathFor('deleteItem', ['id' => $item->id]);
 
             $html .= <<<HTML
                     <td>
@@ -139,7 +139,7 @@ class ItemView extends BaseView
         $list = $this->params['list'];
         $user = Auth::getUser();
 
-        $listUrl = $this->container->router->pathFor('displayList', [
+        $listUrl = $this->pathFor('displayList', [
             'token' => $list->token
         ]);
 
@@ -165,7 +165,7 @@ class ItemView extends BaseView
             $rest = $item->foundingPot->getRest();
 
             if ($rest > 0) {
-                $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
+                $foundingPotUrl = $this->pathFor('participateFoundingPotPage', [
                     'item_id' => $item->id
                 ]);
                 $html .= <<<HTML
@@ -195,7 +195,7 @@ class ItemView extends BaseView
 
             // Annuler la réservation
             if ($user && $item->reservation->user_id === $user['id']) {
-                $cancelLockItem = $this->container->router->pathFor('cancelLockItem', ['id' => $item->id]);
+                $cancelLockItem = $this->pathFor('cancelLockItem', ['id' => $item->id]);
                 $html .= <<<HTML
                     <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
                         <button class="btn btn-danger">Annuler la réservation</button>
@@ -203,7 +203,7 @@ class ItemView extends BaseView
                 HTML;
             }
         } else {
-            $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
+            $lockUrl = $this->pathFor('lockItemPage', ['id' => $item->id]);
             $html .= <<<HTML
                 <a href="{$lockUrl}" class="btn btn-primary">Réserver</a>
             HTML;
@@ -222,7 +222,7 @@ class ItemView extends BaseView
     private function editItemPage(): string
     {
         $item = $this->params['item'];
-        $editUrl = $this->container->router->pathFor('editItem', ['id' => $item->id]);
+        $editUrl = $this->pathFor('editItem', ['id' => $item->id]);
 
         return <<<HTML
             <div class="container">
@@ -268,8 +268,8 @@ class ItemView extends BaseView
         $list = $this->params['list'];
         $item = $this->params['item'];
         $imgUrl = "/img/{$item->image}";
-        $lockUrl = $this->container->router->pathFor('lockItem', ['id' => $item->id]);
-        $cancelUrl = $this->container->router->pathFor('displayItem', [
+        $lockUrl = $this->pathFor('lockItem', ['id' => $item->id]);
+        $cancelUrl = $this->pathFor('displayItem', [
             'token' => $list->token,
             'id' => $item->id
         ]);

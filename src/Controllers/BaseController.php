@@ -3,9 +3,12 @@
 namespace Whishlist\Controllers;
 
 use Slim\Container;
+use Whishlist\Helpers\RouteTrait;
 
 abstract class BaseController
 {
+    use RouteTrait;
+    
     /**
      * Container de l'application
      *

@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ListMessage extends Model
 {
-    protected $table = 'list_messages';
+    protected $table = 'lists_messages';
+    protected $primaryKey = ['list_id', 'user_id'];
     public $timestamps = false;
 
     public function lists()

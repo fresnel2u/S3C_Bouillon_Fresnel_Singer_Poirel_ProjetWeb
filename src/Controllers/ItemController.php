@@ -53,7 +53,7 @@ class ItemController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['image']);
             } catch(Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->container->router->pathFor('newItemPage'));
+                return $response->withRedirect($this->pathFor('newItemPage'));
             }
 
             $files = $request->getUploadedFiles();
@@ -72,10 +72,10 @@ class ItemController extends BaseController
             $item->price = $body['price'];
             $item->save();
 
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash('Impossible de créer l\'item', 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         }
     }
     
@@ -115,18 +115,18 @@ class ItemController extends BaseController
 
         if (!$list) {
             Flashes::addFlash("Liste introuvable.", 'error');
-            return $response->withRedirect($this->container->router->pathFor('home'));
+            return $response->withRedirect($this->pathFor('home'));
         }
         
         $item = Item::find($args['id']);
         if (!$item) {
             Flashes::addFlash("Item introuvable.", 'error');
-            return $response->withRedirect($this->container->router->pathFor('home'));
+            return $response->withRedirect($this->pathFor('home'));
         }
         
         if ($list->id !== $item->list_id) {
             Flashes::addFlash("L'item ne correspond pas à la liste.", 'error');
-            return $response->withRedirect($this->container->router->pathFor('home'));
+            return $response->withRedirect($this->pathFor('home'));
         }
 
         $v = new ItemView($this->container, [
@@ -155,7 +155,7 @@ class ItemController extends BaseController
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("L'item " . $args['id'] . " n'a pas été trouvé", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         }
     }
 
@@ -181,7 +181,7 @@ class ItemController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['image', 'url']);
             } catch(Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->container->router->pathFor('editItemPage', ['id' => $args['id']]));
+                return $response->withRedirect($this->pathFor('editItemPage', ['id' => $args['id']]));
             }
             
             $files = $request->getUploadedFiles();
@@ -205,10 +205,10 @@ class ItemController extends BaseController
             $item->save();
 
             Flashes::addFlash("Item modifié avec succès", 'success');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         } catch (Throwable $e) {
             Flashes::addFlash("Impossible de modifier l'item", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         }
     }
 
@@ -229,10 +229,10 @@ class ItemController extends BaseController
             $item->delete();
 
             Flashes::addFlash("Item supprimé avec succès", 'success');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible de supprimer l'item", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         }
     }
 
@@ -291,14 +291,14 @@ class ItemController extends BaseController
                 Flashes::addFlash("Item déjà réservé.", 'error');
             }
             
-            $redirectUrl = $this->container->router->pathFor('displayItem', [
+            $redirectUrl = $this->pathFor('displayItem', [
                 'token' => $item->list->token,
                 'id' => $item->id
             ]);
             return $response->withRedirect($redirectUrl);
         } catch (\Throwable $th) {
             Flashes::addFlash("Impossible de réservé l'item", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         }
     }
 
@@ -320,14 +320,14 @@ class ItemController extends BaseController
               
             Flashes::addFlash("Réservation annulée avec succès", 'success');
 
-            $redirectUrl = $this->container->router->pathFor('displayItem', [
+            $redirectUrl = $this->pathFor('displayItem', [
                 'token' => $item->list->token,
                 'id' => $item->id
             ]);
             return $response->withRedirect($redirectUrl);
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'annuler la réservation de l'item", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         }
     }
 }

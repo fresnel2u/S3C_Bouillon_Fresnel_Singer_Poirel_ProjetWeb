@@ -22,15 +22,15 @@ class HomeView extends BaseView
                     </div>
                     <div class="header-log">
         HTML;
-        $registerUrl = $this->container->router->pathFor('registerPage');
+        $registerUrl = $this->pathFor('registerPage');
         if (Auth::isLogged()) {
-            $accountUrl = $this->container->router->pathFor('displayAccount');
+            $accountUrl = $this->pathFor('displayAccount');
             $html .= <<<HTML
                 <a href="{$accountUrl}"><button class="btn btn-primary">Mon compte</button></a>
             HTML;
         } else {
             
-            $loginUrl = $this->container->router->pathFor('loginPage');
+            $loginUrl = $this->pathFor('loginPage');
             $html .= <<<HTML
                 <a href="{$loginUrl}"><button class="btn btn-secondary">Connexion</button></a>
                 <a href="{$registerUrl}"><button class="btn btn-primary">Inscription</button></a>

@@ -50,7 +50,7 @@ class ListController extends BaseController
                 Validator::failIfEmptyOrNull($body);
             } catch(Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->container->router->pathFor('newListPage'));
+                return $response->withRedirect($this->pathFor('newListPage'));
             }
 
             $list = new WishList();
@@ -66,10 +66,10 @@ class ListController extends BaseController
                 $list->save();
             }
 
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'ajouter la liste", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -83,7 +83,9 @@ class ListController extends BaseController
      */
     public function displayAllList(Request $request, Response $response, array $args): Response
     {
-        $lists = WishList::all();
+        $user = Auth::getUser();
+        $lists = WishList::where('user_id', $user['id'])->orderBy('id', 'desc')->get();
+
         if ($lists->count() === 0) {
             $response->getBody()->write("<h1 style=\"text-align : center;\"> Aucune liste n'a été trouvée.</h1>");
         }
@@ -110,7 +112,7 @@ class ListController extends BaseController
 
         if (!$list) {
             Flashes::addFlash("Liste introuvable", 'error');
-            return $response->withRedirect($this->container->router->pathFor('home'));
+            return $response->withRedirect($this->pathFor('home'));
         }
         
         $v = new ListView($this->container, [
@@ -139,7 +141,7 @@ class ListController extends BaseController
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("La liste n'existe pas", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -165,7 +167,7 @@ class ListController extends BaseController
                 Validator::failIfEmptyOrNull($body);
             } catch(Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->container->router->pathFor('editListPage', ['id' => $args['id']]));
+                return $response->withRedirect($this->pathFor('editListPage', ['id' => $args['id']]));
             }
 
             $list->title = $body['title'];
@@ -175,10 +177,10 @@ class ListController extends BaseController
             $list->save();
 
             Flashes::addFlash("Liste modifiée", 'success');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible de modifier la liste", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -197,10 +199,10 @@ class ListController extends BaseController
             $list->delete();
 
             Flashes::addFlash("Liste supprimée", 'success');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible de supprimer la liste", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -218,7 +220,7 @@ class ListController extends BaseController
             $list = WishList::with('items')->findOrFail($args['id']);
             if(!$list->isExpired()) {
                 Flashes::addFlash("Impossible de consulter les réservations d'une liste avant échéance", 'error');
-                return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+                return $response->withRedirect($this->pathFor('displayAllList'));
             }
 
             $v = new ListView($this->container, [
@@ -229,7 +231,7 @@ class ListController extends BaseController
             return $response;
         } catch (\Throwable $th) {
             Flashes::addFlash("Impossible de consulter les réservations de la liste.", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -249,12 +251,12 @@ class ListController extends BaseController
             $message->message = $body['message'];
             $message->save();
 
-            return $response->withRedirect($this->container->router->pathFor('displayList', [
+            return $response->withRedirect($this->pathFor('displayList', [
                 'token' => $args['token']
             ]));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'ajouter la liste", 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayList', [
+            return $response->withRedirect($this->pathFor('displayList', [
                 'token' => $args['token']
             ]));
         }

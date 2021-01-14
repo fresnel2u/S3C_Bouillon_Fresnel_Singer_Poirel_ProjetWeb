@@ -46,13 +46,13 @@ class FoundingPotController extends BaseController
             }
             if($body['amount'] > $item->price) {
                 Flashes::addFlash("Vous ne pouvez pas demander plus d'argent que le montant de l'item.", 'error');
-                return $response->withRedirect($this->container->router->pathFor('createFoundingPotPage', [
+                return $response->withRedirect($this->pathFor('createFoundingPotPage', [
                     'item_id' => $item->id
                 ]));
             }
             if($body['amount'] === '0' || $body['amount'] === '') {
                 Flashes::addFlash("Vous ne pouvez pas créer une cagnotte avec un montant nul.", 'error');
-                return $response->withRedirect($this->container->router->pathFor('createFoundingPotPage', [
+                return $response->withRedirect($this->pathFor('createFoundingPotPage', [
                     'item_id' => $item->id
                 ]));
             }
@@ -62,9 +62,9 @@ class FoundingPotController extends BaseController
             $foundingPot->amount = $body['amount'];
             $foundingPot->save();
 
-            return $response->withRedirect($this->container->router->pathFor('displayAllItems'));
+            return $response->withRedirect($this->pathFor('displayAllItems'));
         } catch (\Throwable $th) {
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -90,7 +90,7 @@ class FoundingPotController extends BaseController
             $response->getBody()->write($v->render(0));
             return $response;
         } catch (\Throwable $th) {
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -112,7 +112,7 @@ class FoundingPotController extends BaseController
 
             if ($amount > $rest) {
                 Flashes::addFlash("Vous ne pouvez pas mettre plus d'argent que le reste à payer.", 'error');
-                return $response->withRedirect($this->container->router->pathFor('participateFoundingPotPage', [
+                return $response->withRedirect($this->pathFor('participateFoundingPotPage', [
                     'item_id' => $item->id
                 ]));
             }
@@ -124,7 +124,7 @@ class FoundingPotController extends BaseController
             $participation->save();
 
             Flashes::addFlash("Vous avez bien ajouté {$amount} € à la cagnotte.", 'success');
-            return $response->withRedirect($this->container->router->pathFor('displayList', [
+            return $response->withRedirect($this->pathFor('displayList', [
                 'token' => $item->list->token
             ]));
         } catch (ModelNotFoundException $e) {
@@ -132,7 +132,7 @@ class FoundingPotController extends BaseController
         } catch (\Throwable $th) {
             Flashes::addFlash($th->getMessage(), 'error');
         }
-        return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+        return $response->withRedirect($this->pathFor('displayAllList'));
     }
 
     /**
@@ -157,7 +157,7 @@ class FoundingPotController extends BaseController
             return $response;
         } catch (\Throwable $th) {
             Flashes::addFlash('Impossible d\'afficher la cagnotte.', 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -184,10 +184,10 @@ class FoundingPotController extends BaseController
             $foundingPot->amount = $body['amount'];
             $foundingPot->save();
 
-            return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
+            return $response->withRedirect($this->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
             Flashes::addFlash('Impossible de mettre à jour la cagnotte', 'error');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
     }
 
@@ -208,10 +208,10 @@ class FoundingPotController extends BaseController
             $foundingPot->delete();
 
             Flashes::addFlash('Cagnotte supprimée', 'success');
-            return $response->withRedirect($this->container->router->pathFor('editList', ['id' => $list->id]));
+            return $response->withRedirect($this->pathFor('editList', ['id' => $list->id]));
         } catch (\Throwable $th) {
             Flashes::addFlash('Impossible de supprimer la cagnotte', 'erorr');
-            return $response->withRedirect($this->container->router->pathFor('displayAllList'));
+            return $response->withRedirect($this->pathFor('displayAllList'));
         }
 
         return $response;

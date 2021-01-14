@@ -71,7 +71,7 @@ class AccountController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['password', 'password_confirm']);
             } catch(Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
+                return $response->withRedirect($this->pathFor('editAccountPage'));
             }
             
             $user->firstname = $body['firstname'];
@@ -86,11 +86,11 @@ class AccountController extends BaseController
                 $user->password = password_hash($pass, PASSWORD_DEFAULT);
                 Auth::setUser(null);
                 Flashes::addFlash('Mot de passe changé, déconnexion', 'success');
-                $response = $response->withRedirect($this->container->router->pathFor('home'));
+                $response = $response->withRedirect($this->pathFor('home'));
                 
             } else {
                 Flashes::addFlash('Informations modifiées', 'success');
-                $response = $response->withRedirect($this->container->router->pathFor('displayAccount'));
+                $response = $response->withRedirect($this->pathFor('displayAccount'));
                 Auth::setUser($user);
             }
             $user->save();
@@ -98,10 +98,10 @@ class AccountController extends BaseController
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible d'éditer le compte.", 'error');
-            return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
+            return $response->withRedirect($this->pathFor('editAccountPage'));
         } catch (Exception $e) {
             Flashes::addFlash($e->getMessage(), 'error');
-            return $response->withRedirect($this->container->router->pathFor('editAccountPage'));
+            return $response->withRedirect($this->pathFor('editAccountPage'));
         }
     }
     
@@ -120,10 +120,10 @@ class AccountController extends BaseController
             $user->delete();
             Auth::setUser(null);
             Flashes::addFlash('Compte supprimé.', 'success');
-            return $response->withRedirect($this->container->router->pathFor('home'));
+            return $response->withRedirect($this->pathFor('home'));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash('Impossible de supprimer le compte', 'error');
-            return $response->withRedirect($this->container->router->pathFor('home'));
+            return $response->withRedirect($this->pathFor('home'));
         }
     }
 }

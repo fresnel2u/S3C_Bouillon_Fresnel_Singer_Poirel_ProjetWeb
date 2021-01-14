@@ -15,7 +15,7 @@ class ListView extends BaseView
      */
     private function newListPage(): string
     {
-        $newListUrl = $this->container->router->pathFor('newList');
+        $newListUrl = $this->pathFor('newList');
 
         return <<<HTML
             <div class="container">
@@ -50,60 +50,68 @@ class ListView extends BaseView
      */
     private function getAllList(): string
     {
-        $newListUrl = $this->container->router->pathFor('newListPage');
+        $lists = $this->params['lists'];
+        $addUrl = $this->pathFor('newListPage');
 
         $html = <<<HTML
-            <h1>Listes de souhaits</h1>
-            <a href="{$newListUrl}" class="btn btn-primary">Ajouter une liste</a>
-            <div>
-                <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">user_id</th>
-                        <th scope="col">titre</th>
-                        <th scope="col">description</th>
-                        <th scope="col">expiration</th>
-                        <th scope="col">token</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                        <tbody> 
+            <div class="container page-lists">
+                <h1>Mes listes de souhaits</h1>
+                <a href="{$addUrl}" class="btn btn-primary">Ajouter une liste</a>
+                <div class="table-wrapper">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>URL Publique</th>
+                                <th>Expiration</th>
+                                <th class="table-actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
         HTML;
 
-        foreach ($this->params['lists'] as $list) {
-            $html .= "<tr>";
-
-            foreach ($list->toArray() as $row) {
-                $html .= "<td>$row</td>";
-            }
-            
-            $showUrl = $this->container->router->pathFor('displayList', ['token' => $list->token]);
-            $editUrl = $this->container->router->pathFor('editListPage', ['id' => $list->id]);
-            $deleteUrl = $this->container->router->pathFor('deleteList', ['id' => $list->id]);
-            $resultsUrl = $this->container->router->pathFor('displayListResults', ['id' => $list->id]);
+        foreach ($lists as $list) {
+            $publicUrl = $this->pathFor('displayList', ['token' => $list->token]);
+            $editUrl = $this->pathFor('editListPage', ['id' => $list->id]);
+            $deleteUrl = $this->pathFor('deleteList', ['id' => $list->id]);
+            $resultsUrl = $this->pathFor('displayListResults', ['id' => $list->id]);
 
             $html .= <<<HTML
-                    <td>
-                        <a href="{$showUrl}" class="btn btn-light">Aperçu</a>
-                        <form method="POST" action="{$deleteUrl}">
-                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                        </form>
-                        <a href="{$editUrl}" class="btn btn-light">Éditer</a>
+                <tr>
+                    <td>{$list->id}</td>
+                    <td>{$list->title}</td>
+                    <td>{$list->description}</td>
+                    <td><a href="{$publicUrl}" target="_blank">{$publicUrl}</a></td>
+                    <td>{$list->expiration->format('d/m/Y')}</td>
+                    <td class="table-actions">
+                        <div>
+                            <a href="{$editUrl}" class="btn btn-light">Éditer</a>
             HTML;
 
-           
-            if($list->isExpired()) {
+            if ($list->isExpired()) {
                 $html .= <<<HTML
-                 <a href="{$resultsUrl}" class="btn btn-light">Bilan</a>    
+                    <a href="{$resultsUrl}" class="btn btn-light">Bilan</a>    
                 HTML;
             }
-            $html .= '</td> </tr>';
+
+            $html .= <<<HTML
+                            <form method="POST" action="{$deleteUrl}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette liste ?');">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            HTML;
         }
-        $html .= '</tbody>
-            </table>
-        </div>';
-        return $html;
+        
+        return $html . <<<HTML
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        HTML;
     }
 
     /**
@@ -131,7 +139,7 @@ class ListView extends BaseView
         HTML;
         
         foreach ($items as $item) {
-            $itemUrl = $this->container->router->pathFor('displayItem', [
+            $itemUrl = $this->pathFor('displayItem', [
                 'token' => $list->token,
                 'id' => $item->id
             ]);
@@ -169,7 +177,7 @@ class ListView extends BaseView
                 </div>
         HTML;
 
-        $addListMessageUrl = $this->container->router->pathFor('newListMessage', ['token' => $list->token]);
+        $addListMessageUrl = $this->pathFor('newListMessage', ['token' => $list->token]);
 
         $html .= <<<HTML
         <div class="messages">
@@ -186,95 +194,9 @@ class ListView extends BaseView
             HTML;
         }
 
-        $html .= <<<HTML
-                </div>
-            HTML;
-
-        return $html;
-
-        // $html = <<<HTML
-        //     <h1>Items de la liste "{$list->title}":</h1>
-        //     <div>
-        //         <table class="table">
-                    // <thead>
-                    //     <tr>
-                    //         <th scope="col">ID</th>
-                    //         <th scope="col">Nom</th>
-                    //         <th scope="col">Description</th>
-                    //         <th scope="col">Image</th>
-                    //         <th scope="col">URL</th>
-                    //         <th scope="col">Tarif</th>
-                    //         <th scope="col">Cagnotte</th>
-                    //         <th scope="col">Réservation</th>
-                    //     </tr>
-                    // </thead>
-                    // <tbody>
-        // HTML;
-        // foreach ($items as $item) {
-        //     $html .= <<<HTML
-        //         <tr>
-        //             <td>{$item->id}</td>
-        //             <td>{$item->name}</td>
-        //             <td>{$item->description}</td>
-        //             <td><img src="/img/{$item->image}" alt="Image de l'item {$item->id}" width="150" /></td>
-        //             <td>{$item->url}</td>
-        //             <td>{$item->price} €</td>
-        //     HTML;
-
-        //     // Cagnotte
-        //     if ($item->foundingPot) {
-                // $foundingPotUrl = $this->container->router->pathFor('participateFoundingPotPage', [
-                //     'item_id' => $item->id
-                // ]);
-        //         $html .= <<<HTML
-        //             <td>
-        //                 <a href="{$foundingPotUrl}" class="btn btn-light">Participer à la cagnotte</a>
-        //             </td>
-        //         HTML;
-        //     } else {
-        //         $html .= <<<HTML
-        //             <td>Pas de cagnotte.</td>
-        //         HTML;
-        //     }
-
-        //     // Réservation
-        //     if ($item->reservation) {
-        //         $html .= <<<HTML
-        //             <td>Réservé par {$item->reservation->user->firstname} {$item->reservation->user->lastname}
-        //         HTML;
-                
-        //         // annuler la réservation
-        //         if ($item->reservation->user_id === $user['id']) {
-        //             $cancelLockItem = $this->container->router->pathFor('cancelLockItem', ['id' => $item->id]);
-        //             $html .= <<<HTML
-        //                 <br> 
-        //                 <form method="POST" action="{$cancelLockItem}" onsubmit=" return confirm('Êtes-vous sûr de vouloir annuler votre réservation ?')">
-        //                     <button class="btn btn-danger">Annuler</button>
-        //                 </form>
-        //             HTML;
-        //         }
-        //         $html .= <<<HTML
-        //             </td>
-        //         HTML;
-        //     } else if (Auth::isLogged()) {
-        //         $lockUrl = $this->container->router->pathFor('lockItemPage', ['id' => $item->id]);
-        //         $html .= <<<HTML
-        //             <td><a href="{$lockUrl}" class="btn btn-light">Réserver</button></td>
-        //         HTML;
-        //     } else {
-        //         $html .= <<<HTML
-        //             <td>Vous devez être connecté pour réserver.</td>
-        //         HTML;
-        //     }
-
-        //     $html .= '<tr>';
-        // }
-
-        // return $html . <<<HTML
-        //             </tbody>
-        //         </table>
-        //     </div>
-        // HTML;
+        return $html . <<<HTML
+            </div>
+        HTML;
     }
 
     /**
@@ -285,7 +207,7 @@ class ListView extends BaseView
     private function editListPage(): string
     {
         $list = $this->params['list'];
-        $editUrl = $this->container->router->pathFor('editList', ['id' => $list->id]);
+        $editUrl = $this->pathFor('editList', ['id' => $list->id]);
 
         return <<<HTML
             <div class="container">
@@ -301,7 +223,7 @@ class ListView extends BaseView
                     </div>        
                     <div class="form-group">
                         <label for="expiration">Expiration</label>
-                        <input type="date" name="expiration" id="expiration" value="{$list->expiration}">
+                        <input type="date" name="expiration" id="expiration" value="{$list->expiration->format('Y-m-d')}">
                     </div>        
                     <div class="form-group">
                         <label for="token">Token</label>
