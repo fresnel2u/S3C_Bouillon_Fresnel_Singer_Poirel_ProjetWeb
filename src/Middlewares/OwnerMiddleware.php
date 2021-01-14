@@ -122,6 +122,6 @@ class OwnerMiddleware extends BaseMiddleware
         } else {
             Flashes::addFlash('Message inaccessible', 'error');
         }
-        return  $response->withRedirect($this->container->router->pathFor('displayAllList'));
+        return  $response->withRedirect($this->container->router->pathFor('displayAllLists'));
     }
 }
