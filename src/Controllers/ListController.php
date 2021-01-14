@@ -251,12 +251,31 @@ class ListController extends BaseController
             $message->message = $body['message'];
             $message->save();
 
-            return $response->withRedirect($this->pathFor('displayList', [
+            Flashes::addFlash("Message ajouté", 'success');
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
                 'token' => $args['token']
             ]));
         } catch (ModelNotFoundException $e) {
-            Flashes::addFlash("Impossible d'ajouter la liste", 'error');
-            return $response->withRedirect($this->pathFor('displayList', [
+            Flashes::addFlash("Impossible d'ajouter le message", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
+                'token' => $args['token']
+            ]));
+        }
+    }
+
+    public function deleteListMessage(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $message = ListMessage::where('id', $args['id'])->first();
+            $message->delete();
+
+            Flashes::addFlash("Message supprimé", 'success');
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
+                'token' => $args['token']
+            ]));
+        } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible de supprimer le message", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
                 'token' => $args['token']
             ]));
         }

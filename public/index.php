@@ -29,6 +29,7 @@ $guestMiddleware = new GuestMiddleware($container);
 $itemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
 $listOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::WISHLIST, 'id');
 $foundingPotItemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
+$messageOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::MESSAGE);
 
 // Home
 $app->get('/', HomeController::class . ':home')->setName('home');
@@ -41,7 +42,12 @@ $app->group('', function (App $app) {
     $app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
     $app->post('/lists/{token}/show', ListController::class . ':addListMessage')->setName('newListMessage');
+    //$app->post('/lists/{token}/show/{id}', ListController::class . ':deleteListMessage')->setName('deleteListMessage');
 })->add($authMiddleware);
+
+$app->group('', function(App $app) {
+    $app->post('/lists/{token}/show/{id}', ListController::class . ':deleteListMessage')->setName('deleteListMessage');
+})->add($authMiddleware)->add($messageOwnerMiddleware);
 
 $app->group('', function (App $app) {
     $app->get('/lists/{id}/edit', ListController::class . ':editListPage')->setName('editListPage');

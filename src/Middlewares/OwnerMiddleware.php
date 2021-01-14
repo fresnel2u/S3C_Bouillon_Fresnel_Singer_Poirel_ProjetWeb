@@ -11,11 +11,13 @@ use Whishlist\Helpers\Flashes;
 use Whishlist\Models\FoundingPot;
 use Whishlist\Models\Item;
 use Whishlist\Models\WishList;
+use Whishlist\Models\ListMessage;
 
 class OwnerMiddleware extends BaseMiddleware
 {
     const WISHLIST = 'wishlist';
     const ITEM = 'item';
+    const MESSAGE = 'listmessage';
 
     /**
      * Type of was the owner is supposed to own
@@ -59,6 +61,9 @@ class OwnerMiddleware extends BaseMiddleware
             case self::ITEM:
                 $rs = $this->userOwnsItem($request, $response, $next);
                 break;
+            case self::MESSAGE:
+                $rs = $this->userOwnsMessage($request, $response, $next);
+                break;
             default:
                 throw new Error("OwnerMiddle can't haddle check type : '{$this->checkType}'");
         }
@@ -99,5 +104,24 @@ class OwnerMiddleware extends BaseMiddleware
             Flashes::addFlash('Item inaccessible', 'error');
             return $response->withRedirect($this->container->router->pathFor('displayAllLists')); 
         }
+    }
+
+    /**
+     * Vérifie si l'utilisateur courant possède bien le message avec l'id en argument dans la requête
+     *
+     * @param itemIdParam nom de l'argument pour l'id du message
+     */
+    public function userOwnsMessage(Request $request, Response $response, callable $next): Response
+    {
+        $route = $request->getAttribute('route');
+        $message = ListMessage::find($route->getArgument($this->idParamName));
+        if($message !== null) {
+            if(Auth::getUser()['id'] === $message->user_id)
+                return $next($request, $response);
+            Flashes::addFlash('Vous devez être le créateur du message pour pouvoir supprimer celui-ci', 'error');
+        } else {
+            Flashes::addFlash('Message inaccessible', 'error');
+        }
+        return  $response->withRedirect($this->container->router->pathFor('displayAllList'));
     }
 }

@@ -4,7 +4,7 @@ namespace Whishlist\Views;
 
 use Whishlist\Helpers\Auth;
 use Whishlist\Models\WishList;
-use Whishlist\Models\Message;
+use Whishlist\Models\ListMessage;
 
 class ListView extends BaseView
 {
@@ -190,8 +190,14 @@ class ListView extends BaseView
         HTML;
 
         foreach ($messages as $message) {
+            $deleteListMessageUrl = $this->container->router->pathFor('deleteListMessage', ['id' => $message->id,
+                                                                                            'token' => $list->token]);
             $html .= <<<HTML
                 <br><p><i>$message->message</i></p>
+                <form method="POST" action="{$deleteListMessageUrl}">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+
             HTML;
         }
 
