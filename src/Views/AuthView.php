@@ -118,6 +118,6 @@ class AuthView extends BaseView
                 }
         }
 
-        return $this->layout($content, $title);
+        return $this->layout($content, $title,0);
     }
 }

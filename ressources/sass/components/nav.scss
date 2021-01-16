@@ -1,0 +1,24 @@
+.nav {
+    nav {
+        & {
+            display: flex;
+            overflow: hidden;
+            background-color: var(--clr-dark);
+        }
+
+        a {
+            & {
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 1.2rem;
+                transition: all 0.3s;
+            }
+
+            &:hover {
+                background-color: var(--clr-primary);
+            }
+        }
+    }
+}

@@ -134,5 +134,8 @@ Contributeur : Bouillon Thomas
 URL associée : /
 Contributeur : Singer Jules
 
+- Barre de navigation 
+Contributeur : Singer Jules
+  
 - fix de bugs, refactoring, modifications mineures ...
 Contributeurs : Tout le monde

@@ -13,16 +13,15 @@ class Menu
      */
     public static function getMenu(): string
     {
-        $accountLink = Auth::isLogged() ? '<li><a href="/account">Compte</a></li>' : '';
-        
         return <<<HTML
-            <ul style="display : flex; justify-content : space-between;">
-                <li><a href="/">Accueil</a></li>
-                <li><a href="/login">Connexion</a></li>
-                <li><a href="/register">Inscription</a></li>
-                <li><a href="/lists">Mes listes</a></li>
-                {$accountLink}
-            </ul>
+            <div class="nav">
+                <nav>
+                    <a href="/">Accueil</a>
+                    <a href="/lists">Mes listes</a>
+                    <a href="TODO">Listes publiques(TODO)</a>
+                    <a href="/account">Mon compte</a>
+                </nav>
+            </div>
         HTML;
     }
 }
