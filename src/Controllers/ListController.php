@@ -135,7 +135,7 @@ class ListController extends BaseController
     public function editListPage(Request $request, Response $response, array $args): Response
     {
         try {
-            $list = WishList::findOrFail($args['id']);
+            $list = WishList::findOrFail($args['list_id']);
             $v = new ListView($this->container, ['list' => $list]);
             $response->getBody()->write($v->render(3));
             return $response;
@@ -156,7 +156,7 @@ class ListController extends BaseController
     public function editList(Request $request, Response $response, $args): Response
     {
         try {
-            $list = WishList::findOrFail($args['id']);
+            $list = WishList::findOrFail($args['list_id']);
 
             $body = $request->getParsedBody();
             $body = array_map(function ($field) {
@@ -167,7 +167,7 @@ class ListController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['token']);
             } catch (Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->pathFor('editListPage', ['id' => $args['id']]));
+                return $response->withRedirect($this->pathFor('editListPage', ['id' => $args['list_id']]));
             }
 
             $list->title = $body['title'];
@@ -195,7 +195,7 @@ class ListController extends BaseController
     public function deleteList(Request $request, Response $response, array $args): Response
     {
         try {
-            $list = WishList::find($args['id']);
+            $list = WishList::find($args['list_id']);
             $list->delete();
 
             Flashes::addFlash("Liste supprimée", 'success');
@@ -217,7 +217,7 @@ class ListController extends BaseController
     public function displayListResults(Request $request, Response $response, array $args): Response
     {
         try {
-            $list = WishList::with('items')->findOrFail($args['id']);
+            $list = WishList::with('items')->findOrFail($args['list_id']);
             if (!$list->isExpired()) {
                 Flashes::addFlash("Impossible de consulter les réservations d'une liste avant échéance", 'error');
                 return $response->withRedirect($this->pathFor('displayAllLists'));

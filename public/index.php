@@ -50,10 +50,10 @@ $app->group('', function(App $app) {
 })->add($authMiddleware)->add($messageOwnerMiddleware);
 
 $app->group('', function (App $app) {
-    $app->get('/lists/{id}/edit', ListController::class . ':editListPage')->setName('editListPage');
-    $app->post('/lists/{id}/edit', ListController::class . ':editList')->setName('editList');
-    $app->post('/lists/{id}/delete', ListController::class . ':deleteList')->setName('deleteList');
-    $app->get('/lists/{id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
+    $app->get('/lists/{list_id}/edit', ListController::class . ':editListPage')->setName('editListPage');
+    $app->post('/lists/{list_id}/edit', ListController::class . ':editList')->setName('editList');
+    $app->post('/lists/{list_id}/delete', ListController::class . ':deleteList')->setName('deleteList');
+    $app->get('/lists/{list_id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
 })->add($authMiddleware)->add($listOwnerMiddleware);
 
 // Items

@@ -75,10 +75,10 @@ class ListView extends BaseView
 
         foreach ($lists as $list) {
             $publicUrl = $this->pathFor('displayList', ['token' => $list->token]);
-            $editUrl = $this->pathFor('editListPage', ['id' => $list->id]);
+            $editUrl = $this->pathFor('editListPage', ['list_id' => $list->id]);
             $itemsUrl = $this->pathFor('displayAllItems', ['list_id' => $list->id]);
-            $deleteUrl = $this->pathFor('deleteList', ['id' => $list->id]);
-            $resultsUrl = $this->pathFor('displayListResults', ['id' => $list->id]);
+            $deleteUrl = $this->pathFor('deleteList', ['list_id' => $list->id]);
+            $resultsUrl = $this->pathFor('displayListResults', ['list_id' => $list->id]);
 
             $html .= <<<HTML
                 <tr>
@@ -223,7 +223,7 @@ class ListView extends BaseView
     private function editListPage(): string
     {
         $list = $this->params['list'];
-        $editUrl = $this->pathFor('editList', ['id' => $list->id]);
+        $editUrl = $this->pathFor('editList', ['list_id' => $list->id]);
 
         return <<<HTML
             <div class="container">
