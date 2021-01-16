@@ -146,10 +146,8 @@ class ListView extends BaseView
             ]);
             $html .= <<<HTML
                 <div class="item">
-                    <a href="{$itemUrl}">
-                        <img src="/img/{$item->image}" alt="Image de l'item" />
-                        <h3>{$item->name}</h3>
-                    </a>
+                    <img src="/img/{$item->image}" alt="Image de l'item" />
+                    <h3>{$item->name}</h3> 
             HTML;
 
             // Réservation
@@ -170,6 +168,7 @@ class ListView extends BaseView
             }
 
             $html .= <<<HTML
+                <a href="{$itemUrl}" class="btn btn-primary"> Afficher </a>
                 </div>
             HTML;
         }
