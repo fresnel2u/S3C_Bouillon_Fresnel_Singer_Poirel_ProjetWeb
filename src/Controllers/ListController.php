@@ -245,13 +245,17 @@ class ListController extends BaseController
                 return filter_var($field, FILTER_SANITIZE_STRING);
             }, $body);
 
-            $message = new ListMessage();
-            $message->list_id = $list->id;
-            $message->user_id = Auth::getUser()['id'];
-            $message->message = $body['message'];
-            $message->save();
-
-            Flashes::addFlash("Message ajouté", 'success');
+            if($body['message'] === "") {
+                Flashes::addFlash("Veuillez mettre du contenu dans votre message", 'error');
+            } else {
+                $message = new ListMessage();
+                $message->list_id = $list->id;
+                $message->user_id = Auth::getUser()['id'];
+                $message->message = $body['message'];
+                $message->save();
+                Flashes::addFlash("Message ajouté", 'success');
+            }
+            
             return $response->withRedirect($this->container->router->pathFor('displayList', [
                 'token' => $args['token']
             ]));

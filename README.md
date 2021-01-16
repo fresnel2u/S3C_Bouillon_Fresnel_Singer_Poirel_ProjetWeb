@@ -31,7 +31,6 @@ Contributeur : Singer Jules
 URL associée : /lists/{tokenList}/item/{idItem} --> necessite d'avoir réservé l'item. puis appuyer sur 'annuler la réservation'.
 Contributeur : Singer Jules
 
-A MODIFIER
 - Ajouter un message sur une liste : ajoute un message public rattaché à la liste visible par tous les autres utilisateurs de la liste.
 URL associée : /lists/{tokenList}/show --> fonctionnalité présente sur la page d'affichage d'une liste (en bas de page)
 Contributeur : Poirel Jeremy
@@ -72,9 +71,8 @@ Contributeur : Poirel Jeremy
 URL associée : /lists/{idList}/items/{idItem}/edit --> accessible via la fonctionnalité d'édtion d'un item, un champ est prévu pour sélectionner une autre image.
 Contributeur : Poirel Jeremy
 
-A MODIFIER
 - Supprimer une image d'un item : le créateur peut supprimer l'image de ses items.
-URL associée :
+URL associée : /lists/{idList}/items --> puis appuyer sur le bouton supprimer de l'item souhaité
 Contributeur : Poirel Jeremy
 
 - Partager une liste : le créateur d'une liste peut la partager via une URL à donner contenant le token de la liste concernée.
@@ -84,7 +82,7 @@ Contributeur : Fresnel Hugo
 - Consulter les réservations d'une de ses listes avant échéance : le créateur d'une liste peut voir les réservations des items déjà réalisées.
   (sans montrer qui a réservé)
 URL associée : /lists/{tokenList}/show --> chaque item est accompagné d'une mention "Non réservé" ou "Réservé".
-Contributeur : A FINIR
+Contributeur : Fresnel Hugo et Singer Jules
 
 - Consulter les réservations et messages d'une de ses listes après échéance : le créateur d'une liste peut accéder au bilan de celle-ci une fois la date d'expiration
   dépassée. Cette page permet de récapituler les items réservés et qui les a réservés avec différentes informations détaillées.

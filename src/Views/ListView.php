@@ -5,6 +5,7 @@ namespace Whishlist\Views;
 use Whishlist\Helpers\Auth;
 use Whishlist\Models\WishList;
 use Whishlist\Models\ListMessage;
+use Whishlist\Models\User;
 
 class ListView extends BaseView
 {
@@ -181,10 +182,15 @@ class ListView extends BaseView
 
         $html .= <<<HTML
         <div class="messages">
+        
             <form method="POST" action="{$addListMessageUrl}">
-                <label for="descr"><br><p><i>Messages : </i></p></label>
-                <input type="text" name ="message" id="message">
+                <label for="descr"><br><h2>Messages publics : </h2></label>
+                <div class=form-group" >
+                    <input type="text" name ="message" id="message" placeholder="Contenu du message">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
             </form>
+            
         <br>
         HTML;
 
@@ -192,10 +198,14 @@ class ListView extends BaseView
             $deleteListMessageUrl = $this->container->router->pathFor('deleteListMessage', ['id' => $message->id,
                                                                                             'token' => $list->token]);
             $html .= <<<HTML
-                <br><p><i>$message->message</i></p>
+            <div class="message">
+                <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
+                <p>$message->message</p>
                 <form method="POST" action="{$deleteListMessageUrl}">
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
                 </form>
+                <br>
+            </div>
 
             HTML;
         }

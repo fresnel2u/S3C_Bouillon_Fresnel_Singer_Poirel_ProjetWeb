@@ -67,10 +67,11 @@ CREATE TABLE `items_reservations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `lists_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
 	`list_id` INT(11) NOT NULL,
 	`user_id` INT(11) NOT NULL,
 	`message` VARCHAR(1024) NOT NULL,
-	PRIMARY KEY (`list_id`, `user_id`),
+	PRIMARY KEY (`id`),
 	CONSTRAINT `fk_lists_messages_lists` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`) ON DELETE CASCADE,
 	CONSTRAINT `fk_lists_messages_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -9,13 +9,13 @@ class ListMessage extends Model
     protected $table = 'lists_messages';
     public $timestamps = false;
 
-    public function lists()
+    public function list()
     {
         return $this->belongsTo(WishList::class, 'list_id', 'id');
     }
 
-    public function users()
+    public function user()
     {
-        return $this->belongsTo(Users::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

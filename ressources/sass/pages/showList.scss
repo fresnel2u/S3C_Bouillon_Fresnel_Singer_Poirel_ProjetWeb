@@ -31,4 +31,31 @@
         }
 
     }
+
+    .messages {
+
+        .message {
+            & {
+                background-color: var(--clr-light);
+                border-radius: 5px;
+                padding: 2rem;
+                box-shadow: var(--eft-neumorphism-shadow);
+                margin-bottom: 1.5rem;
+            }
+
+            form {
+                & {
+                    margin-top : 0.5rem;
+                }
+
+                button {
+                    padding: 0.5rem 0.75rem;
+                    justify-content: end;
+                    float:right;
+                }
+            }
+             
+            
+        }
+    }
 }
