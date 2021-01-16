@@ -27,7 +27,7 @@ $app = new \Slim\App($container);
 $authMiddleware = new AuthMiddleware($container);
 $guestMiddleware = new GuestMiddleware($container);
 $itemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
-$listOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::WISHLIST, 'id');
+$listOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::WISHLIST, 'list_id');
 $foundingPotItemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
 $messageOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::MESSAGE);
 
@@ -58,13 +58,17 @@ $app->group('', function (App $app) {
 
 // Items
 $app->group('', function (App $app) {
-    $app->get('/lists/{list_id}/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
-    $app->get('/lists/{list_id}/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
-    $app->post('/lists/{list_id}/items/new', ItemController::class . ':newItem')->setName('newItem');
     $app->get('/lists/{list_id}/items/{item_id}/lock', ItemController::class . ':lockItemPage')->setName('lockItemPage');
     $app->post('/lists/{list_id}/items/{item_id}/lock', ItemController::class . ':lockItem')->setName('lockItem');
     $app->post('/lists/{list_id}/items/{item_id}/lock/cancel', ItemController::class . ':cancelLockItem')->setName('cancelLockItem');
 })->add($authMiddleware);
+
+$app->group('', function (App $app) {
+    $app->get('/lists/{list_id}/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
+    $app->get('/lists/{list_id}/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
+    $app->post('/lists/{list_id}/items/new', ItemController::class . ':newItem')->setName('newItem');
+})->add($authMiddleware)->add($listOwnerMiddleware);
+
 $app->get('/lists/{token}/item/{item_id}', ItemController::class . ':displayItem')->setName('displayItem');
 
 $app->group('', function (App $app) {
