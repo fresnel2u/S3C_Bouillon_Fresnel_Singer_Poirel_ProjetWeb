@@ -154,14 +154,14 @@ class ListView extends BaseView
 
             // Réservation
             if ($item->reservation) {
-                if ($list->expiration->lessThan(new \DateTime())) {
+                if (!($list->user_id === Auth::getUser()['id'])) {
                     $html .= <<<HTML
                         <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
                     HTML;
                 } else {
                     $html .= <<<HTML
                         <p><i>Réservé.</i></p>
-                    HTML;
+                    HTML; 
                 }
             } else {
                 $html .= <<<HTML
