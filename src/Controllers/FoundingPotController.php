@@ -26,7 +26,7 @@ class FoundingPotController extends BaseController
      */
     public function create(Request $request, Response $response, array $args): Response
     {
-        $list = WishList::where('id', $args['list_id'])->first();
+        $list = WishList::find($args['list_id']);
         if (!$list) {
             Flashes::addFlash("Liste introuvable.", 'error');
             return $response->withRedirect($this->pathFor('displayAllLists'));
@@ -90,7 +90,7 @@ class FoundingPotController extends BaseController
      */
     public function createPage(Request $request, Response $response, array $args): Response
     {
-        $list = WishList::where('id', $args['list_id'])->first();
+        $list = WishList::find($args['list_id']);
         if (!$list) {
             Flashes::addFlash("Liste introuvable.", 'error');
             return $response->withRedirect($this->pathFor('displayAllLists'));
@@ -128,35 +128,45 @@ class FoundingPotController extends BaseController
      */
     public function participate(Request $request, Response $response, array $args): Response
     {
-        try {
-            $item = Item::with('foundingPot')->findOrFail($args['item_id']);
-
-            $amount = round(abs(floatval($request->getParsedBodyParam('amount'))), 2);
-            $rest = $item->foundingPot->getRest();
-
-            if ($amount > $rest) {
-                Flashes::addFlash("Vous ne pouvez pas mettre plus d'argent que le reste à payer.", 'error');
-                return $response->withRedirect($this->pathFor('participateFoundingPotPage', [
-                    'item_id' => $item->id
-                ]));
-            }
-
-            $participation = new FoundingPotParticipation();
-            $participation->amount = $amount;
-            $participation->user_id = Auth::getUser()['id'];
-            $participation->founding_pot_id = $item->foundingPot->id;
-            $participation->save();
-
-            Flashes::addFlash("Vous avez bien ajouté {$amount} € à la cagnotte.", 'success');
-            return $response->withRedirect($this->pathFor('displayList', [
-                'token' => $item->list->token
-            ]));
-        } catch (ModelNotFoundException $e) {
-            Flashes::addFlash("Le model n'existe pas.", 'error');
-        } catch (\Throwable $th) {
-            Flashes::addFlash($th->getMessage(), 'error');
+        $list = WishList::where('token', $args['token'])->first();
+        if (!$list) {
+            Flashes::addFlash("Liste introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('home'));
         }
-        return $response->withRedirect($this->pathFor('displayAllLists'));
+
+        $item = Item::find($args['item_id']);
+        if (!$item) {
+            Flashes::addFlash("Item introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('home'));
+        }
+
+        if ($list->id !== $item->list_id) {
+            Flashes::addFlash("L'item ne correspond pas à la liste.", 'error');
+            return $response->withRedirect($this->pathFor('home'));
+        }
+
+        $amount = round(abs(floatval($request->getParsedBodyParam('amount'))), 2);
+        $rest = $item->foundingPot->getRest();
+
+        if ($amount > $rest) {
+            Flashes::addFlash("Vous ne pouvez pas mettre plus d'argent que le reste à payer.", 'error');
+            return $response->withRedirect($this->pathFor('participateFoundingPotPage', [
+                'token' => $list->token,
+                'item_id' => $item->id
+            ]));
+        }
+
+        $participation = new FoundingPotParticipation();
+        $participation->amount = $amount;
+        $participation->user_id = Auth::getUser()['id'];
+        $participation->founding_pot_id = $item->foundingPot->id;
+        $participation->save();
+
+        Flashes::addFlash("Vous avez bien ajouté {$amount} € à la cagnotte.", 'success');
+        return $response->withRedirect($this->pathFor('displayItem', [
+            'token' => $list->token,
+            'item_id' => $item->id
+        ]));
     }
 
     /**
@@ -169,20 +179,30 @@ class FoundingPotController extends BaseController
      */
     public function participatePage(Request $request, Response $response, array $args): Response
     {
-        try {
-            $item = Item::with('foundingPot')->with('list')->findOrFail($args['item_id']);
-
-            $v = new FoundingPotView($this->container, [
-                'founding_pot' => $item->foundingPot,
-                'list' => $item->list,
-                'item' => $item
-            ]);
-            $response->getBody()->write($v->render(1));
-            return $response;
-        } catch (\Throwable $th) {
-            Flashes::addFlash('Impossible d\'afficher la cagnotte.', 'error');
-            return $response->withRedirect($this->pathFor('displayAllLists'));
+        $list = WishList::where('token', $args['token'])->first();
+        if (!$list) {
+            Flashes::addFlash("Liste introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('home'));
         }
+
+        $item = Item::find($args['item_id']);
+        if (!$item) {
+            Flashes::addFlash("Item introuvable.", 'error');
+            return $response->withRedirect($this->pathFor('home'));
+        }
+
+        if ($list->id !== $item->list_id) {
+            Flashes::addFlash("L'item ne correspond pas à la liste.", 'error');
+            return $response->withRedirect($this->pathFor('home'));
+        }
+
+        $v = new FoundingPotView($this->container, [
+            'founding_pot' => $item->foundingPot,
+            'list' => $list,
+            'item' => $item
+        ]);
+        $response->getBody()->write($v->render(1));
+        return $response;
     }
 
     /**

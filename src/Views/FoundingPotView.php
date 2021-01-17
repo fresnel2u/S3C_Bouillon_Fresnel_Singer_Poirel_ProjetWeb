@@ -45,7 +45,7 @@ class FoundingPotView extends BaseView
         $item = $this->params['item'];
 
         $participateUrl = $this->pathFor('participateFoundingPot', [
-            'list_id' => $list->id,
+            'token' => $list->token,
             'item_id' => $item->id
         ]);
         $cancelUrl = $this->pathFor('displayItem', [

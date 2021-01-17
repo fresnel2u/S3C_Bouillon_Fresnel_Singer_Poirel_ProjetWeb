@@ -83,8 +83,8 @@ $app->group('', function (App $app) {
 $app->group('', function (App $app) {
     $app->get('/lists/{list_id}/items/{item_id}/founding_pot/create', FoundingPotController::class . ':createPage')->setName('createFoundingPotPage');
     $app->post('/lists/{list_id}/items/{item_id}/founding_pot/create', FoundingPotController::class . ':create')->setName('createFoundingPot');
-    $app->get('/lists/{list_id}/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participatePage')->setName('participateFoundingPotPage');
-    $app->post('/lists/{list_id}/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participate')->setName('participateFoundingPot');
+    $app->get('/lists/{token}/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participatePage')->setName('participateFoundingPotPage');
+    $app->post('/lists/{token}/items/{item_id}/founding_pot/participate', FoundingPotController::class . ':participate')->setName('participateFoundingPot');
 })->add($authMiddleware)->add($foundingPotItemOwnerMiddleware);
 
 // Auth

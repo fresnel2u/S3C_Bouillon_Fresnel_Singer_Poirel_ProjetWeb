@@ -179,7 +179,7 @@ class ItemView extends BaseView
             $rest = $item->foundingPot->getRest();
 
             if ($rest > 0) {
-                $foundingPotUrl = $this->pathFor('participateFoundingPotPage', ['list_id' =>$list->id, 'item_id' => $item->id]);
+                $foundingPotUrl = $this->pathFor('participateFoundingPotPage', ['token' => $list->token, 'item_id' => $item->id]);
                 $html .= <<<HTML
                     <p><strong>Cagnotte : </strong> {$item->foundingPot->getRest()} € restant à payer</p>
                     <a href="{$foundingPotUrl}" class="btn btn-secondary">Participer à la cagnotte</a>
