@@ -106,16 +106,19 @@ URL associée : /account/edit
 Contributeur : Singer Jules
 
 - Rendre une liste publique : le créateur d'une liste peut la rendre publique.
-URL associée : A FAIRE
+URL associée : /lists/{idList}/edit
+Contributeur : Fresnel Hugo
 
-- Afficher les listes de souhaits publiques : A FAIRE
+- Afficher les listes de souhaits publiques : les visiteurs peuvent voir la liste des listes de souhaits publiques
+URL associée : /lists/public
+Contributeur : Fresnel Hugo
 
 - Créer une cagnotte sur un item : le créateur d'une liste peut ouvrir une cagnotte sur ses items (avec un montant spécifié ne pouvant pas dépassé le prix de l'item).
 ULR associée : /lists/{idList}/items/{idItem}/founding_pot/create
 Contributeur : Fresnel Hugo
 
 - Participer à une cagnotte : les utilisateurs d'une liste peuvent participer à une cagnotte d'un item en indiquant un montant de participation.
-URL associée : A FIX
+URL associée : /lists/{idList}/items/{idItem}/founding_pot/participate
 Contributeur : Fresnel Hugo
 
 - Supprimer son compte : chaque utilisateur inscrit peut supprimer son compte.
