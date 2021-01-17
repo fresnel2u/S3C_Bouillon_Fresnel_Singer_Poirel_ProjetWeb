@@ -42,11 +42,12 @@ $app->group('', function (App $app) {
     $app->get('/lists/new', ListController::class . ':newListPage')->setName('newListPage');
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
     $app->post('/lists/{token}/show', ListController::class . ':addListMessage')->setName('newListMessage');
-    //$app->post('/lists/{token}/show/{id}', ListController::class . ':deleteListMessage')->setName('deleteListMessage');
+    $app->get('/list/{token}/edit', ListController::class . ':editListMessagePage')->setName('editListMessagePage');
 })->add($authMiddleware);
 
 $app->group('', function(App $app) {
     $app->post('/lists/{token}/show/{id}', ListController::class . ':deleteListMessage')->setName('deleteListMessage');
+    $app->post('/lists/{token}/edit/{id}', ListController::class . ':editListMessage')->setName('editListMessage');
 })->add($authMiddleware)->add($messageOwnerMiddleware);
 
 $app->group('', function (App $app) {

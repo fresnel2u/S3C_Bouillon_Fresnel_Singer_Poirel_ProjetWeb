@@ -185,7 +185,7 @@ class ListView extends BaseView
         
             <form method="POST" action="{$addListMessageUrl}">
                 <label for="descr"><br><h2>Messages publics : </h2></label>
-                <div class=form-group" >
+                <div class="form-group" >
                     <input type="text" name ="message" id="message" placeholder="Contenu du message">
                     <button type="submit" class="btn btn-primary">Ajouter</button>
                 </div>
@@ -197,12 +197,109 @@ class ListView extends BaseView
         foreach ($messages as $message) {
             $deleteListMessageUrl = $this->container->router->pathFor('deleteListMessage', ['id' => $message->id,
                                                                                             'token' => $list->token]);
+            
+            $editListMessagePageUrl = $this->container->router->pathFor('editListMessagePage', ['token' => $list->token]);
+            
             $html .= <<<HTML
             <div class="message">
                 <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
                 <p>$message->message</p>
                 <form method="POST" action="{$deleteListMessageUrl}">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+                <form method="GET" action="{$editListMessagePageUrl}">
+                    <button type="submit" class="btn btn-secondary">Modifier</button>
+                </form>
+                <br>
+            </div>
+
+            HTML;
+        }
+
+        return $html . <<<HTML
+            </div>
+        HTML;
+    }
+
+    /**
+     * Construit le contenu d'un formulaire pour modifier un message public sur une liste
+     *
+     * @return string l'HTML d'une liste de souhaits
+     */
+    private function getEditMessage(): string
+    {
+        $list = $this->params['list'];
+        $items = $this->params['items'];
+        $messages = $this->params['messages'];
+
+        $html = <<<HTML
+            <div class="container page-list-show">
+                <h1>{$list->title}</h1>
+                <p>{$list->description}</p>
+                <br><br>
+                <p><i>Expiration : {$list->expiration->format('d/m/Y')}</i></p> 
+                <p><i>Créée par : {$list->user->firstname} {$list->user->lastname}</i></p> 
+
+                <h2>Items de la liste</h2>
+                <div class="items-list">
+        HTML;
+        
+        foreach ($items as $item) {
+            $itemUrl = $this->pathFor('displayItem', [
+                'token' => $list->token,
+                'item_id' => $item->id
+            ]);
+            $html .= <<<HTML
+                <div class="item">
+                    <img src="/img/{$item->image}" alt="Image de l'item" />
+                    <h3>{$item->name}</h3> 
+            HTML;
+
+            // Réservation
+            if ($item->reservation) {
+                if (!($list->user_id === Auth::getUser()['id'])) {
+                    $html .= <<<HTML
+                        <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
+                    HTML;
+                } else {
+                    $html .= <<<HTML
+                        <p><i>Réservé.</i></p>
+                    HTML; 
+                }
+            } else {
+                $html .= <<<HTML
+                    <p><i>Non réservé.</i></p>
+                HTML;
+            }
+
+            $html .= <<<HTML
+                <a href="{$itemUrl}" class="btn btn-primary"> Afficher </a>
+                </div>
+            HTML;
+        }
+
+        $html .= <<<HTML
+                </div>
+        HTML;
+
+        $addListMessageUrl = $this->pathFor('newListMessage', ['token' => $list->token]);
+
+        $html .= <<<HTML
+        <div class="messages">
+            
+        <br>
+        HTML;
+
+        foreach ($messages as $message) {      
+            $editListMessageUrl = $this->container->router->pathFor('editListMessage', ['id' => $message->id,
+                                                                                        'token' => $list->token]);
+            
+            $html .= <<<HTML
+            <div class="message">
+                <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
+                <form method="POST" action="{$editListMessageUrl}">
+                    <input type="text" name ="message" id="editmessage" value="$message->message">
+                    <button type="submit" class="btn btn-secondary">Sauvegarder</button>
                 </form>
                 <br>
             </div>
@@ -358,6 +455,11 @@ class ListView extends BaseView
             case 4: {
                     $content = $this->getListResults();
                     $title .= "Bilan réservations";
+                    break;
+                }
+            case 5: {
+                    $content = $this->getEditMessage();
+                    $title .= "Modifier un message";
                     break;
                 }
             default: {

@@ -115,10 +115,11 @@ class OwnerMiddleware extends BaseMiddleware
     {
         $route = $request->getAttribute('route');
         $message = ListMessage::find($route->getArgument($this->idParamName));
-        if($message !== null) {
+        $list = WishList::find($route->getArgument($this->idParamName));
+        if($message !== null || $list !== null) {
             if(Auth::getUser()['id'] === $message->user_id)
                 return $next($request, $response);
-            Flashes::addFlash('Vous devez être le créateur du message pour pouvoir supprimer celui-ci', 'error');
+            Flashes::addFlash('Vous devez être le créateur du message pour pouvoir agir sur celui-ci', 'error');
         } else {
             Flashes::addFlash('Message inaccessible', 'error');
         }

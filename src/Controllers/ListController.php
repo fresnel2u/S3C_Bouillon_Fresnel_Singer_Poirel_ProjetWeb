@@ -235,6 +235,14 @@ class ListController extends BaseController
         }
     }
 
+    /**
+     * Ajoute un message public sur la page d'une liste 
+     *
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
     public function addListMessage(Request $request, Response $response, array $args): Response
     {
         try {
@@ -267,6 +275,14 @@ class ListController extends BaseController
         }
     }
 
+    /**
+     * Supprime un message public sur la page d'une list
+     *
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
     public function deleteListMessage(Request $request, Response $response, array $args): Response
     {
         try {
@@ -279,6 +295,79 @@ class ListController extends BaseController
             ]));
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible de supprimer le message", 'error');
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
+                'token' => $args['token']
+            ]));
+        }
+    }
+    
+    /**
+     * Crée une vue pour pouvoir modifier un message public d'une liste
+     *
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
+    public function editListMessagePage(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $list = WishList::with('items')
+            ->with('user')
+            ->with('messages')
+            ->where('token', $args['token'])
+            ->first();
+            $v = new ListView($this->container, [
+                'list' => $list,
+                'items' => $list->items,
+                'messages' => $list->messages
+            ]);
+            $response->getBody()->write($v->render(5));
+            return $response;
+        } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible de modifier le message", 'error');
+            return $response->withRedirect($this->pathFor('displayAllLists'));
+        }
+    } 
+
+    /**
+     * Modifie le message public d'une list
+     *
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
+    public function editListMessage(Request $request, Response $response, array $args): Response
+    {
+        try {
+            $message = ListMessage::where('id', $args['id'])->first();
+
+            $body = $request->getParsedBody();
+            $body = array_map(function ($field) {
+                return filter_var($field, FILTER_SANITIZE_STRING);
+            }, $body);
+
+            try {
+                Validator::failIfEmptyOrNull($body, ['token']);
+            } catch (Exception $e) {
+                Flashes::addFlash($e->getMessage(), 'error');
+                return $response->withRedirect($this->pathFor('editListPage', ['id' => $args['list_id']]));
+            }
+
+            if($body['message'] === "") {
+                Flashes::addFlash("Veuillez mettre du contenu dans votre message", 'error');
+            } else {
+                $message->message = $body['message'];
+                $message->save();
+                Flashes::addFlash("Message modifié", 'success');
+            }
+
+            return $response->withRedirect($this->container->router->pathFor('displayList', [
+                'token' => $args['token']
+            ]));
+        } catch (ModelNotFoundException $e) {
+            Flashes::addFlash("Impossible de modifier le message", 'error');
             return $response->withRedirect($this->container->router->pathFor('displayList', [
                 'token' => $args['token']
             ]));

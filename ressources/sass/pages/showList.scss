@@ -49,9 +49,14 @@
                 }
 
                 button {
+                    margin-left: 0.5rem;
                     padding: 0.5rem 0.75rem;
                     justify-content: end;
                     float:right;
+                }
+
+                #editmessage {
+                    background-color:white;
                 }
             }
              
