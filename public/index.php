@@ -36,6 +36,7 @@ $app->get('/', HomeController::class . ':home')->setName('home');
 
 // Lists
 $app->get('/lists/{token}/show', ListController::class . ':displayList')->setName('displayList');
+$app->get('/lists/public', ListController::class . ':publicLists')->setName('publicLists');
 
 $app->group('', function (App $app) {
     $app->get('/lists', ListController::class . ':displayAllLists')->setName('displayAllLists');

@@ -18,7 +18,6 @@ class Menu
                 <nav>
                     <a href="/">Accueil</a>
                     <a href="/lists">Mes listes</a>
-                    <a href="TODO">Listes publiques(TODO)</a>
                     <a href="/account">Mon compte</a>
                 </nav>
             </div>

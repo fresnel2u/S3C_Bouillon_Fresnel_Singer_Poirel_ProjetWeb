@@ -3,6 +3,7 @@
 namespace Whishlist\Views;
 
 use Whishlist\Helpers\Auth;
+use Whishlist\Views\Components\HomeMenu;
 
 class HomeView extends BaseView
 {
@@ -13,33 +14,13 @@ class HomeView extends BaseView
      */
     private function getHome(): string
     {
-        $html = <<<HTML
-            <div class="home">
-                <div class=home-header>
-                    <div class="header-title">
-                        <img src="/img/icons/wishlist_icon.svg" alt="wishlist">
-                        <h2>MyWishList</h2>
-                    </div>
-                    <div class="header-log">
-        HTML;
+        $publicListsUrl = $this->pathFor('publicLists');
         $registerUrl = $this->pathFor('registerPage');
-        if (Auth::isLogged()) {
-            $accountUrl = $this->pathFor('displayAccount');
-            $html .= <<<HTML
-                <a href="{$accountUrl}"><button class="btn btn-primary">Mon compte</button></a>
-            HTML;
-        } else {
-            
-            $loginUrl = $this->pathFor('loginPage');
-            $html .= <<<HTML
-                <a href="{$loginUrl}"><button class="btn btn-secondary">Connexion</button></a>
-                <a href="{$registerUrl}"><button class="btn btn-primary">Inscription</button></a>
-            HTML;
-        }
-        
-        return $html . <<<HTML
-                    </div>
-                </div>
+        $homeMenu = (new HomeMenu($this->container))->render();
+
+        return <<<HTML
+            <div class="home">
+                {$homeMenu}
                 <div class="home-intro">
                     <img src="/img/icons/online_whishlist.svg" alt="a whish list">
                     <div class="intro-container">
@@ -118,6 +99,6 @@ class HomeView extends BaseView
                 }
         }
 
-        return $this->layout($content, $title, 0);
+        return $this->layout($content, $title, false);
     }
 }

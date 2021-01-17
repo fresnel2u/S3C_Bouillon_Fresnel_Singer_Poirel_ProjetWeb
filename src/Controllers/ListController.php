@@ -59,6 +59,7 @@ class ListController extends BaseController
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
             $list->token = $body['token'];
+            $list->is_public = $body['is_public'] ? true : false;
             $list->save();
 
             if ($list->token === '') {
@@ -95,6 +96,26 @@ class ListController extends BaseController
     }
 
     /**
+     * Affichage des listes publiques
+     *
+     * @param Request $request requête
+     * @param Response $response réponse
+     * @param array $args arguments
+     * @return Response réponse à la requête
+     */
+    public function publicLists(Request $request, Response $response, array $args): Response
+    {
+        $lists = WishList::where('is_public', true)
+            ->whereRaw('expiration > NOW()')
+            ->orderBy('expiration')
+            ->get();
+
+        $v = new ListView($this->container, ['lists' => $lists]);
+        $response->getBody()->write($v->render(2));
+        return $response;
+    }
+
+    /**
      * Crée une vue pour afficher les items d'une liste
      *
      * @param Request $request requête
@@ -120,7 +141,7 @@ class ListController extends BaseController
             'items' => $list->items,
             'messages' => $list->messages
         ]);
-        $response->getBody()->write($v->render(2));
+        $response->getBody()->write($v->render(3));
         return $response;
     }
 
@@ -137,7 +158,7 @@ class ListController extends BaseController
         try {
             $list = WishList::findOrFail($args['list_id']);
             $v = new ListView($this->container, ['list' => $list]);
-            $response->getBody()->write($v->render(3));
+            $response->getBody()->write($v->render(4));
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("La liste n'existe pas", 'error');
@@ -174,6 +195,7 @@ class ListController extends BaseController
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
             $list->token = $body['token'] !== '' ? $body['token'] : bin2hex($list->id . random_bytes(10));
+            $list->is_public = $body['is_public'] ? true : false;
             $list->save();
 
             Flashes::addFlash("Liste modifiée", 'success');
@@ -227,7 +249,7 @@ class ListController extends BaseController
                 'list' => $list,
                 'items' => $list->items
             ]);
-            $response->getBody()->write($v->render(4));
+            $response->getBody()->write($v->render(5));
             return $response;
         } catch (\Throwable $th) {
             Flashes::addFlash("Impossible de consulter les réservations de la liste.", 'error');
@@ -322,7 +344,7 @@ class ListController extends BaseController
                 'items' => $list->items,
                 'messages' => $list->messages
             ]);
-            $response->getBody()->write($v->render(5));
+            $response->getBody()->write($v->render(6));
             return $response;
         } catch (ModelNotFoundException $e) {
             Flashes::addFlash("Impossible de modifier le message", 'error');

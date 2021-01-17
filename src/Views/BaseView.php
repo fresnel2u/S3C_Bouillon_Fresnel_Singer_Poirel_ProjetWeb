@@ -11,7 +11,7 @@ use Whishlist\Views\Components\Flashes;
 abstract class BaseView
 {
     use RouteTrait;
-    
+
     /**
      * Container de l'application
      *
@@ -46,19 +46,23 @@ abstract class BaseView
     public abstract function render(int $selector): string;
 
     /**
-     * Met en place le layout autour de la page HTML
+     * Met en place le layout autour de la page
      *
      * @param string $html
      * @param string|null $title
-     * @return string html avec son layout
+     * @param boolean $withMenu
+     * @param boolean $withFlashes
+     * @return string
      */
-    public function layout(string $html, ?string $title = null, ?int $set_menu = 1, ?int $set_flashes = 1): string
+    public function layout(string $html, ?string $title = null, bool $withMenu = true, bool $withFlashes = true): string
     {
         $result = Header::getHeader($title);
-        if ($set_menu != 0)
+        if ($withMenu) {
             $result .= Menu::getMenu();
-        if ($set_flashes)
+        }
+        if ($withFlashes) {
             $result .= Flashes::getFlashes();
+        }
         $result .= $html;
         $result .= "</body></html>";
         return $result;

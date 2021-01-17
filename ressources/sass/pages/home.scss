@@ -1,36 +1,4 @@
 .home {
-   
-    .home-header {
-        & {
-            display : flex;
-            justify-content: space-between;
-            margin: 1rem 2rem 0 2rem;
-            scroll-behavior: smooth;
-        }
-
-        .header-title {
-            & {
-                display: flex;
-                align-items: center;
-            }
-
-            img {
-                margin-right: 1rem;
-                width: 2rem;
-            }
-        }
-
-        .header-log {
-            & {
-                display: flex;
-            }
-
-            button {
-                margin: 0 0.5rem 0 0.5rem;
-            }
-        }
-    }
-
     .home-intro {
         & {
             margin-top: 1rem;
@@ -137,3 +105,42 @@
         text-decoration: none;
     }
 }
+
+.home-header {
+    & {
+        display : flex;
+        justify-content: space-between;
+        margin: 1rem 2rem 0 2rem;
+        scroll-behavior: smooth;
+    }
+
+    .header-title {
+        & {
+            display: flex;
+            align-items: center;
+        }
+
+        img {
+            margin-right: 1rem;
+            width: 2rem;
+        }
+    }
+
+    .header-log {
+        & {
+            display: flex;
+            align-items: center;
+        }
+
+        & a {
+            color: var(--clr-dark);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        button {
+            margin: 0 0.5rem 0 0.5rem;
+        }
+    }
+}
+

@@ -6,6 +6,7 @@ use Whishlist\Models\User;
 use Whishlist\Helpers\Auth;
 use Whishlist\Models\WishList;
 use Whishlist\Models\ListMessage;
+use Whishlist\Views\Components\HomeMenu;
 
 class ListView extends BaseView
 {
@@ -38,6 +39,12 @@ class ListView extends BaseView
                         <label for="token">Token</label>
                         <input type="text" name="token" id="token">
                     </div>      
+                    <div class="form-group">
+                        <label for="is_public">
+                            <input type="checkbox" name="is_public" id="is_public">
+                            Liste publique
+                        </label>
+                    </div>
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
                 </form>
             </div>
@@ -49,7 +56,7 @@ class ListView extends BaseView
      *
      * @return string l'HTML des listes de souhaits
      */
-    private function getAllList(): string
+    private function getAllLists(): string
     {
         $lists = $this->params['lists'];
         $addUrl = $this->pathFor('newListPage');
@@ -115,6 +122,52 @@ class ListView extends BaseView
                 </div>
             </div>
         HTML;
+    }
+
+    /**
+     * Construit le contenu des listes de souhaits
+     *
+     * @return string l'HTML des listes de souhaits
+     */
+    private function getAllPublicLists(): string
+    {
+        $lists = $this->params['lists'];
+        $homeMenu = (new HomeMenu($this->container))->render();
+
+        $html = <<<HTML
+            {$homeMenu}
+            <div class="container">
+                <h1>Listes publiques</h1>
+                <div class="table-wrapper">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        HTML;
+
+        foreach ($lists as $list) {
+            $listLink = $this->pathFor('displayList', ['token' => $list->token]);
+
+            $html .= <<<HTML
+                <tr>
+                    <td>{$list->title}</td>
+                    <td><a href="{$listLink}" class="btn btn-primary">Voir</a></td>
+                </tr>
+            HTML;
+        }
+
+        return $html . <<<HTML
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        HTML;
+
+        return $html;
     }
 
     /**
@@ -338,6 +391,8 @@ class ListView extends BaseView
         $list = $this->params['list'];
         $editUrl = $this->pathFor('editList', ['list_id' => $list->id]);
 
+        $checked = $list->isPublic() ? 'checked="checked"' : ''; 
+
         return <<<HTML
             <div class="container">
                 <h1>Éditer une liste</h1>
@@ -357,7 +412,13 @@ class ListView extends BaseView
                     <div class="form-group">
                         <label for="token">Token</label>
                         <input type="text" name="token" id="token" value="{$list->token}">
-                    </div>      
+                    </div> 
+                    <div class="form-group">
+                        <label for="is_public">
+                            <input type="checkbox" name="is_public" id="is_public" {$checked}>
+                            Liste publique
+                        </label>
+                    </div>     
                     <button type="submit" class="btn btn-primary">Sauvegarder</button>  
                 </form>
             </div>
@@ -451,31 +512,43 @@ class ListView extends BaseView
             case 0: {
                     $content = $this->newListPage();
                     $title .= "Créer une liste";
+                    $menu = true;
                     break;
                 }
             case 1: {
-                    $content = $this->getAllList();
+                    $content = $this->getAllLists();
                     $title .= "Listes de souhaits";
+                    $menu = true;
                     break;
                 }
             case 2: {
-                    $content = $this->getList();
-                    $title .= "Liste";
+                    $content = $this->getAllPublicLists();
+                    $title .= "Listes de souhaits publiques";
+                    $menu = false;
                     break;
                 }
             case 3: {
-                    $content = $this->editListPage();
-                    $title .= "Éditer une liste";
+                    $content = $this->getList();
+                    $title .= "Liste";
+                    $menu = true;
                     break;
                 }
             case 4: {
-                    $content = $this->getListResults();
-                    $title .= "Bilan réservations";
+                    $content = $this->editListPage();
+                    $title .= "Éditer une liste";
+                    $menu = true;
                     break;
                 }
             case 5: {
+                    $content = $this->getListResults();
+                    $title .= "Bilan réservations";
+                    $menu = true;
+                    break;
+                }
+            case 6: {
                     $content = $this->getEditMessage();
                     $title .= "Modifier un message";
+                    $menu = true;
                     break;
                 }
             default: {
@@ -484,6 +557,6 @@ class ListView extends BaseView
                 }
         }
 
-        return $this->layout($content, $title);
+        return $this->layout($content, $title, $menu);
     }
 }

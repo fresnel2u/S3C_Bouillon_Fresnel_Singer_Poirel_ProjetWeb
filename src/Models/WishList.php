@@ -11,7 +11,8 @@ class WishList extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'expiration' => 'date'
+        'expiration' => 'date',
+        'is_public' => 'boolean'
     ];
 
     public function items()
@@ -32,5 +33,10 @@ class WishList extends Model
     public function isExpired(): bool
     {
         return $this->expiration->lessThan(new DateTime());
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->is_public;
     }
 }
