@@ -2,10 +2,10 @@
 
 namespace Whishlist\Views;
 
+use Whishlist\Models\User;
 use Whishlist\Helpers\Auth;
 use Whishlist\Models\WishList;
 use Whishlist\Models\ListMessage;
-use Whishlist\Models\User;
 
 class ListView extends BaseView
 {
@@ -93,7 +93,7 @@ class ListView extends BaseView
                             <a href="{$itemsUrl}" class="btn btn-light">Items</a>
             HTML;
 
-            if($list->isExpired()) {
+            if ($list->isExpired()) {
                 $html .= <<<HTML
                     <a href="{$resultsUrl}" class="btn btn-light">Bilan</a>    
                 HTML;
@@ -108,7 +108,7 @@ class ListView extends BaseView
                 </tr>
             HTML;
         }
-        
+
         return $html . <<<HTML
                         </tbody>
                     </table>
@@ -139,7 +139,7 @@ class ListView extends BaseView
                 <h2>Items de la liste</h2>
                 <div class="items-list">
         HTML;
-        
+
         foreach ($items as $item) {
             $itemUrl = $this->pathFor('displayItem', [
                 'token' => $list->token,
@@ -160,7 +160,7 @@ class ListView extends BaseView
                 } else {
                     $html .= <<<HTML
                         <p><i>Réservé.</i></p>
-                    HTML; 
+                    HTML;
                 }
             } else {
                 $html .= <<<HTML
@@ -195,11 +195,13 @@ class ListView extends BaseView
         HTML;
 
         foreach ($messages as $message) {
-            $deleteListMessageUrl = $this->container->router->pathFor('deleteListMessage', ['id' => $message->id,
-                                                                                            'token' => $list->token]);
-            
+            $deleteListMessageUrl = $this->container->router->pathFor('deleteListMessage', [
+                'id' => $message->id,
+                'token' => $list->token
+            ]);
+
             $editListMessagePageUrl = $this->container->router->pathFor('editListMessagePage', ['token' => $list->token]);
-            
+
             $html .= <<<HTML
             <div class="message">
                 <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
@@ -243,7 +245,7 @@ class ListView extends BaseView
                 <h2>Items de la liste</h2>
                 <div class="items-list">
         HTML;
-        
+
         foreach ($items as $item) {
             $itemUrl = $this->pathFor('displayItem', [
                 'token' => $list->token,
@@ -264,7 +266,7 @@ class ListView extends BaseView
                 } else {
                     $html .= <<<HTML
                         <p><i>Réservé.</i></p>
-                    HTML; 
+                    HTML;
                 }
             } else {
                 $html .= <<<HTML
@@ -273,7 +275,7 @@ class ListView extends BaseView
             }
 
             $html .= <<<HTML
-                <a href="{$itemUrl}" class="btn btn-primary"> Afficher </a>
+                <a href="{$itemUrl}" class="btn btn-primary">Afficher</a>
                 </div>
             HTML;
         }
@@ -282,18 +284,16 @@ class ListView extends BaseView
                 </div>
         HTML;
 
-        $addListMessageUrl = $this->pathFor('newListMessage', ['token' => $list->token]);
-
         $html .= <<<HTML
         <div class="messages">
-            
         <br>
         HTML;
 
-        foreach ($messages as $message) {      
-            $editListMessageUrl = $this->container->router->pathFor('editListMessage', ['id' => $message->id,
-                                                                                        'token' => $list->token]);
-            
+        foreach ($messages as $message) {
+            $editListMessageUrl = $this->container->router->pathFor('editListMessage', [
+                'id' => $message->id,
+                'token' => $list->token
+            ]);
             $html .= <<<HTML
             <div class="message">
                 <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
@@ -353,7 +353,7 @@ class ListView extends BaseView
      *
      * @return string
      */
-    public function getListResults() : string
+    public function getListResults(): string
     {
         $list = $this->params['list'];
         $items = $this->params['items'];
@@ -361,22 +361,22 @@ class ListView extends BaseView
             <div class="container big list-results">
                 <h1>Bilan des réservations de votre liste : <br> $list->title</h1>
                 <div class="results-container">
-        HTML;        
-        
+        HTML;
+
         $hasContent = false;
-        foreach($items as $item) {
+        foreach ($items as $item) {
             if (!is_null($item->reservation) || !is_null($item->foundingPot)) {
                 $hasContent = true;
                 $imgUrl = "/img/{$item->image}";
                 $reservation = $item->reservation;
                 $foundingPot = $item->foundingPot;
-                
+
                 if (!is_null($foundingPot)) {
                     $type = 'Cagnotte';
                     $content = '<div class="item-participants">
                     <p> <strong>Participants :</strong> </p>';
-                    
-                   foreach($foundingPot->participations as $participant) {
+
+                    foreach ($foundingPot->participations as $participant) {
                         $content .= <<<HTML
                             <div>
                                 <p><strong>-</strong>  {$participant->user->firstname} {$participant->user->lastname} 
@@ -395,8 +395,8 @@ class ListView extends BaseView
                         $content .= <<<HTML
                             <p><strong>message de l'expéditeur :</strong> {$reservation->message} </p>
                         HTML;
-                    } 
-                }   
+                    }
+                }
                 $html .= <<<HTML
                     <div class="item-result">
                         <img src="{$imgUrl}"/>
@@ -408,15 +408,15 @@ class ListView extends BaseView
                         </div>
                     </div>
                 HTML;
-            } 
+            }
         }
 
-        if($hasContent === false) {
+        if ($hasContent === false) {
             $html .= <<<HTML
                     <p> Aucune réservation n'a été effectué sur cette liste. </p>
                 HTML;
         }
-        
+
         $html .= <<<HTML
                 </div>
             </div>
@@ -438,7 +438,7 @@ class ListView extends BaseView
                     break;
                 }
             case 1: {
-                $content = $this->getAllList();
+                    $content = $this->getAllList();
                     $title .= "Listes de souhaits";
                     break;
                 }
