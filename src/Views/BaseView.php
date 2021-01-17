@@ -56,12 +56,12 @@ abstract class BaseView
      */
     public function layout(string $html, ?string $title = null, bool $withMenu = true, bool $withFlashes = true): string
     {
-        $result = Header::getHeader($title);
+        $result = (new Header($title))->render();
         if ($withMenu) {
-            $result .= Menu::getMenu();
+            $result .= (new Menu($this->container))->render();
         }
         if ($withFlashes) {
-            $result .= Flashes::getFlashes();
+            $result .= (new Flashes())->render();
         }
         $result .= $html;
         $result .= "</body></html>";

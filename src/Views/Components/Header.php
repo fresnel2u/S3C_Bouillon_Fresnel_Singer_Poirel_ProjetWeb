@@ -2,21 +2,34 @@
 
 namespace Whishlist\Views\Components;
 
-class Header
+use Slim\Container;
+
+class Header extends BaseComponent
 {
     /**
-     * Construit la structure du document
+     * Titre de la page
      *
-     * @return string l'HTML de l'entete du document
+     * @var string|null
      */
-    public static function getHeader(?string $title): string
+    private $title;
+
+    public function __construct(?string $title, ?Container $container = null)
+    {
+        parent::__construct($container);
+        $this->title = $title;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function render(): string
     {
         return <<<HTML
             <!DOCTYPE html>
             <html lang="fr">
                 <head>
                     <meta charset="UTF-8">
-                    <title>{$title}</title>
+                    <title>{$this->title}</title>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link rel="stylesheet" href="/css/style.css">
                     <link rel="preconnect" href="https://fonts.gstatic.com">

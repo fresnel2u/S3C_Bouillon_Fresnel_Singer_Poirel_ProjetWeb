@@ -2,10 +2,7 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Models\User;
 use Whishlist\Helpers\Auth;
-use Whishlist\Models\WishList;
-use Whishlist\Models\ListMessage;
 use Whishlist\Views\Components\HomeMenu;
 
 class ListView extends BaseView

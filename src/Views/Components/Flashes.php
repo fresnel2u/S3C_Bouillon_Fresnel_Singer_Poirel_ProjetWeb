@@ -4,23 +4,21 @@ namespace Whishlist\Views\Components;
 
 use Whishlist\Helpers\Flashes as FlashesHelper;
 
-class Flashes
+class Flashes extends BaseComponent
 {
     /**
-     * Construit la structure du document
-     *
-     * @return string l'HTML du footer du document
+     * @inheritDoc
      */
-    public static function getFlashes(): string
+    public function render(): string
     {
         $html = "<div class='flashes'>";
-        foreach(FlashesHelper::getFlashes() as $flash)
+        foreach(FlashesHelper::getFlashes() as $flash) {
             $html .= <<<HTML
                 <div class="flash flash-{$flash['type']}">
                     <p>{$flash['message']}</p>
                 </div>
             HTML;
-        $html .= "</div>";
-        return $html;
+        }
+        return $html . "</div>";
     }
 }

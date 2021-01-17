@@ -2,25 +2,12 @@
 
 namespace Whishlist\Views\Components;
 
-use Slim\Container;
 use Whishlist\Helpers\Auth;
-use Whishlist\Helpers\RouteTrait;
 
-class HomeMenu
+class HomeMenu extends BaseComponent
 {
-    use RouteTrait;
-
-    private $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     /**
-     * Construit la structure du menu
-     *
-     * @return string HTML correspondant
+     * @inheritDoc
      */
     public function render(): string
     {

@@ -2,7 +2,6 @@
 
 namespace Whishlist\Views;
 
-use Whishlist\Helpers\Auth;
 use Whishlist\Views\Components\HomeMenu;
 
 class HomeView extends BaseView
@@ -14,7 +13,6 @@ class HomeView extends BaseView
      */
     private function getHome(): string
     {
-        $publicListsUrl = $this->pathFor('publicLists');
         $registerUrl = $this->pathFor('registerPage');
         $homeMenu = (new HomeMenu($this->container))->render();
 

@@ -4,21 +4,40 @@ namespace Whishlist\Views\Components;
 
 use Whishlist\Helpers\Auth;
 
-class Menu
+class Menu extends BaseComponent
 {
     /**
-     * Construit le menu de la page
-     *
-     * @return string l'HTML de la navigation
+     * @inheritDoc
      */
-    public static function getMenu(): string
+    public function render(): string
     {
-        return <<<HTML
+        $homeUrl = $this->pathFor('home');
+
+        $html = <<<HTML
             <div class="nav">
                 <nav>
-                    <a href="/">Accueil</a>
-                    <a href="/lists">Mes listes</a>
-                    <a href="/account">Mon compte</a>
+                    <a href="{$homeUrl}">Accueil</a>
+        HTML;
+
+        if (Auth::isLogged()) {
+            $listsUrl = $this->pathFor('displayAllLists');
+            $accountUrl = $this->pathFor('displayAccount');
+
+            $html .= <<<HTML
+                <a href="{$listsUrl}">Mes listes</a>
+                <a href="{$accountUrl}">Mon compte</a>
+            HTML;
+        } else {
+            $loginUrl = $this->pathFor('loginPage');
+            $registerUrl = $this->pathFor('registerPage');
+
+            $html .= <<<HTML
+                <a href="{$loginUrl}">Connexion</a>
+                <a href="{$registerUrl}">Inscription</a>
+            HTML;
+        }
+
+        return $html . <<<HTML
                 </nav>
             </div>
         HTML;
