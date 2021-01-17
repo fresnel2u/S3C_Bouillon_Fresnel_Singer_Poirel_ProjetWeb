@@ -127,6 +127,7 @@ class ListView extends BaseView
         $list = $this->params['list'];
         $items = $this->params['items'];
         $messages = $this->params['messages'];
+        $user = Auth::getUser();
 
         $html = <<<HTML
             <div class="container page-list-show">
@@ -203,19 +204,24 @@ class ListView extends BaseView
             $editListMessagePageUrl = $this->container->router->pathFor('editListMessagePage', ['token' => $list->token]);
 
             $html .= <<<HTML
-            <div class="message">
-                <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
-                <p>$message->message</p>
-                <form method="POST" action="{$deleteListMessageUrl}">
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                </form>
-                <form method="GET" action="{$editListMessagePageUrl}">
-                    <button type="submit" class="btn btn-secondary">Modifier</button>
-                </form>
-                <br>
-            </div>
-
-            HTML;
+                <div class="message">
+                    <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
+                    <p>$message->message</p>
+                HTML;
+                if($user['id'] === $message->user_id) {
+                    $html.= <<<HTML
+                    <form method="POST" action="{$deleteListMessageUrl}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                    <form method="GET" action="{$editListMessagePageUrl}">
+                        <button type="submit" class="btn btn-secondary">Modifier</button>
+                    </form>
+                    HTML;
+                }
+                $html.= <<<HTML
+                        <br>
+                    </div>
+                    HTML;
         }
 
         return $html . <<<HTML
@@ -233,6 +239,7 @@ class ListView extends BaseView
         $list = $this->params['list'];
         $items = $this->params['items'];
         $messages = $this->params['messages'];
+        $user = Auth::getUser();
 
         $html = <<<HTML
             <div class="container page-list-show">
@@ -295,16 +302,25 @@ class ListView extends BaseView
                 'token' => $list->token
             ]);
             $html .= <<<HTML
-            <div class="message">
-                <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
-                <form method="POST" action="{$editListMessageUrl}">
-                    <input type="text" name ="message" id="editmessage" value="$message->message">
-                    <button type="submit" class="btn btn-secondary">Sauvegarder</button>
-                </form>
-                <br>
-            </div>
-
-            HTML;
+                <div class="message">
+                    <p><i> Ecrit par {$message->user->firstname} {$message->user->lastname} :</i></p>
+                HTML;
+                if($user['id'] === $message->user_id) {
+                    $html.= <<<HTML
+                    <form method="POST" action="{$editListMessageUrl}">
+                        <input type="text" name ="message" id="editmessage" value="$message->message">
+                        <button type="submit" class="btn btn-secondary">Sauvegarder</button>
+                    </form>
+                    HTML;
+                } else {
+                    $html.= <<<HTML
+                    <p><i>$message->message</i></p>
+                    HTML;
+                }
+                $html.= <<<HTML
+                        <br>
+                    </div>
+                    HTML;
         }
 
         return $html . <<<HTML
