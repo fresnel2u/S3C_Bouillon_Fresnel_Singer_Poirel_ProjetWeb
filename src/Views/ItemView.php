@@ -193,7 +193,7 @@ class ItemView extends BaseView
 
         // Réservation
         if ($item->reservation) {
-            if ($list->isExpired() && $user && $list->user_id !== $user['id']) {
+            if ($list->isExpired() && $list->user_id != Auth::getLastUserId()) {
                 $html .= <<<HTML
                     <br><br><hr><br>
                     <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>

@@ -229,7 +229,7 @@ class ListView extends BaseView
 
             // Réservation
             if ($item->reservation) {
-                if (!($list->user_id === Auth::getUser()['id'])) {
+                if (!($list->user_id == Auth::getLastUserId())) {
                     $html .= <<<HTML
                         <p><i>Réservé par {$item->reservation->user->getFullname()}.</i></p>
                     HTML;

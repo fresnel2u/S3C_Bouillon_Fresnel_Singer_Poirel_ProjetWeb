@@ -29,12 +29,12 @@ class Auth
         if (!password_verify($password, $user->password)) {
             throw new Exception('Nom d\'utilisateur ou mot de Passe incorrect.');
         } else {
-            $_SESSION['user'] = $user->toArray();
+            self::setUser($user);
         }
     }
 
     /**
-     * Définie l'utilisateur courrant
+     * Définie l'utilisateur courrant et màj le cookie du dernier utilisateur
      *
      * @param User $user
      * @return void
@@ -45,6 +45,7 @@ class Auth
             $_SESSION['user'] = null;
         } else {
             $_SESSION['user'] = $user->toArray();
+            setcookie('lastUser', $user->id, time() + 60*60*24*30);
         }
     }
 
@@ -103,4 +104,17 @@ class Auth
     {
         return $_SESSION['user'] ?? null;
     }
+
+    /**
+     * Trouve l'id du dernier utilisateur connecté dans les cookies depuis 30j 
+     * @return ?int id ou null si aucun utilisateur depuis 30j 
+     */
+    public static function getLastUserId(): ?int 
+    {
+        if(self::getUser() === null)
+            return $_COOKIE['lastUser'] ?? null;
+        else {
+            return $_SESSION['user']['id'] ?? null;
+        }
+    } 
 }
