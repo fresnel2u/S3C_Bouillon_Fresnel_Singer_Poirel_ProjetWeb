@@ -14,7 +14,7 @@ class EditMiddleWare extends BaseMiddleWare
     public function __invoke(Request $rq, Response $rs, callable $next): Response
     {
         $route = $rq->getAttribute('route');
-        $list = UsersLists::where('list_id', $route->getArgument($this->idParamName))
+        $list = UsersLists::where('list_id', $route->getArgument('list_id'))
             ->where('user_id', Auth::getUser()['id']);
         if($list !== null)
             return $next($rq, $rs);
