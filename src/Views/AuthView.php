@@ -13,8 +13,13 @@ class AuthView extends BaseView
     {
         $loginUrl = $this->pathFor('login');
         $registerUrl = $this->pathFor('registerPage');
+        $homeUrl = $this->pathFor('home');
 
         return <<<HTML
+            <div class="back-home">
+                <a href="{$homeUrl}"><img class="back-home-arrow" src="/img/icons/left-arrow.svg"></a>
+                <a href="{$homeUrl}"><img src="/img/icons/home.svg"></a>
+            </div>
             <div class="login">
                 <h1>Connexion</h1>
                 <form role="form" method="post" action="{$loginUrl}">
@@ -48,8 +53,13 @@ class AuthView extends BaseView
     {
         $loginUrl = $this->pathFor('loginPage');
         $registerUrl = $this->pathFor('register');
+        $homeUrl = $this->pathFor('home');
 
         return <<<HTML
+            <div class="back-home">
+                <a href="{$homeUrl}"><img class="back-home-arrow" src="/img/icons/left-arrow.svg"></a>
+                <a href="{$homeUrl}"><img src="/img/icons/home.svg"></a>
+            </div>
             <div class="register">
                 <h1>Inscription</h1>
                 <form role="form" method="post" action="{$registerUrl}">

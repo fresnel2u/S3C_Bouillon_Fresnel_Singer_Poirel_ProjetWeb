@@ -22,3 +22,23 @@
         }
     }
 }
+
+.back-home {    
+    & {
+        display: flex;
+        position: fixed;
+        top: 2rem;
+        left: 3rem;
+        align-items: center;
+    }
+
+    img {
+        width: 2rem;
+        margin-right: 0.25rem;
+        cursor: pointer;
+    }
+
+    .back-home-arrow {
+        width: 1.5rem;
+    }
+}   
