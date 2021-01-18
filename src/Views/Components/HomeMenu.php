@@ -12,6 +12,7 @@ class HomeMenu extends BaseComponent
     public function render(): string
     {
         $publicListsUrl = $this->pathFor('publicLists');
+        $publicAccounts = $this->pathFor('publicAccounts');
 
         $html = <<<HTML
             <div class="home-header">
@@ -21,6 +22,7 @@ class HomeMenu extends BaseComponent
                 </div>
                 <div class="header-log">
                     <a href="{$publicListsUrl}">Listes publiques</a>
+                    <a href="{$publicAccounts}">Créateurs publiques</a>
         HTML;
         $registerUrl = $this->pathFor('registerPage');
         if (Auth::isLogged()) {

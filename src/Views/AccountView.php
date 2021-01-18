@@ -83,6 +83,24 @@ class AccountView extends BaseView
     }
 
     /**
+     * Affiche une liste de créateurs
+     */
+    private function allCreators(): string
+    {
+        $html = <<<HTML
+            <div class="container">
+                <h1>Créateurs publiques</h1>
+        HTML;
+        $creators = $this->params['creators'];
+        foreach($creators as $creator)
+            $html .= "<p>{$creator->firstname} {$creator->lastname}</p>";
+        if(count($creators) === 0)
+            $html .= "<p>Aucun créateur n'a de liste publique</p>";
+        return $html . '</div>';
+    }
+
+
+    /**
      * @inheritdoc
      */
     public function render(int $selector): string
@@ -99,6 +117,11 @@ class AccountView extends BaseView
                     $title .= "Modifier mon compte";
                     break;
                 }
+            case 2: {
+                    $content = $this->allCreators();
+                    $title .= "Lite des créateurs";
+                    break;
+            }
             default: {
                     $content = '';
                     break;

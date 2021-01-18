@@ -108,6 +108,7 @@ $app->group('', function (App $app) {
     $app->post('/account/edit', AccountController::class.':editAccount')->setName('editAccount');
     $app->post('/account/delete', AccountController::class . ':deleteAccount')->setName('deleteAccount');
 })->add($authMiddleware);
+$app->get('/accounts/public', AccountController::class . ':allPublicAccounts')->setName('publicAccounts');
 
 $app->run();
 

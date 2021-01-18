@@ -11,6 +11,7 @@ use Whishlist\Helpers\Flashes;
 use Whishlist\Views\AccountView;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Whishlist\Helpers\Validator;
+use Whishlist\Models\WishList;
 
 class AccountController extends BaseController
 {
@@ -125,5 +126,16 @@ class AccountController extends BaseController
             Flashes::addFlash('Impossible de supprimer le compte', 'error');
             return $response->withRedirect($this->pathFor('home'));
         }
+    }
+
+    /**
+     * Liste de tous les createur d'au moins une liste publique
+     */
+    public function allPublicAccounts(Request $request, Response $response, array $args): Response
+    {
+        $accounts = WishList::where('is_public', true)->join('users', 'lists.user_id', '=', 'users.id')->distinct('users.id')->get()->all();
+        $v = new AccountView($this->container, ['creators' => $accounts]);
+        $response->getBody()->write($v->render(2));
+        return $response;
     }
 }
