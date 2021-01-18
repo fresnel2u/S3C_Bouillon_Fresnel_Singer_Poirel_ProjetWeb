@@ -85,7 +85,8 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
 INSERT INTO `lists` (`id`, `user_id`, `title`, `description`, `expiration`, `token`, `is_public`) VALUES
 (1, 1, 'Pour fêter le bac !', 'Pour un week-end à Nancy qui nous fera oublier les épreuves. ', '2018-06-27', 'nosecure1', true),
 (2, 2, 'lists de mariage d\'Alice et Bob', 'Nous souhaitons passer un week-end royal à Nancy pour notre lune de miel :)', '2018-06-30', 'nosecure2', false),
-(3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3', false);
+(3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3', false),
+(4, 1, 'Noël !', 'Liste de participation des cadeaux de Noël', '2021-06-27', 'nosecure4', false);
 
 INSERT INTO `items` (`id`, `list_id`, `name`, `description`, `image`, `url`, `price`) VALUES
 (1, 2, 'Champagne', 'Bouteille de champagne + flutes + jeux à gratter', 'champagne.jpg', '', 20.00),
@@ -114,4 +115,7 @@ INSERT INTO `founding_pots` (`id`, `item_id`, `amount`) VALUES
 (3, 16, 100.00);
 
 INSERT INTO `items_reservations` (`id`, `item_id`, `user_id`, `message`) VALUES
-(1, 1, 1, 'Je t\'offre cette bouteille de champagne, déguste la bien.');
+(1, 1, 1, 'Je t\'offre cette bouteille de champagne, déguste la bien.'),
+(2, 15, 2, 'Petit séjour a l\'appart Hotel ! '),
+(3, 18, 3, 'Une petite partie de Laser Game ?');
+

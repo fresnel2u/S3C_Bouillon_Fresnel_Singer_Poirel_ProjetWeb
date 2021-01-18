@@ -90,7 +90,17 @@ class ListView extends BaseView
                     <td>{$list->title}</td>
                     <td>{$list->description}</td>
                     <td><a href="{$publicUrl}" target="_blank">{$publicUrl}</a></td>
-                    <td>{$list->expiration->format('d/m/Y')}</td>
+                    <td>{$list->expiration->format('d/m/Y')}
+            HTML;
+
+            if ($list->isExpired()) {
+                $html .= <<<HTML
+                   <p style="text-align:center;"> <strong>[Expirée]</strong></p>
+                HTML;
+            }
+
+            $html .= <<<HTML
+                    </td>
                     <td class="table-actions">
                         <div>
                             <a href="{$editUrl}" class="btn btn-light">Éditer</a>
