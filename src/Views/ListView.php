@@ -49,20 +49,17 @@ class ListView extends BaseView
     }
 
     /**
-     * Construit le contenu des listes de souhaits
+     * Genere le tableau de toutes les listes passe en parametre
      *
-     * @return string l'HTML des listes de souhaits
+     * @param string $listParamName cle dans le tableau des parametres pour trouver les listes
+     * @param boolean $isOwner si il faut generer les actions réservées au propriétaire
+     * @return string le tableau html des listes
      */
-    private function getAllLists(): string
+    private function getLists(string $listParamName, bool $isOwner = true): string 
     {
-        $lists = $this->params['lists'];
-        $addUrl = $this->pathFor('newListPage');
-
+        $lists = $this->params[$listParamName];
         $html = <<<HTML
-            <div class="container container-full">
-                <h1>Mes listes de souhaits</h1>
-                <a href="{$addUrl}" class="btn btn-primary">Ajouter une liste</a>
-                <div class="table-wrapper">
+        <div class="table-wrapper">
                     <table class="table-custom">
                         <thead>
                             <tr>
@@ -70,6 +67,7 @@ class ListView extends BaseView
                                 <th>Titre</th>
                                 <th>Description</th>
                                 <th>URL Publique</th>
+                                <th>Token de modification</th>
                                 <th>Expiration</th>
                                 <th class="table-actions">Actions</th>
                             </tr>
@@ -90,17 +88,9 @@ class ListView extends BaseView
                     <td>{$list->title}</td>
                     <td>{$list->description}</td>
                     <td><a href="{$publicUrl}" target="_blank">{$publicUrl}</a></td>
-                    <td>{$list->expiration->format('d/m/Y')}
-            HTML;
-
-            if ($list->isExpired()) {
-                $html .= <<<HTML
-                   <p style="text-align:center;"> <strong>[Expirée]</strong></p>
-                HTML;
-            }
-
-            $html .= <<<HTML
-                    </td>
+                    <td>{$list->expiration->format('d/m/Y')}</td>
+                    <td>{$list->modification_token}</td>
+                    <td>{$list->expiration->format('d/m/Y')}</td>
                     <td class="table-actions">
                         <div>
                             <a href="{$editUrl}" class="btn btn-light">Éditer</a>
@@ -109,24 +99,49 @@ class ListView extends BaseView
 
             if ($list->isExpired()) {
                 $html .= <<<HTML
-                    <a href="{$resultsUrl}" class="btn btn-light">Bilan</a>    
+                    <p style="text-align:center;"> <strong>[Expirée]</strong></p>
                 HTML;
             }
 
-            $html .= <<<HTML
-                            <form method="POST" action="{$deleteUrl}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette liste ?');">
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            HTML;
+            if($isOwner)
+                $html .= <<<HTML
+                                <form method="POST" action="{$deleteUrl}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette liste ?');">
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                HTML;
         }
 
         return $html . <<<HTML
-                        </tbody>
-                    </table>
-                </div>
+                </tbody>
+            </table>
+        </div>
+        HTML;
+    }
+
+    /**
+     * Construit le contenu des listes de souhaits + des listes où on a été invité
+     *
+     * @return string l'HTML des listes de souhaits
+     */
+    private function getAllLists(string $ListsParamName = 'lists'): string
+    {
+        $addUrl = $this->pathFor('newListPage');
+        $joinUrl = $this->pathFor('joinListPage');
+
+        return <<<HTML
+            <div class="container container-full">
+                <h1>Mes listes de souhaits</h1>
+                <a href="{$addUrl}" class="btn btn-primary">Ajouter une liste</a>
+                {$this->getLists('lists')}
+            </div>
+
+            <div class="container container-full">
+                <h1>Mes listes modifiables</h1>
+                <a href="{$joinUrl}" class="btn btn-primary">Joindre une liste</a>
+                {$this->getLists('invitedLists', false)}
             </div>
         HTML;
     }
@@ -509,6 +524,19 @@ class ListView extends BaseView
         return $html;
     }
 
+    public function getJoinPage(): string
+    {
+        return <<<HTML
+            <div class="container join-list__container">
+                <form action="" method="POST">
+                    <label for="token">Token de modification</label>
+                    <input type="text" id="token" name="token">
+                    <button class="btn btn-primary">Ajouter</button>
+                </form>
+            </div>
+        HTML;
+    }
+
     /**
      * @inheritdoc
      */
@@ -558,6 +586,12 @@ class ListView extends BaseView
                     $menu = true;
                     break;
                 }
+            case 7: {
+                    $content = $this->getJoinPage();
+                    $title .= "Joindre une liste";
+                    $menu = true;
+                    break;
+            }
             default: {
                     $content = '';
                     break;

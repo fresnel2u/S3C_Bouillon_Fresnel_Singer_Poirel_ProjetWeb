@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS `items_reservations`;
 DROP TABLE IF EXISTS `founding_pots_participations`;
 DROP TABLE IF EXISTS `founding_pots`;
 DROP TABLE IF EXISTS `items`;
+DROP TABLE IF EXISTS `users_lists`;
 DROP TABLE IF EXISTS `lists`;
 DROP TABLE IF EXISTS `users`;
 
@@ -23,6 +24,7 @@ CREATE TABLE `lists` (
   `expiration` date DEFAULT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `is_public` tinyint(1) DEFAULT 0,
+  `modification_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_lists_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -77,6 +79,15 @@ CREATE TABLE `lists_messages` (
 	CONSTRAINT `fk_lists_messages_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE `users_lists` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `list_id` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	CONSTRAINT `fk_users_lists_lists` FOREIGN KEY (`list_id`) REFERENCES `lists` (`id`) ON DELETE CASCADE,
+	CONSTRAINT `fk_users_lists_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
 (1, 'Jean', 'Dupont', 'a@a.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
 (2, 'Jeanne', 'Maria', 'b@b.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
@@ -121,3 +132,8 @@ INSERT INTO `items_reservations` (`id`, `item_id`, `user_id`, `message`) VALUES
 (2, 15, 2, 'Petit séjour a l\'appart Hotel ! '),
 (3, 18, 3, 'Une petite partie de Laser Game ?');
 
+INSERT INTO `users_lists` (`id`, `user_id`, `list_id`) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3),
+(4, 1, 2);

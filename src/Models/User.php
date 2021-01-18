@@ -2,6 +2,7 @@
 
 namespace Whishlist\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
@@ -11,7 +12,7 @@ class User extends Model
 
     public function lists()
     {
-        return $this->hasMany(WishList::class, 'list_id', 'id');
+        return $this->hasMany(WishList::class);
     }
 
     public function reservations()
@@ -22,5 +23,21 @@ class User extends Model
     public function getFullname(): string
     {
         return $this->firstname . ' ' . $this->lastname;
+    }
+
+    public function editableLists()
+    {
+        return $this->belongsToMany(WishList::class, UsersLists::class, 'user_id', 'list_id', 'id', 'id');
+    }
+
+    /**
+     * Listes modifiables mais qui ne nous appartiennent pas
+     *
+     * @return Collection
+     */
+    public function invitedLists()
+    {
+        return $this->belongsToMany(WishList::class, UsersLists::class, 'user_id', 'list_id', 'id', 'id')
+                ->where('lists.user_id', '!=', $this->id);
     }
 }

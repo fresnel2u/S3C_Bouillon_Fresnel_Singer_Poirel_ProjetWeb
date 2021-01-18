@@ -9,6 +9,7 @@ use Whishlist\Controllers\ItemController;
 use Whishlist\Controllers\ListController;
 use Whishlist\Middlewares\AuthMiddleware;
 use Whishlist\Middlewares\GuestMiddleware;
+use Whishlist\Middlewares\EditMiddleWare;
 use Whishlist\Middlewares\OwnerMiddleware;
 use Whishlist\Controllers\AccountController;
 use Whishlist\Controllers\FoundingPotController;
@@ -30,6 +31,7 @@ $itemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'i
 $listOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::WISHLIST, 'list_id');
 $foundingPotItemOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::ITEM, 'item_id');
 $messageOwnerMiddleware = new OwnerMiddleware($container, OwnerMiddleware::MESSAGE);
+$canEditMiddleWare = new EditMiddleWare($container);
 
 // Home
 $app->get('/', HomeController::class . ':home')->setName('home');
@@ -44,6 +46,8 @@ $app->group('', function (App $app) {
     $app->post('/lists/new', ListController::class . ':newList')->setName('newList');
     $app->post('/lists/{token}/show', ListController::class . ':addListMessage')->setName('newListMessage');
     $app->get('/list/{token}/edit', ListController::class . ':editListMessagePage')->setName('editListMessagePage');
+    $app->get('/lists/join', ListController::class . ':joinListPage')->setName('joinListPage');
+    $app->post('/lists/join', ListController::class . ':joinList')->setName('joinList');
 })->add($authMiddleware);
 
 $app->group('', function(App $app) {
@@ -54,9 +58,10 @@ $app->group('', function(App $app) {
 $app->group('', function (App $app) {
     $app->get('/lists/{list_id}/edit', ListController::class . ':editListPage')->setName('editListPage');
     $app->post('/lists/{list_id}/edit', ListController::class . ':editList')->setName('editList');
-    $app->post('/lists/{list_id}/delete', ListController::class . ':deleteList')->setName('deleteList');
     $app->get('/lists/{list_id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
-})->add($authMiddleware)->add($listOwnerMiddleware);
+})->add($authMiddleware)->add($canEditMiddleWare);
+
+$app->post('/lists/{list_id}/delete', ListController::class . ':deleteList')->setName('deleteList')->add($authMiddleware)->add($listOwnerMiddleware);
 
 // Items
 $app->group('', function (App $app) {

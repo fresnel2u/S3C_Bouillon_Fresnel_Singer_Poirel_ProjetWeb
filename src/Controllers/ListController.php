@@ -12,6 +12,9 @@ use Whishlist\Models\WishList;
 use Whishlist\Helpers\Validator;
 use Whishlist\Models\ListMessage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Throwable;
+use Whishlist\Models\User;
+use Whishlist\Models\UsersLists;
 
 class ListController extends BaseController
 {
@@ -75,7 +78,55 @@ class ListController extends BaseController
     }
 
     /**
-     * Crée une vue pour afficher la liste des listes de souhaits
+     * Page pour joindre une liste à l'utilisateur avec un token de modification
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    public function joinListPage(Request $request, Response $response, array $args) {
+        $v = new ListView($this->container);
+        $response->getBody()->write($v->render(7));      
+    }
+
+    /**
+     * Page pour joindre une liste à l'utilisateur avec un token de modification
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return void
+     */
+    public function joinList(Request $request, Response $response, array $args) {
+        $body = $request->getParsedBody();
+        try {
+            $token = $body['token'] ?? null;
+            if($token === null)
+                throw new Exception();
+            $list = WishList::where('modification_token', $token)->firstOrFail();
+            $user = Auth::getUser();
+            $existing = UsersLists::where('list_id', $list->id)->where('user_id', $user['id'])->first();
+            if($existing === null) {
+                $invitation = new UsersLists();
+                $invitation->user_id = $user['id'];
+                $invitation->list_id = $list->id;
+                $invitation->save();
+                Flashes::addFlash('Liste ajoutée', 'success');
+            } else {
+                Flashes::addFlash('Vous avez déjà rejoint cette liste', 'warning');
+            }
+            return $response->withRedirect($this->pathFor('displayAllLists'));
+
+        } catch(Throwable $throwable) {
+            Flashes::addFlash('Token invalide', 'error');
+            Flashes::addFlash($throwable->getMessage(), 'error');
+            return $response->withRedirect($this->pathFor('joinListPage'));
+        }
+    }
+
+    /**
+     * Crée une vue pour afficher la liste des listes de souhaits dont on est le créateur / qu'on a été invité à modifier
      *
      * @param Request $request requête
      * @param Response $response réponse
@@ -84,13 +135,14 @@ class ListController extends BaseController
      */
     public function displayAllLists(Request $request, Response $response, array $args): Response
     {
-        $user = Auth::getUser();
-        $lists = WishList::where('user_id', $user['id'])->orderBy('id', 'desc')->get();
+        $user = User::find(Auth::getUser()['id']);
+        $lists = $user->lists()->get()->all();
+        $invited = $user->invitedLists()->get()->all();
 
-        if ($lists->count() === 0) {
+        if (count($lists) + count($invited) === 0) {
             $response->getBody()->write("<h1 style=\"text-align : center;\"> Aucune liste n'a été trouvée.</h1>");
         }
-        $v = new ListView($this->container, ['lists' => $lists]);
+        $v = new ListView($this->container, ['lists' => $lists, 'invitedLists' => $invited]);
         $response->getBody()->write($v->render(1));
         return $response;
     }
