@@ -36,7 +36,13 @@ URL associée : /lists/{tokenList}/show --> fonctionnalité présente sur la pag
 Contributeur : Poirel Jeremy
 
 - Supprimer un message sur une liste : supprime un message public rattaché à la liste.
-URL associée : /lists/{tokenList}/show --> necessite un message public sur la liste. puis appuyer sur 'Supprimer' pour le message souhaité.
+URL associée : /lists/{tokenList}/show --> nécessite un message public sur la liste. puis appuyer sur 'Supprimer' pour le message souhaité.
+ATTENTION : Pour pouvoir tester, il faut que l'utilisateur ait posté un message sur cette liste, car on ne peut pas supprimer le message d'un autre.
+Contributeur : Poirel Jeremy
+
+- Modifier un message sur une liste : modifie un message public rattaché à la liste.
+URL associée : /list/{tokenList}/edit --> nécessite un message public sur la liste. puis appuyer sur 'Modifier' pour le message souhaité.
+ATTENTION : Pour pouvoir tester, il faut que l'utilisateur ait posté un message sur cette liste, car on ne peut pas modifier le message d'un autre.
 Contributeur : Poirel Jeremy
 
 - Créer une liste : Créé une liste (titre, description, expiration, token) lié à un utilisateur.
@@ -63,15 +69,15 @@ Contributeur : Fresnel Hugo
 URL associée : /lists/{idList}/items --> une fois sur cette page, appuyer sur "supprimer" au niveau de chaque item
 Contributeur : Fresnel Hugo 
 
-- ajouter une image à un item : Au moment de créer un item le créateur peut ajouter une image à l'item.
+- ajouter une image à un item : Au moment de créer un item le créateur peut ajouter une image à l'item ou non. (+ sécurité / vérification de l'extension du fichier).
 URL associée : /lists/{idList}/items/new --> un champ spécifique a l'image est placé dans ce formulaire
 Contributeur : Poirel Jeremy
 
-- Modifier une image d'un item : le créateur peut modifier les images de ses items.
+- Modifier une image d'un item : le créateur peut modifier les images de ses items. L'ancienne image est alors supprimée dans le dossier et remplacée par la nouvelle (+ sécurité / vérification de l'extension du fichier).
 URL associée : /lists/{idList}/items/{idItem}/edit --> accessible via la fonctionnalité d'édtion d'un item, un champ est prévu pour sélectionner une autre image.
 Contributeur : Poirel Jeremy
 
-- Supprimer une image d'un item : le créateur peut supprimer l'image de ses items.
+- Supprimer une image d'un item : le créateur supprime l'image d'un item lorsqu'il supprime l'item (suppression de l'image dans le dossier des images)
 URL associée : /lists/{idList}/items --> puis appuyer sur le bouton supprimer de l'item souhaité
 Contributeur : Poirel Jeremy
 
@@ -129,6 +135,9 @@ Autres tâches réalisées :
 
 - Middlewares d'authentification et de propriété : facilite la vérification qu'un utilisateur est connecté et qu'un utilisateur est propriétaire d'une liste.
 Contributeur : Fresnel Hugo
+
+- Middleware de propriété d'un message (dans OwnerMiddleware) : vérification qu'un utilisateur est bien l'auteur d'un message public sur une liste afin que celui-ci puisse modifier ou supprimer ce message
+Contributer : Poirel Jérémy
 
 - Messages flash : message d'erreur ou message de validation utilisés pour les traitements.
 Contributeur : Bouillon Thomas

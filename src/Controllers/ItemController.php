@@ -63,9 +63,17 @@ class ItemController extends BaseController
 
         $files = $request->getUploadedFiles();
         $file = $files['image'];
+        $allowed = array('gif', 'png', 'jpg');
+        $filename = $_FILES['image']['name'];
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
         if ($file->getError() === UPLOAD_ERR_OK) {
-            $directory = ROUTE . '\img\\';
-            $filename = UploadFile::moveUploadedFile($directory, $file);
+            if(in_array($extension, $allowed)) {
+                $directory = ROUTE . '\img\\';
+                $filename = UploadFile::moveUploadedFile($directory, $file);
+            } else {
+                Flashes::addFlash("Les fichiers de ce type ne sont pas acceptés", 'error');
+                return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+            }
         }
 
         $item = new Item();
@@ -206,11 +214,19 @@ class ItemController extends BaseController
         $files = $request->getUploadedFiles();
         $file = $files['image'];
         $filename = $item->image;
+        $allowed = array('gif', 'png', 'jpg');
+        $filename = $_FILES['image']['name'];
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
         if ($file !== null) {
             if ($file->getError() === UPLOAD_ERR_OK) {
-                $directory = ROUTE . '\img\\';
-                unlink($directory . $item->image);
-                $filename = UploadFile::moveUploadedFile($directory, $file);
+                if(in_array($extension, $allowed)) {
+                    $directory = ROUTE . '\img\\';
+                    unlink($directory . $item->image);
+                    $filename = UploadFile::moveUploadedFile($directory, $file);
+                } else {
+                    Flashes::addFlash("Les fichiers de ce type ne sont pas acceptés", 'error');
+                    return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+                }
             }
         }
 
