@@ -104,11 +104,10 @@ class ItemView extends BaseView
 
             if ($item->foundingPot) {
                 $goal = number_format($item->foundingPot->amount, 2);
-                $current = number_format($goal - $item->foundingPot->getRest(), 2);
 
                 $html .= <<<HTML
                     <td>
-                      {$current}  / {$goal} €
+                      {$goal} €
                     </td>
                 HTML;
             } else {

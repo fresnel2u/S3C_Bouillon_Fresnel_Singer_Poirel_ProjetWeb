@@ -62,12 +62,14 @@ class FoundingPotController extends BaseController
         if ($body['amount'] > $item->price) {
             Flashes::addFlash("Vous ne pouvez pas demander plus d'argent que le montant de l'item.", 'error');
             return $response->withRedirect($this->pathFor('createFoundingPotPage', [
+                'list_id' => $list->id,
                 'item_id' => $item->id
             ]));
         }
         if ($body['amount'] === '0' || $body['amount'] === '') {
             Flashes::addFlash("Vous ne pouvez pas créer une cagnotte avec un montant nul.", 'error');
             return $response->withRedirect($this->pathFor('createFoundingPotPage', [
+                'list_id' => $list->id,
                 'item_id' => $item->id
             ]));
         }
