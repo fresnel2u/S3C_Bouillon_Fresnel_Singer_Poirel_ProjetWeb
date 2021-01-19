@@ -61,19 +61,12 @@ class ListController extends BaseController
             $list->title = $body['title'];
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
-            $list->token = $body['token'];
-            $list->modification_token = $body['edit_token'];
-            $list->is_public = $body['is_public'] ? true : false;
-
-            if ($list->token === '') {
-                $list->token = bin2hex($list->id . random_bytes(10));
-                $list->save();
-            }
-
-            if ($list->modification_token === '') {
+            $list->token = bin2hex($list->id . random_bytes(10));
+            $list->modification_token = bin2hex($list->id . random_bytes(10));
+            while($list->modification_token === $list->token) {
                 $list->modification_token = bin2hex($list->id . random_bytes(10));
-                $list->save();
             }
+            $list->is_public = $body['is_public'] ? true : false;
             $list->save();
 
             return $response->withRedirect($this->pathFor('displayAllLists'));
@@ -251,8 +244,6 @@ class ListController extends BaseController
             $list->title = $body['title'];
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
-            $list->token = $body['token'] !== '' ? $body['token'] : bin2hex($list->id . random_bytes(10));
-            $list->modification_token = $body['edit_token'] !== '' ? $body['edit_token'] : bin2hex($list->id . random_bytes(10));
             $list->is_public = $body['is_public'] ? true : false;
             $list->save();
 

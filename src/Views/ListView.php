@@ -31,15 +31,7 @@ class ListView extends BaseView
                     <div class="form-group">
                         <label for="expiration">Expiration</label>
                         <input type="date" name="expiration" id="expiration">
-                    </div>        
-                    <div class="form-group">
-                        <label for="token">Token</label>
-                        <input type="text" name="token" id="token">
-                    </div> 
-                    <div class="form-group">
-                        <label for="token">Token de modification</label>
-                        <input type="text" name="edit_token" id="token">
-                    </div>      
+                    </div>            
                     <div class="form-group">
                         <label for="is_public">
                             <input type="checkbox" name="is_public" id="is_public">
@@ -436,14 +428,6 @@ class ListView extends BaseView
                         <label for="expiration">Expiration</label>
                         <input type="date" name="expiration" id="expiration" value="{$list->expiration->format('Y-m-d')}">
                     </div>        
-                    <div class="form-group">
-                        <label for="token">Token</label>
-                        <input type="text" name="token" id="token" value="{$list->token}">
-                    </div> 
-                    <div class="form-group">
-                        <label for="token">Token de modification</label>
-                        <input type="text" name="edit_token" id="token" value="{$list->modification_token}">
-                    </div> 
                     <div class="form-group">
                         <label for="is_public">
                             <input type="checkbox" name="is_public" id="is_public" {$checked}>
