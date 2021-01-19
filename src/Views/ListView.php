@@ -87,11 +87,7 @@ class ListView extends BaseView
                     <td><a href="{$publicUrl}" target="_blank">{$publicUrl}</a></td>
                     <td><a href="{$editUrl}" target="_blank">{$editUrl}</a></td>
                     <td>{$list->edit_token}</td>
-                    <td>{$list->expiration->format('d/m/Y')}</td>
-                    <td class="table-actions">
-                        <div>
-                            <a href="{$editUrl}" class="btn btn-light">Éditer</a>
-                            <a href="{$itemsUrl}" class="btn btn-light">Items</a>
+                    <td>{$list->expiration->format('d/m/Y')}
             HTML;
 
             if ($list->isExpired()) {
@@ -99,6 +95,14 @@ class ListView extends BaseView
                     <p style="text-align:center;"> <strong>[Expirée]</strong></p>
                 HTML;
             }
+
+            $html .= <<<HTML
+                    </td>
+                    <td class="table-actions">
+                        <div>
+                            <a href="{$editUrl}" class="btn btn-light">Éditer</a>
+                            <a href="{$itemsUrl}" class="btn btn-light">Items</a>
+            HTML;
 
             if($isOwner)
                 $html .= <<<HTML
