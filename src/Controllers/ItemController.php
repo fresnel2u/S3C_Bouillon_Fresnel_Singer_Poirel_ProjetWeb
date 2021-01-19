@@ -67,7 +67,7 @@ class ItemController extends BaseController
         $filename = $_FILES['image']['name'];
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
         if ($file->getError() === UPLOAD_ERR_OK) {
-            if(in_array($extension, $allowed)) {
+            if (in_array($extension, $allowed)) {
                 $directory = ROUTE . '\img\\';
                 $filename = UploadFile::moveUploadedFile($directory, $file);
             } else {
@@ -163,14 +163,14 @@ class ItemController extends BaseController
             return $response->withRedirect($this->pathFor('displayAllLists'));
         }
 
-        if(ItemReservation::where('item_id', $args['item_id']) !== null) {
-            Flashes::addFlash("L'item est réservé et ne peut donc pas être modifié !", 'error');
-            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
-        }
-
         $item = Item::find($args['item_id']);
         if (!$item || $list->id !== $item->list_id) {
             Flashes::addFlash("L'item n'a pas été trouvé", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
+        if ($item->reservation) {
+            Flashes::addFlash("L'item est réservé et ne peut donc pas être modifié !", 'error');
             return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
         }
 
@@ -195,13 +195,14 @@ class ItemController extends BaseController
             return $response->withRedirect($this->pathFor('displayAllLists'));
         }
 
-        if(ItemReservation::where('item_id', $args['item_id']) !== null) {
-            Flashes::addFlash("L'item est réservé et ne peut donc pas être modifié !", 'error');
-            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
-        }
         $item = Item::find($args['item_id']);
         if (!$item || $list->id !== $item->list_id) {
             Flashes::addFlash("L'item n'a pas été trouvé", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
+        if ($item->reservation) {
+            Flashes::addFlash("L'item est réservé et ne peut donc pas être modifié !", 'error');
             return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
         }
 
@@ -228,7 +229,7 @@ class ItemController extends BaseController
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
         if ($file !== null) {
             if ($file->getError() === UPLOAD_ERR_OK) {
-                if(in_array($extension, $allowed)) {
+                if (in_array($extension, $allowed)) {
                     $directory = ROUTE . '\img\\';
                     unlink($directory . $item->image);
                     $filename = UploadFile::moveUploadedFile($directory, $file);
@@ -266,13 +267,14 @@ class ItemController extends BaseController
             return $response->withRedirect($this->pathFor('displayAllLists'));
         }
 
-        if(ItemReservation::where('item_id', $args['item_id']) !== null) {
-            Flashes::addFlash("L'item est réservé et ne peut donc pas être supprimé !", 'error');
-            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
-        }
         $item = Item::find($args['item_id']);
         if (!$item || $list->id !== $item->list_id) {
             Flashes::addFlash("L'item n'a pas été trouvé", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
+        if ($item->reservation) {
+            Flashes::addFlash("L'item est réservé et ne peut donc pas être supprimé !", 'error');
             return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
         }
 
@@ -358,7 +360,7 @@ class ItemController extends BaseController
             'item_id' => $item->id
         ]);
         return $response->withRedirect($redirectUrl);
-}
+    }
 
     /**
      * Annulation de la réservation d'un item

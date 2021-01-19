@@ -69,7 +69,7 @@ Contributeur : Fresnel Hugo
 URL associée : /lists/{idList}/items --> une fois sur cette page, appuyer sur "supprimer" au niveau de chaque item
 Contributeur : Fresnel Hugo 
 
-- ajouter une image à un item : Au moment de créer un item le créateur peut ajouter une image à l'item ou non. (+ sécurité / vérification de l'extension du fichier).
+- Ajouter une image à un item : Au moment de créer un item le créateur peut ajouter une image à l'item ou non. (+ sécurité / vérification de l'extension du fichier).
 URL associée : /lists/{idList}/items/new --> un champ spécifique a l'image est placé dans ce formulaire
 Contributeur : Poirel Jeremy
 
