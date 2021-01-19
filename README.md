@@ -9,7 +9,7 @@ Lexique des paramètres utilisés dans les URLs associées à chaque fonctionnal
 'idItem' : l'id de l'item concerné
 'idList' : l'id de la liste concernée
 
-Fonctionnalités : 
+## Fonctionnalités : 
 
 -  Afficher une liste de souhaits : affiche les informations général de la liste (titre, créateur etc...) + les items contenu dans cette liste.
 URL associée : /lists/{tokenList}/show
@@ -55,7 +55,7 @@ Contributeurs : Fresnel Hugo et Singer Jules
 
 - Modifier les informations générales d'une de ses listes : Le créateur de la liste peut modifier ses listes.
 URL associée : /lists/{idList}/edit
-Contributeur : Bouillon Thomas
+Contributeur : Bouillon Thomas + Fresnel Hugo
 
 - Ajouter des items : le créateur d'une liste peut ajouter des items sur celle-ci.
 URL associée : /lists/{idList}/items/new --> page est accessible depuis ce chemin sur le site : mes listes -> items -> ajouter un item 
@@ -131,13 +131,16 @@ Contributeur : Fresnel Hugo
 URL associée : /account --> puis appuyer sur le bouton 'supprimer mon compte'
 Contributeur : Singer Jules
 
-Autres tâches réalisées :
+## Autres tâches réalisées :
 
-- Middlewares d'authentification et de propriété : facilite la vérification qu'un utilisateur est connecté et qu'un utilisateur est propriétaire d'une liste.
+- Middlewares d'authentification : facilite la vérification qu'un utilisateur est connecté.
 Contributeur : Fresnel Hugo
 
+- Middlewares de propriété : facilite la vérification qu'un utilisateur est propriétaire d'une liste.
+Contributeur : Bouillon Thomas
+
 - Middleware de propriété d'un message (dans OwnerMiddleware) : vérification qu'un utilisateur est bien l'auteur d'un message public sur une liste afin que celui-ci puisse modifier ou supprimer ce message
-Contributer : Poirel Jérémy
+Contributeur : Poirel Jérémy
 
 - Messages flash : message d'erreur ou message de validation utilisés pour les traitements.
 Contributeur : Bouillon Thomas
