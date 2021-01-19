@@ -163,6 +163,11 @@ class ItemController extends BaseController
             return $response->withRedirect($this->pathFor('displayAllLists'));
         }
 
+        if(ItemReservation::where('item_id', $args['item_id']) !== null) {
+            Flashes::addFlash("L'item est réservé et ne peut donc pas être modifié !", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
+
         $item = Item::find($args['item_id']);
         if (!$item || $list->id !== $item->list_id) {
             Flashes::addFlash("L'item n'a pas été trouvé", 'error');
@@ -190,6 +195,10 @@ class ItemController extends BaseController
             return $response->withRedirect($this->pathFor('displayAllLists'));
         }
 
+        if(ItemReservation::where('item_id', $args['item_id']) !== null) {
+            Flashes::addFlash("L'item est réservé et ne peut donc pas être modifié !", 'error');
+            return $response->withRedirect($this->pathFor('displayAllItems', ['list_id' => $list->id]));
+        }
         $item = Item::find($args['item_id']);
         if (!$item || $list->id !== $item->list_id) {
             Flashes::addFlash("L'item n'a pas été trouvé", 'error');
