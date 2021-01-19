@@ -50,7 +50,7 @@ class ListController extends BaseController
             }, $body);
 
             try {
-                Validator::failIfEmptyOrNull($body, ['token']);
+                Validator::failIfEmptyOrNull($body, ['token', 'edit_token']);
             } catch (Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
                 return $response->withRedirect($this->pathFor('newListPage'));
@@ -62,13 +62,19 @@ class ListController extends BaseController
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
             $list->token = $body['token'];
+            $list->modification_token = $body['edit_token'];
             $list->is_public = $body['is_public'] ? true : false;
-            $list->save();
 
             if ($list->token === '') {
                 $list->token = bin2hex($list->id . random_bytes(10));
                 $list->save();
             }
+
+            if ($list->modification_token === '') {
+                $list->modification_token = bin2hex($list->id . random_bytes(10));
+                $list->save();
+            }
+            $list->save();
 
             return $response->withRedirect($this->pathFor('displayAllLists'));
         } catch (ModelNotFoundException $e) {
@@ -237,7 +243,7 @@ class ListController extends BaseController
             }, $body);
 
             try {
-                Validator::failIfEmptyOrNull($body, ['token']);
+                Validator::failIfEmptyOrNull($body, ['token', 'edit_token']);
             } catch (Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
                 return $response->withRedirect($this->pathFor('editListPage', ['id' => $args['list_id']]));
@@ -247,6 +253,7 @@ class ListController extends BaseController
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
             $list->token = $body['token'] !== '' ? $body['token'] : bin2hex($list->id . random_bytes(10));
+            $list->modification_token = $body['edit_token'] !== '' ? $body['edit_token'] : bin2hex($list->id . random_bytes(10));
             $list->is_public = $body['is_public'] ? true : false;
             $list->save();
 

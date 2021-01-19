@@ -35,6 +35,10 @@ class ListView extends BaseView
                     <div class="form-group">
                         <label for="token">Token</label>
                         <input type="text" name="token" id="token">
+                    </div> 
+                    <div class="form-group">
+                        <label for="token">Token de modification</label>
+                        <input type="text" name="edit_token" id="token">
                     </div>      
                     <div class="form-group">
                         <label for="is_public">
@@ -88,7 +92,6 @@ class ListView extends BaseView
                     <td>{$list->title}</td>
                     <td>{$list->description}</td>
                     <td><a href="{$publicUrl}" target="_blank">{$publicUrl}</a></td>
-                    <td>{$list->expiration->format('d/m/Y')}</td>
                     <td>{$list->modification_token}</td>
                     <td>{$list->expiration->format('d/m/Y')}</td>
                     <td class="table-actions">
@@ -434,6 +437,10 @@ class ListView extends BaseView
                     <div class="form-group">
                         <label for="token">Token</label>
                         <input type="text" name="token" id="token" value="{$list->token}">
+                    </div> 
+                    <div class="form-group">
+                        <label for="token">Token de modification</label>
+                        <input type="text" name="edit_token" id="token" value="{$list->modification_token}">
                     </div> 
                     <div class="form-group">
                         <label for="is_public">
