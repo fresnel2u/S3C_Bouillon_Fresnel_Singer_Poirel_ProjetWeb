@@ -24,7 +24,7 @@ CREATE TABLE `lists` (
   `expiration` date DEFAULT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `is_public` tinyint(1) DEFAULT 0,
-  `modification_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `edit_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_lists_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -93,7 +93,7 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`) VALUES
 (2, 'Jeanne', 'Maria', 'b@b.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.'),
 (3, 'Jeanne2', 'Maria2', 'c@c.com', '$2y$12$WD8JZg.SitaDw.n6pFkxuuPLLWSKRSPZ8lspQ1n4KdnSbrjZsBOd.');
 
-INSERT INTO `lists` (`id`, `user_id`, `title`, `description`, `expiration`, `token`, `modification_token`, `is_public`) VALUES
+INSERT INTO `lists` (`id`, `user_id`, `title`, `description`, `expiration`, `token`, `edit_token`, `is_public`) VALUES
 (1, 1, 'Pour fêter le bac !', 'Pour un week-end à Nancy qui nous fera oublier les épreuves. ', '2018-06-27', 'nosecure1', 'nosecure12', false),
 (2, 2, 'lists de mariage d\'Alice et Bob', 'Nous souhaitons passer un week-end royal à Nancy pour notre lune de miel :)', '2018-06-30', 'nosecure2', 'nosecure22', false),
 (3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3', 'nosecure32', false),

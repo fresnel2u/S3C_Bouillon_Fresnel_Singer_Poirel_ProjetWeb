@@ -74,7 +74,7 @@ class ListView extends BaseView
 
         foreach ($lists as $list) {
             $publicUrl = $this->pathFor('displayList', ['token' => $list->token]);
-            $editUrl = $this->pathFor('editListPage', ['token' => $list->modification_token]);
+            $editUrl = $this->pathFor('editListPage', ['token' => $list->edit_token]);
             $itemsUrl = $this->pathFor('displayAllItems', ['list_id' => $list->id]);
             $deleteUrl = $this->pathFor('deleteList', ['list_id' => $list->id]);
             $resultsUrl = $this->pathFor('displayListResults', ['list_id' => $list->id]);
@@ -86,7 +86,7 @@ class ListView extends BaseView
                     <td>{$list->description}</td>
                     <td><a href="{$publicUrl}" target="_blank">{$publicUrl}</a></td>
                     <td><a href="{$editUrl}" target="_blank">{$editUrl}</a></td>
-                    <td>{$list->modification_token}</td>
+                    <td>{$list->edit_token}</td>
                     <td>{$list->expiration->format('d/m/Y')}</td>
                     <td class="table-actions">
                         <div>
@@ -408,7 +408,7 @@ class ListView extends BaseView
     private function editListPage(): string
     {
         $list = $this->params['list'];
-        $editUrl = $this->pathFor('editList', ['token' => $list->modification_token]);
+        $editUrl = $this->pathFor('editList', ['token' => $list->edit_token]);
 
         $checked = $list->isPublic() ? 'checked="checked"' : ''; 
 

@@ -62,9 +62,9 @@ class ListController extends BaseController
             $list->description = $body['description'];
             $list->expiration = $body['expiration'];
             $list->token = bin2hex($list->id . random_bytes(10));
-            $list->modification_token = bin2hex($list->id . random_bytes(10));
-            while($list->modification_token === $list->token) {
-                $list->modification_token = bin2hex($list->id . random_bytes(10));
+            $list->edit_token = bin2hex($list->id . random_bytes(10));
+            while($list->edit_token === $list->token) {
+                $list->edit_token = bin2hex($list->id . random_bytes(10));
             }
             $list->is_public = $body['is_public'] ? true : false;
             $list->save();
@@ -103,7 +103,7 @@ class ListController extends BaseController
             $token = $body['token'] ?? null;
             if($token === null)
                 throw new Exception();
-            $list = WishList::where('modification_token', $token)->firstOrFail();
+            $list = WishList::where('edit_token', $token)->firstOrFail();
             $user = Auth::getUser();
             $existing = UsersLists::where('list_id', $list->id)->where('user_id', $user['id'])->first();
             if($existing === null) {
@@ -204,7 +204,7 @@ class ListController extends BaseController
     public function editListPage(Request $request, Response $response, array $args): Response
     {
         try {
-            $list = WishList::where('modification_token', $args['token'])->firstOrFail();
+            $list = WishList::where('edit_token', $args['token'])->firstOrFail();
             $v = new ListView($this->container, ['list' => $list]);
             $response->getBody()->write($v->render(4));
             return $response;
@@ -225,7 +225,7 @@ class ListController extends BaseController
     public function editList(Request $request, Response $response, $args): Response
     {
         try {
-            $list = WishList::where('modification_token', $args['token'])->firstOrFail();
+            $list = WishList::where('edit_token', $args['token'])->firstOrFail();
             $body = $request->getParsedBody();
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
@@ -235,7 +235,7 @@ class ListController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['token', 'edit_token']);
             } catch (Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->pathFor('editListPage', ['token' => $list->modification_token]));
+                return $response->withRedirect($this->pathFor('editListPage', ['token' => $list->edit_token]));
             }
 
             $list->title = $body['title'];
@@ -420,7 +420,7 @@ class ListController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['token']);
             } catch (Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->pathFor('editListPage', ['token' => $list->modification_token]));
+                return $response->withRedirect($this->pathFor('editListPage', ['token' => $message->list->edit_token]));
             }
 
             if($body['message'] === "") {
