@@ -98,7 +98,7 @@ class ItemController extends BaseController
      */
     public function displayAllItems(Request $request, Response $response, array $args): Response
     {
-        $list = WishList::with('items')->find($args['list_id']);
+        $list = WishList::find($args['list_id']);
         if (!$list) {
             Flashes::addFlash("Liste introuvable.", 'error');
             return $response->withRedirect($this->pathFor('displayAllLists'));
@@ -106,7 +106,7 @@ class ItemController extends BaseController
 
         $v = new ItemView($this->container, [
             'list' => $list,
-            'items' => $list->items
+            'items' => $list->items()->orderBy('id', 'desc')->get()
         ]);
         $response->getBody()->write($v->render(1));
         return $response;
