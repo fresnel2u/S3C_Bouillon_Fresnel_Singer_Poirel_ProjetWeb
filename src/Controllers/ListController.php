@@ -135,12 +135,9 @@ class ListController extends BaseController
     public function displayAllLists(Request $request, Response $response, array $args): Response
     {
         $user = User::find(Auth::getUser()['id']);
-        $lists = $user->lists()->get()->all();
+        $lists = $user->lists()->orderBy('id', 'desc')->get()->all();
         $invited = $user->invitedLists()->get()->all();
 
-        if (count($lists) + count($invited) === 0) {
-            $response->getBody()->write("<h1 style=\"text-align : center;\"> Aucune liste n'a été trouvée.</h1>");
-        }
         $v = new ListView($this->container, ['lists' => $lists, 'invitedLists' => $invited]);
         $response->getBody()->write($v->render(1));
         return $response;
