@@ -1,20 +1,24 @@
 # S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb
 
-URL de l'application : 'à écrire ici'
+URL de l'application : `à écrire ici`
 
-Liste des fonctionnalité réalisées :
+Membres :
+- Hugo Fresnel
+- Jules Singer
+- Thomas Bouillon
+- Jérémy Poirel
 
-Lexique des paramètres utilisés dans les URLs associées à chaque fonctionnalité : 
-'tokenList' : le token de la liste concernée --> exemple : à remplacer par nosecure1 pour la liste 1
-'idItem' : l'id de l'item concerné
-'idList' : l'id de la liste concernée
+## Lexique des paramètres utilisés dans les URLs : 
+- `tokenList` : le token de la liste concernée
+- `idItem` : l'id de l'item concerné
+- `idList` : l'id de la liste concernée
 
 ## Fonctionnalités : 
 
 | Tâche | Description | URL Associée | Contributeurs |
 | --- | --- | --- | --- |
 | Afficher une liste de souhaits | affiche les informations général de la liste (titre, créateur etc...) + les items contenu dans cette liste. | `/lists/{tokenList}/show` | Hugo Fresnel |
-| Afficher un item d'une liste | affiche le détail d'un item (titre, description, prix ...). | `/lists/{tokenList}/item/{idItem}` 'idItem' l'id de l'item souhaité à afficher. | Hugo Fresnel |
+| Afficher un item d'une liste | affiche le détail d'un item (titre, description, prix ...). | `/lists/{tokenList}/item/{idItem}` | Hugo Fresnel |
 | Réserver un item | possibilité de réserver un item si celui-ci ne l'ai pas déjà. | `/lists/{idList}/items/{idItem}/lock` | Thomas Bouillon |
 | Ajouter un message avec sa réservation | au moment de réserver, permet d'ajouter (en option) un message associé à l'item à destination du créateur de la liste. | `/lists/{idList}/items/{idItem}/lock` --> fonctionnalité présente sur la même page que l'URL précédente (réservation d'un item). | Jules Singer |
 | Annuler une réservation | possibilité d'annuler une réservation pour l'utilisateur qui en a fait. | `/lists/{tokenList}/item/{idItem}` --> necessite d'avoir réservé l'item. puis appuyer sur 'annuler la réservation'. | Jules Singer |
