@@ -14,11 +14,10 @@ class EditMiddleWare extends BaseMiddleWare
     public function __invoke(Request $rq, Response $rs, callable $next): Response
     {
         $route = $rq->getAttribute('route');
-        $list = UsersLists::where('list_id', $route->getArgument('list_id'))
-            ->where('user_id', Auth::getUser()['id']);
+        $list = WishList::where('token', $route->getArgument('token'));
         if($list !== null)
             return $next($rq, $rs);
-        Flashes::addFlash('Vous devez être le propriétaire ou avoir été invité à la liste pour accéder à cet URL', 'error');
+        Flashes::addFlash('Token de modification invalide', 'error');
         return $rq->withRedirect($this->container->router->pathFor('displayAllLists')); 
     }
 }

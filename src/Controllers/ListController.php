@@ -214,7 +214,7 @@ class ListController extends BaseController
     public function editListPage(Request $request, Response $response, array $args): Response
     {
         try {
-            $list = WishList::findOrFail($args['list_id']);
+            $list = WishList::where('modification_token', $args['token'])->firstOrFail();
             $v = new ListView($this->container, ['list' => $list]);
             $response->getBody()->write($v->render(4));
             return $response;
@@ -235,8 +235,7 @@ class ListController extends BaseController
     public function editList(Request $request, Response $response, $args): Response
     {
         try {
-            $list = WishList::findOrFail($args['list_id']);
-
+            $list = WishList::where('modification_token', $args['token'])->firstOrFail();
             $body = $request->getParsedBody();
             $body = array_map(function ($field) {
                 return filter_var($field, FILTER_SANITIZE_STRING);
@@ -246,7 +245,7 @@ class ListController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['token', 'edit_token']);
             } catch (Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->pathFor('editListPage', ['id' => $args['list_id']]));
+                return $response->withRedirect($this->pathFor('editListPage', ['token' => $list->modification_token]));
             }
 
             $list->title = $body['title'];
@@ -433,7 +432,7 @@ class ListController extends BaseController
                 Validator::failIfEmptyOrNull($body, ['token']);
             } catch (Exception $e) {
                 Flashes::addFlash($e->getMessage(), 'error');
-                return $response->withRedirect($this->pathFor('editListPage', ['id' => $args['list_id']]));
+                return $response->withRedirect($this->pathFor('editListPage', ['token' => $list->modification_token]));
             }
 
             if($body['message'] === "") {

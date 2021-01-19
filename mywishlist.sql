@@ -97,7 +97,7 @@ INSERT INTO `lists` (`id`, `user_id`, `title`, `description`, `expiration`, `tok
 (1, 1, 'Pour fêter le bac !', 'Pour un week-end à Nancy qui nous fera oublier les épreuves. ', '2018-06-27', 'nosecure1', 'nosecure12', false),
 (2, 2, 'lists de mariage d\'Alice et Bob', 'Nous souhaitons passer un week-end royal à Nancy pour notre lune de miel :)', '2018-06-30', 'nosecure2', 'nosecure22', false),
 (3, 3, 'C\'est l\'anniversaire de Charlie', 'Pour lui préparer une fête dont il se souviendra :)', '2017-12-12', 'nosecure3', 'nosecure32', false),
-(4, 1, 'Noël !', 'Liste de participation des cadeaux de Noël', '2021-06-27', 'nosecure4', true);
+(4, 1, 'Noël !', 'Liste de participation des cadeaux de Noël', '2021-06-27', 'nosecure4', 'nosecure42', true);
 
 INSERT INTO `items` (`id`, `list_id`, `name`, `description`, `image`, `url`, `price`) VALUES
 (1, 2, 'Champagne', 'Bouteille de champagne + flutes + jeux à gratter', 'champagne.jpg', '', 20.00),

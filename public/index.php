@@ -56,12 +56,9 @@ $app->group('', function(App $app) {
 })->add($authMiddleware)->add($messageOwnerMiddleware);
 
 $app->group('', function (App $app) {
-    $app->get('/lists/{list_id}/edit', ListController::class . ':editListPage')->setName('editListPage');
-    $app->post('/lists/{list_id}/edit', ListController::class . ':editList')->setName('editList');
-    $app->get('/lists/{list_id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
-})->add($authMiddleware)->add($canEditMiddleWare);
-
-$app->post('/lists/{list_id}/delete', ListController::class . ':deleteList')->setName('deleteList')->add($authMiddleware)->add($listOwnerMiddleware);
+    $app->get('/lists/{token}/edit', ListController::class . ':editListPage')->setName('editListPage');
+    $app->post('/lists/{token}/edit', ListController::class . ':editList')->setName('editList');
+})->add($canEditMiddleWare);
 
 // Items
 $app->group('', function (App $app) {
@@ -74,6 +71,8 @@ $app->group('', function (App $app) {
     $app->get('/lists/{list_id}/items', ItemController::class . ':displayAllItems')->setName('displayAllItems');
     $app->get('/lists/{list_id}/items/new', ItemController::class . ':newItemPage')->setName('newItemPage');
     $app->post('/lists/{list_id}/items/new', ItemController::class . ':newItem')->setName('newItem');
+    $app->post('/lists/{list_id}/delete', ListController::class . ':deleteList')->setName('deleteList');
+    $app->get('/lists/{list_id}/results', ListController::class . ':displayListResults')->setName('displayListResults');
 })->add($authMiddleware)->add($listOwnerMiddleware);
 
 $app->get('/lists/{token}/item/{item_id}', ItemController::class . ':displayItem')->setName('displayItem');

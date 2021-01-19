@@ -89,4 +89,8 @@ table tfoot tr tf
     & th.table-actions {
         text-align: right;
     }
+
+    a:not(.btn) {
+        overflow-wrap: anywhere;
+    }
 }
