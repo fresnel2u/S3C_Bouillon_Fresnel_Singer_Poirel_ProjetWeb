@@ -8,7 +8,24 @@ Membres :
 - Thomas Bouillon
 - Jérémy Poirel
 
+## Guide d'installation du projet ##
+
+1) Commencez par cloner le projet avec git: `git clone https://github.com/fresnel2u/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb.git && cd S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb/`.
+2) Créez la base de données
+- Avec mysql | mariadb déjà installé
+- Connectez vous avec un outil comme PhpMyAdmin
+- Créez une base de donnée avec le nom de votre choix
+- Executez toutes les requêtes dans mywishlist.sql
+3) Dans src/Configuration/ copiez 'conf.example.ini' en 'conf.ini', ouvrez le et remplacez les informations par celles qui vous correspondent
+4) Retournez à la racine du projet puis initialisez le projet avec
+- `composer install`
+- `npm install` ou `yarn install` (Pour utiliser Sass)
+- `npm run dev` ou `yarn run dev` (Pour utiliser Sass)
+5) Démarrez le serveur local de php avec `make serve`
+6) Ouvrez le navigateur et rendez-vous à `http://localhost:8080/`
+
 ## Lexique des paramètres utilisés dans les URLs : 
+
 - `tokenList` : le token de la liste concernée
 - `idItem` : l'id de l'item concerné
 - `idList` : l'id de la liste concernée
