@@ -1,6 +1,6 @@
 # S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb
 
-URL de l'application : `à écrire ici`
+URL de l'application : https://hugofresnel.alwaysdata.net/
 
 Membres :
 - Hugo Fresnel
@@ -10,19 +10,22 @@ Membres :
 
 ## Guide d'installation du projet ##
 
-1) Commencez par cloner le projet avec git: `git clone https://github.com/fresnel2u/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb.git && cd S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb/`.
+1) Commencez par cloner le projet avec git: git clone https://github.com/fresnel2u/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb.git 
+   Puis cd S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb/`.
 2) Créez la base de données
 - Avec mysql | mariadb déjà installé
 - Connectez vous avec un outil comme PhpMyAdmin
 - Créez une base de donnée avec le nom de votre choix
-- Executez toutes les requêtes dans mywishlist.sql
+- Executez toutes les requêtes dans mywishlist.sql présent dans le dossier du projet
 3) Dans src/Configuration/ copiez 'conf.example.ini' en 'conf.ini', ouvrez le et remplacez les informations par celles qui vous correspondent
 4) Retournez à la racine du projet puis initialisez le projet avec
 - `composer install`
 - `npm install` ou `yarn install` (Pour utiliser Sass)
 - `npm run dev` ou `yarn run dev` (Pour utiliser Sass)
-5) Démarrez le serveur local de php avec `make serve`
-6) Ouvrez le navigateur et rendez-vous à `http://localhost:8080/`
+5) Démarrage du serveur : 
+- avec xampp : Mettre le dossier du projet dans htdocs, changer le DocumentRoot dans la configuration Apache -> fichier httpd.conf (mettre "C:/xampp/htdocs/S3C_Bouillon_Fresnel_Singer_Poirel_ProjetWeb/public"), puis démarrer le serveur Apache et MySql.
+- Démarrez le serveur en local de php avec `make serve` si vous en avez la possibilité.
+1) Ouvrez le navigateur et rendez-vous à `http://localhost:8080/` (ou `http://localhost:8000/` en général).
 
 ## Lexique des paramètres utilisés dans les URLs : 
 
@@ -30,7 +33,7 @@ Membres :
 - `idItem` : l'id de l'item concerné
 - `idList` : l'id de la liste concernée
 
-## Fonctionnalités : 
+## Fonctionnalités : ( partie à regarder directement sur github pour la mise en forme du tableau)
 
 | Tâche | Description | URL Associée | Contributeurs |
 | --- | --- | --- | --- |
