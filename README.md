@@ -35,26 +35,29 @@ Membres :
 | Modifier une image d'un item | le créateur peut modifier les images de ses items. L'ancienne image est alors supprimée dans le dossier et remplacée par la nouvelle (+ sécurité / vérification de l'extension du fichier). | `/lists/{idList}/items/{idItem}/edit` --> accessible via la fonctionnalité d'édtion d'un item, un champ est prévu pour sélectionner une autre image. | Jérémy Poirel |
 | Supprimer une image d'un item | le créateur supprime l'image d'un item lorsqu'il supprime l'item (suppression de l'image dans le dossier des images) | `/lists/{idList}/items` --> puis appuyer sur le bouton supprimer de l'item souhaité | Jérémy Poirel |
 | Partager une liste | le créateur d'une liste peut la partager via une URL à donner contenant le token de la liste concernée. | `/lists` --> une fois sur cette page vous voyez, pour chacune de vos listes, l'URL publique à partager. | Hugo Fresnel |
-| Consulter les réservations d'une de ses listes avant échéance | le créateur d'une liste peut voir les réservations des items déjà réalisées. (sans montrer qui a réservé) | `/lists/{tokenList}/show` --> chaque item est accompagné d'une mention "Non réservé" ou "Réservé". | Hugo Fresnel + Jules Singer |
+| Consulter les réservations d'une de ses listes avant échéance | le créateur d'une liste peut voir les réservations des items déjà réalisées. (sans montrer qui a réservé) | `/lists/{tokenList}/show` --> chaque item est accompagné d'une mention "Non réservé" ou "Réservé". | Hugo Fresnel + Jules Singer + Thomas Bouillon |
 | Consulter les réservations et messages d'une de ses listes après échéance | le créateur d'une liste peut accéder au bilan de celle-ci une fois la date d'expiration dépassée. Cette page permet de récapituler les items réservés et qui les a réservés avec différentes informations détaillées. | `/lists/{idList}/results` --> accessible depuis : mes listes -> bilan(ce bouton s'affiche seulement si la liste est expirée). | Jules Singer |
 | Créer un compte | l'utilisateur peut créer un compte avec des informations tel que nom prénom email et mot de passe. | `/register` | Jules Singer |
 | S'authentifier | l'utilisateur peut se connecter s'il est déjà inscrit (avec son email et son mot de passe). | `/login` | Jules Singer |
 | Se déconnecter | l'utilisateur peut se déconnecter via la page de son compte.| `/account` -> puis appuyez sur 'Déconnexion' | Jules Singer |
 | Modifier son compte | l'utilisateur peut modifier les informations de son compte (sauf le login donc l'email pour respecter la consigne du sujet). | `/account/edit` | Jules Singer |
 | Rendre une liste publique | le créateur d'une liste peut la rendre publique. | `/lists/{idList}/edit` | Hugo Fresnel |
+| Afficher la liste des créateurs | Tout le monde peut voir les créateurs qui ont au moins une liste de publique. | `/accounts/public` | Thomas Bouillon |
 | Afficher les listes de souhaits publiques | les visiteurs peuvent voir la liste des listes de souhaits publiques | `/lists/public` | Hugo Fresnel |
 | Créer une cagnotte sur un item | le créateur d'une liste peut ouvrir une cagnotte sur ses items (avec un montant spécifié ne pouvant pas dépassé le prix de l'item). | `/lists/{tokenList}/items/{idItem}/founding_pot/create` | Hugo Fresnel |
 | Participer à une cagnotte | les utilisateurs d'une liste peuvent participer à une cagnotte d'un item en indiquant un montant de participation. | `/lists/{tokenList}/items/{idItem}/founding_pot/participate` | Hugo Fresnel |
 | Supprimer son compte | chaque utilisateur inscrit peut supprimer son compte. | `/account` --> puis appuyer sur le bouton 'supprimer mon compte' | Jules Singer |
+| Joindre des listes à son compte | Un utilisateur peut joindre une liste à son compte avec un token de modification. | `/lists/join` | Thomas Bouillon |
 
 ## Autres tâches réalisées :
 
 | Tâche | Description | Contributeur |
 | --- | --- | --- |
 | Middlewares d'authentification | facilite la vérification qu'un utilisateur est connecté. | Hugo Fresnel |
-| Middlewares de propriété | facilite la vérification qu'un utilisateur est propriétaire d'une liste. | Thomas Bouillon |
+| Middlewares de propriété | facilite la vérification qu'un utilisateur est propriétaire ou peut modifier une liste ou un item. | Thomas Bouillon |
 | Middleware de propriété d'un message (dans OwnerMiddleware) | vérification qu'un utilisateur est bien l'auteur d'un message public sur une liste afin que celui-ci puisse modifier ou supprimer ce message | Jérémy Poirel |
 | Messages flash | message d'erreur ou message de validation utilisés pour les traitements. | Thomas Bouillon |
+| Helper de validation | Helper pour valider facilement les données d'un formulaire. | Thomas Bouillon |
 | Page d'accueil | point d'entrée du site, contient les explications de l'application | Jules Singer |
 | Barre de navigation | intégration de la barre de navigation | Jules Singer |
 | Autre | fix de bugs, refactoring, modifications mineures ... | Tout le monde |
