@@ -104,6 +104,12 @@ class ListView extends BaseView
                             <a href="{$itemsUrl}" class="btn btn-light">Items</a>
             HTML;
 
+            if ($list->isExpired()) {
+                $html .= <<<HTML
+                    <a href="{$resultsUrl}" class="btn btn-light">Bilan</a>    
+                HTML;
+            }
+
             if($isOwner)
                 $html .= <<<HTML
                                 <form method="POST" action="{$deleteUrl}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette liste ?');">
